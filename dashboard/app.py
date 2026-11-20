@@ -94,8 +94,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# Initialize Data Service in session state
-if "data_service" not in st.session_state:
+# Initialize Data Service in session state (safely re-instantiate if schema updated)
+if "data_service" not in st.session_state or not hasattr(st.session_state["data_service"], "backend_connected"):
     st.session_state["data_service"] = TelemetryDataService()
 
 data_service: TelemetryDataService = st.session_state["data_service"]
@@ -135,7 +135,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.caption("Backend API Status:")
-    if data_service.backend_connected:
+    if getattr(data_service, "backend_connected", False):
         st.success("🟢 FastAPI Backend: **Connected** (http://127.0.0.1:8000)")
     else:
         st.warning("🟡 FastAPI Backend: **Offline** (Autonomous fallback active)")
