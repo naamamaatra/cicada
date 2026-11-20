@@ -289,3 +289,4 @@ with st.expander("📋 Phase 1 Hackathon Completion Criteria (Judges Reference)"
     - [x] **Server status changes from healthy to critical**: Node health dynamically recalculates to `POOR` and changes color to Red.
     - [x] **Alert is displayed**: Threshold breaches generate immediate warning and critical alert banners.
     """)
+

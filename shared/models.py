@@ -37,3 +37,4 @@ class BasicAlert(BaseModel):
     severity: str  # WARNING, CRITICAL
     message: str
     timestamp_utc: str
+

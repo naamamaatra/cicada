@@ -90,3 +90,4 @@ HEALTH_BADGES = {
     "FAIR": "🟡 FAIR",
     "POOR": "🔴 POOR"
 }
+

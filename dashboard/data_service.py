@@ -222,3 +222,4 @@ class TelemetryDataService:
         if not self.history:
             return pd.DataFrame()
         return pd.DataFrame(self.history)
+

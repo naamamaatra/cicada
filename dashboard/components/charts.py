@@ -93,3 +93,4 @@ def create_gauge_chart(value: float, title: str, unit: str = "%", max_val: float
         font={'color': "#F8FAFC"}
     )
     return fig
+
