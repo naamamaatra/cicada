@@ -34,3 +34,4 @@ To avoid merge conflicts while contributing in parallel:
    ```
 
 4. **Merge to `main` via PR on GitHub** after testing locally.
+
