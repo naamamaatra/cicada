@@ -1150,10 +1150,10 @@
             <span class="text-[11px] font-bold uppercase tracking-wider text-muted">CORRELATED INCIDENT STREAM</span>
             
             <!-- Inc 1 -->
-            <div id="inc-card-1" onclick="selectIncidentItem(1)" class="p-4 rounded-xl notion-card border-l-4 border-l-accent-coral cursor-pointer hover:shadow-md transition-all">
+            <div id="inc-card-1" onclick="selectIncidentItem(1)" class="p-4 rounded-xl notion-card border-l-4 border-l-accent-coral cursor-pointer hover:shadow-md transition-all ring-1 ring-primary/20">
               <div class="flex items-center justify-between text-[11px] font-mono">
-                <span class="px-2 py-0.5 rounded bg-error-container text-accent-coral font-bold">CRITICAL • INC-8941</span>
-                <span class="text-accent-coral font-semibold">4 mins ago</span>
+                <span id="inc-badge-1" class="px-2 py-0.5 rounded bg-error-container text-accent-coral font-bold">CRITICAL • INC-8941</span>
+                <span id="inc-time-1" class="text-accent-coral font-semibold">4 mins ago</span>
               </div>
               <h3 class="text-[15px] font-bold text-ink mt-2 leading-snug">Database Memory Exhaustion &amp; Query Latency Surge</h3>
               <div class="text-[12px] text-body-secondary font-mono mt-1">node_b92c • Postgres Master (PG-15)</div>
@@ -1162,8 +1162,8 @@
             <!-- Inc 2 -->
             <div id="inc-card-2" onclick="selectIncidentItem(2)" class="p-4 rounded-xl notion-card border-l-4 border-l-success cursor-pointer hover:shadow-md transition-all">
               <div class="flex items-center justify-between text-[11px] font-mono">
-                <span class="px-2 py-0.5 rounded bg-success-tint text-success font-bold">RESOLVED • INC-8938</span>
-                <span class="text-muted">18 mins ago</span>
+                <span id="inc-badge-2" class="px-2 py-0.5 rounded bg-success-tint text-success font-bold">RESOLVED • INC-8938</span>
+                <span id="inc-time-2" class="text-muted">18 mins ago</span>
               </div>
               <h3 class="text-[15px] font-bold text-ink mt-2 leading-snug">API Gateway Ephemeral Port Depletion</h3>
               <div class="text-[12px] text-body-secondary font-mono mt-1">node_c73d • Edge Ingress Gateway</div>
@@ -1172,8 +1172,8 @@
             <!-- Inc 3 -->
             <div id="inc-card-3" onclick="selectIncidentItem(3)" class="p-4 rounded-xl notion-card border-l-4 border-l-accent-amber cursor-pointer hover:shadow-md transition-all">
               <div class="flex items-center justify-between text-[11px] font-mono">
-                <span class="px-2 py-0.5 rounded bg-accent-amber/20 text-[#854d0e] font-bold">INVESTIGATING • INC-8924</span>
-                <span class="text-muted">32 mins ago</span>
+                <span id="inc-badge-3" class="px-2 py-0.5 rounded bg-accent-amber/20 text-[#854d0e] font-bold">INVESTIGATING • INC-8924</span>
+                <span id="inc-time-3" class="text-muted">32 mins ago</span>
               </div>
               <h3 class="text-[15px] font-bold text-ink mt-2 leading-snug">Asynchronous Job Queue Backpressure (Celery)</h3>
               <div class="text-[12px] text-body-secondary font-mono mt-1">node_a81f • App Worker Services</div>
@@ -1194,7 +1194,7 @@
                   Trace ID: 7f81a-cc9041b • node_b92c
                 </div>
               </div>
-              <span class="px-3 py-1 rounded-full bg-error-container text-accent-coral font-mono text-[11px] font-bold" id="ai-inc-badge">
+              <span class="px-3 py-1 rounded-full bg-error-container text-accent-coral font-mono text-[11px] font-bold transition-all" id="ai-inc-badge">
                 Active Severity 1
               </span>
             </div>
@@ -1203,10 +1203,10 @@
             <div>
               <div class="flex justify-between text-[12px] font-mono mb-1.5">
                 <span class="text-body-secondary font-medium">Bayesian Anomaly Confidence</span>
-                <strong class="text-primary font-bold" id="ai-inc-conf">94.2% Primary Hypothesis</strong>
+                <strong class="text-primary font-bold transition-all" id="ai-inc-conf">94.2% Primary Hypothesis</strong>
               </div>
               <div class="w-full h-2 rounded-full bg-surface-warm overflow-hidden">
-                <div class="h-full bg-primary rounded-full" style="width: 94.2%;"></div>
+                <div id="ai-inc-conf-bar" class="h-full bg-primary rounded-full transition-all duration-500" style="width: 94.2%;"></div>
               </div>
             </div>
 
@@ -1220,36 +1220,59 @@
 
             <!-- Divergent Signals Grid -->
             <div>
-              <span class="text-[11px] font-bold uppercase tracking-wider text-muted block mb-2">DIVERGENT METRIC SIGNALS</span>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-muted">DIVERGENT METRIC SIGNALS</span>
+                <span id="ai-signals-status-label" class="text-[11px] font-mono font-semibold text-accent-coral">SLA BREACH ACTIVE</span>
+              </div>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-[12px] font-mono">
-                <div class="p-3 rounded-lg bg-card-subtle border border-black/5">
-                  <span class="text-muted block text-[10px]">RESIDENT MEMORY</span>
-                  <strong class="text-accent-coral text-[14px]">91.4% (+48%)</strong>
+                <div id="ai-sigcard-1" class="p-3 rounded-lg bg-card-subtle border border-black/5 transition-all">
+                  <span id="ai-sig-lbl-1" class="text-muted block text-[10px]">RESIDENT MEMORY</span>
+                  <strong id="ai-sig-val-1" class="text-accent-coral text-[14px] transition-all">91.4% (+48%)</strong>
                 </div>
-                <div class="p-3 rounded-lg bg-card-subtle border border-black/5">
-                  <span class="text-muted block text-[10px]">QUERY LATENCY</span>
-                  <strong class="text-accent-coral text-[14px]">182.0 ms</strong>
+                <div id="ai-sigcard-2" class="p-3 rounded-lg bg-card-subtle border border-black/5 transition-all">
+                  <span id="ai-sig-lbl-2" class="text-muted block text-[10px]">QUERY LATENCY</span>
+                  <strong id="ai-sig-val-2" class="text-accent-coral text-[14px] transition-all">182.0 ms</strong>
                 </div>
-                <div class="p-3 rounded-lg bg-card-subtle border border-black/5">
-                  <span class="text-muted block text-[10px]">DISK SATURATION</span>
-                  <strong class="text-accent-coral text-[14px]">98.0%</strong>
+                <div id="ai-sigcard-3" class="p-3 rounded-lg bg-card-subtle border border-black/5 transition-all">
+                  <span id="ai-sig-lbl-3" class="text-muted block text-[10px]">DISK SATURATION</span>
+                  <strong id="ai-sig-val-3" class="text-accent-coral text-[14px] transition-all">98.0%</strong>
                 </div>
-                <div class="p-3 rounded-lg bg-card-subtle border border-black/5">
-                  <span class="text-muted block text-[10px]">DB ERROR RATE</span>
-                  <strong class="text-accent-coral text-[14px]">0.089 / req</strong>
+                <div id="ai-sigcard-4" class="p-3 rounded-lg bg-card-subtle border border-black/5 transition-all">
+                  <span id="ai-sig-lbl-4" class="text-muted block text-[10px]">DB ERROR RATE</span>
+                  <strong id="ai-sig-val-4" class="text-accent-coral text-[14px] transition-all">0.089 / req</strong>
                 </div>
               </div>
             </div>
 
             <!-- Remediation Box -->
-            <div id="remediation-action-box" class="p-4 rounded-xl bg-primary-tint border border-primary/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div>
-                <strong class="text-primary-pressed block text-[13px]">Recommended Autonomous Action:</strong>
-                <span class="text-[12px] text-body-secondary">Cap connection pool at 250, terminate idle trans-locks, reroute read-replicas.</span>
+            <div id="remediation-action-box" class="p-4 rounded-xl bg-primary-tint border border-primary/20 flex flex-col gap-4 transition-all">
+              <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                  <strong id="ai-remed-title" class="text-primary-pressed block text-[13px]">Recommended Autonomous Action:</strong>
+                  <span id="ai-remed-desc" class="text-[12px] text-body-secondary">Cap connection pool at 250, terminate idle trans-locks, reroute read-replicas.</span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                  <button id="btn-reset-remediation" onclick="resetCurrentIncident()" class="hidden px-3 py-2 rounded-lg border border-black/15 bg-white hover:bg-black/5 text-ink text-[12px] font-semibold transition-all cursor-pointer shadow-xs">
+                    ↺ Re-simulate Fault
+                  </button>
+                  <button id="btn-exec-remediation" onclick="dispatchRemediationAction()" class="px-4 py-2 rounded-lg bg-primary hover:bg-primary-pressed text-white text-[12px] font-semibold transition-all shrink-0 cursor-pointer shadow-xs flex items-center gap-1.5">
+                    <span id="remed-btn-icon" class="material-symbols-outlined text-[16px]">bolt</span>
+                    <span id="remed-btn-text">Execute Remediation</span>
+                  </button>
+                </div>
               </div>
-              <button id="btn-exec-remediation" onclick="dispatchRemediationAction()" class="px-4 py-2 rounded-lg bg-primary hover:bg-primary-pressed text-white text-[12px] font-semibold transition-all shrink-0 cursor-pointer shadow-xs">
-                Execute Remediation
-              </button>
+
+              <!-- Live Execution Stepper / Console -->
+              <div id="remediation-live-console" class="hidden p-3.5 rounded-lg bg-[#0d1117] text-[#c9d1d9] font-mono text-[11px] leading-relaxed border border-white/10 shadow-inner">
+                <div class="flex items-center justify-between text-[#8b949e] border-b border-white/10 pb-1.5 mb-2">
+                  <div class="flex items-center gap-2">
+                    <span id="remed-console-indicator" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="font-bold text-[#e6edf3]">AUTONOMOUS SELF-HEALING DISPATCH TRACE</span>
+                  </div>
+                  <span id="remed-execution-timer" class="text-[10px] text-emerald-400 font-semibold">0.0s elapsed</span>
+                </div>
+                <div id="remed-execution-steps" class="flex flex-col gap-1.5"></div>
+              </div>
             </div>
 
           </div>
@@ -2209,51 +2232,356 @@
       }
     }
 
-    // Incidents selection
+    // Incidents selection and self-healing state
+    let activeIncidentId = 1;
     const INCIDENT_DETAILS = {
       1: {
+        id: 1,
+        code: "INC-8941",
         title: "Database Memory Exhaustion & Query Latency Surge",
         meta: "Trace ID: 7f81a-cc9041b • node_b92c",
+        node: "node_b92c",
         badge: "Active Severity 1",
+        isCritical: true,
         conf: "94.2% Primary Hypothesis",
-        hypothesis: "High contention lock during unindexed sequential table scan on customer_events table triggered by concurrent batch sync operations."
+        confPct: "94.2%",
+        hypothesis: "High contention lock during unindexed sequential table scan on customer_events table triggered by concurrent batch sync operations.",
+        actionTitle: "Recommended Autonomous Action:",
+        actionDesc: "Cap connection pool at 250, terminate idle trans-locks, reroute read-replicas.",
+        signals: [
+          { lbl: "RESIDENT MEMORY", val: "91.4% (+48%)", isBad: true },
+          { lbl: "QUERY LATENCY", val: "182.0 ms", isBad: true },
+          { lbl: "DISK SATURATION", val: "98.0%", isBad: true },
+          { lbl: "DB ERROR RATE", val: "0.089 / req", isBad: true }
+        ],
+        healedSignals: [
+          { lbl: "RESIDENT MEMORY", val: "38.2% (Nominal)", isBad: false },
+          { lbl: "QUERY LATENCY", val: "14.5 ms (SLA OK)", isBad: false },
+          { lbl: "DISK SATURATION", val: "62.0% (Stable)", isBad: false },
+          { lbl: "DB ERROR RATE", val: "0.000 / req", isBad: false }
+        ],
+        steps: [
+          "[0.00s] 🔐 Policy Verification: Zero-Trust egress pass, HMAC validated",
+          "[0.35s] ⚡ Contacting agent on node_b92c via Tier 2 autonomous channel",
+          "[0.72s] 🛠️ Executing: Capping connection pool (max=250), killing 14 idle lock backends",
+          "[1.05s] 📦 Triggered WAL buffer sync flush & rerouted read traffic to replica pool",
+          "[1.35s] 📊 Health check: Telemetry normalized to nominal baseline (<250ms SLA)",
+          "[1.42s] 🛡️ Incident INC-8941 marked RESOLVED. Cryptographic audit receipt committed."
+        ],
+        remediationSummary: "Target: node_b92c • 14 lock transactions terminated • Query latency dropped by 92% • Telemetry restored.",
+        remediated: false
       },
       2: {
+        id: 2,
+        code: "INC-8938",
         title: "API Gateway Ephemeral Port Depletion",
         meta: "Trace ID: 5a22d-bb8019e • node_c73d",
+        node: "node_c73d",
         badge: "Resolved",
+        isCritical: false,
         conf: "99.1% Confidence",
-        hypothesis: "Upstream microservice webhook connection lingering due to TCP keepalive mismatch. Neutralized in 3m 12s."
+        confPct: "99.1%",
+        hypothesis: "Upstream microservice webhook connection lingering due to TCP keepalive mismatch. Neutralized in 3m 12s.",
+        actionTitle: "Executed Self-Healing Protocol:",
+        actionDesc: "Purged dead TCP sockets, tuned net.ipv4.tcp_tw_reuse=1, refreshed Envoy connection pool.",
+        signals: [
+          { lbl: "IN-USE PORTS", val: "1,240 / 65,535", isBad: false },
+          { lbl: "ROUND-TRIP LAT", val: "18.2 ms (SLA OK)", isBad: false },
+          { lbl: "PACKET LOSS", val: "0.0% (Zero Loss)", isBad: false },
+          { lbl: "TCP RESET RATE", val: "0.000 / req", isBad: false }
+        ],
+        healedSignals: [
+          { lbl: "IN-USE PORTS", val: "1,240 / 65,535", isBad: false },
+          { lbl: "ROUND-TRIP LAT", val: "18.2 ms (SLA OK)", isBad: false },
+          { lbl: "PACKET LOSS", val: "0.0% (Zero Loss)", isBad: false },
+          { lbl: "TCP RESET RATE", val: "0.000 / req", isBad: false }
+        ],
+        steps: [
+          "[0.00s] 🔐 Policy Verification: RFC-1918 socket teardown approved",
+          "[0.30s] ⚡ Transmitting sysctl parameters to node_c73d",
+          "[0.65s] 🛠️ Applied net.ipv4.tcp_tw_reuse=1 & purged lingering TIME_WAIT sockets",
+          "[0.95s] 🔄 Graceful worker reload on Envoy ingress listener",
+          "[1.18s] 📊 Health check: Available ephemeral ports > 64,000, latency 18.2ms",
+          "[1.24s] 🛡️ Incident INC-8938 verified resolved."
+        ],
+        remediationSummary: "Target: node_c73d • 63,500 sockets recycled • Latency restored from 412ms to 18.2ms • Edge Nominal.",
+        remediated: true
       },
       3: {
+        id: 3,
+        code: "INC-8924",
         title: "Asynchronous Job Queue Backpressure (Celery)",
         meta: "Trace ID: 8e991-ff1098c • node_a81f",
+        node: "node_a81f",
         badge: "Investigating",
+        isCritical: false,
         conf: "82.4% Confidence",
-        hypothesis: "Sudden spike in high-dimensional text indexing requests during customer batch ingestion."
+        confPct: "82.4%",
+        hypothesis: "Sudden spike in high-dimensional text indexing requests during customer batch ingestion.",
+        actionTitle: "Recommended Autonomous Action:",
+        actionDesc: "Autoscale Celery worker pool from 4 to 12 workers, route indexing to GPU cluster, throttle background batch sync.",
+        signals: [
+          { lbl: "PENDING QUEUE", val: "14,890 tasks", isBad: true },
+          { lbl: "WORKER CPU", val: "88.6%", isBad: true },
+          { lbl: "TASK DELAY", val: "4.2s (Breached)", isBad: true },
+          { lbl: "DEAD LETTER RT", val: "0.034 / req", isBad: true }
+        ],
+        healedSignals: [
+          { lbl: "PENDING QUEUE", val: "114 tasks", isBad: false },
+          { lbl: "WORKER CPU", val: "34.2% (Nominal)", isBad: false },
+          { lbl: "TASK DELAY", val: "82 ms (SLA OK)", isBad: false },
+          { lbl: "DEAD LETTER RT", val: "0.000 / req", isBad: false }
+        ],
+        steps: [
+          "[0.00s] 🔐 Policy Verification: Autoscaler webhook authorization confirmed",
+          "[0.40s] ⚡ Dispatched scale event to orchestrator for node_a81f",
+          "[0.80s] 🛠️ Provisioned 8 auxiliary Celery worker containers (pool=12)",
+          "[1.15s] 🔀 Diverted text embedding tasks to dedicated high-memory queue",
+          "[1.45s] 📊 Queue drained from 14,890 to 114 tasks in 2.1s",
+          "[1.52s] 🛡️ Incident INC-8924 marked RESOLVED. Pipeline normalized."
+        ],
+        remediationSummary: "Target: node_a81f • 8 worker nodes added • Queue backpressure neutralized • Latency 82ms.",
+        remediated: false
       }
     };
 
-    function selectIncidentItem(id) {
-      const d = INCIDENT_DETAILS[id];
-      if (!d) return;
-      document.getElementById('ai-inc-title').innerText = d.title;
-      document.getElementById('ai-inc-meta').innerText = d.meta;
-      document.getElementById('ai-inc-badge').innerText = d.badge;
-      document.getElementById('ai-inc-conf').innerText = d.conf;
-      document.getElementById('ai-inc-hypothesis').innerText = d.hypothesis;
-      notify(`Loaded diagnosis for incident #${id}`, 'psychology');
+    function renderIncidentSignals(signalsList, isHealed) {
+      signalsList.forEach((sig, idx) => {
+        const i = idx + 1;
+        const lblEl = document.getElementById(`ai-sig-lbl-${i}`);
+        const valEl = document.getElementById(`ai-sig-val-${i}`);
+        const cardEl = document.getElementById(`ai-sigcard-${i}`);
+        if (lblEl && valEl) {
+          lblEl.innerText = sig.lbl;
+          valEl.innerText = sig.val;
+          if (sig.isBad) {
+            valEl.className = 'text-accent-coral text-[14px] font-bold transition-all';
+            if (cardEl) cardEl.className = 'p-3 rounded-lg bg-card-subtle border border-black/5 transition-all';
+          } else {
+            valEl.className = 'text-success text-[14px] font-bold transition-all';
+            if (cardEl) cardEl.className = 'p-3 rounded-lg bg-success-tint/40 border border-success/30 transition-all';
+          }
+        }
+      });
+      const statusLbl = document.getElementById('ai-signals-status-label');
+      if (statusLbl) {
+        if (isHealed) {
+          statusLbl.innerText = '✅ ALL SIGNALS NOMINAL';
+          statusLbl.className = 'text-[11px] font-mono font-bold text-success';
+        } else {
+          statusLbl.innerText = '⚠️ SLA BREACH ACTIVE';
+          statusLbl.className = 'text-[11px] font-mono font-bold text-accent-coral';
+        }
+      }
     }
 
-    function dispatchRemediationAction() {
-      const btn = document.getElementById('btn-exec-remediation');
-      if (!btn) return;
-      btn.innerText = 'Transmitting...';
-      setTimeout(() => {
-        btn.innerText = 'Remediation Dispatched ✓';
-        btn.className = 'px-4 py-2 rounded-lg bg-emerald-600 text-white text-[12px] font-semibold';
-        notify('Autonomous remediation packet executed on node_b92c. Connection pool throttled.', 'smart_toy');
-      }, 700);
+    function selectIncidentItem(id) {
+      activeIncidentId = id;
+      const d = INCIDENT_DETAILS[id];
+      if (!d) return;
+
+      // Update active ring on list cards
+      [1, 2, 3].forEach(cid => {
+        const card = document.getElementById(`inc-card-${cid}`);
+        if (card) {
+          if (cid === id) {
+            card.classList.add('ring-2', 'ring-primary/40', 'bg-primary-tint/20');
+          } else {
+            card.classList.remove('ring-2', 'ring-primary/40', 'bg-primary-tint/20');
+          }
+        }
+      });
+
+      // Populate Diagnostic Inspector
+      document.getElementById('ai-inc-title').innerText = d.title;
+      document.getElementById('ai-inc-meta').innerText = d.meta;
+      document.getElementById('ai-inc-hypothesis').innerText = d.hypothesis;
+      document.getElementById('ai-inc-conf').innerText = d.conf;
+      const confBar = document.getElementById('ai-inc-conf-bar');
+      if (confBar) confBar.style.width = d.confPct;
+
+      const badgeEl = document.getElementById('ai-inc-badge');
+      const remedBox = document.getElementById('remediation-action-box');
+      const remedTitle = document.getElementById('ai-remed-title');
+      const remedDesc = document.getElementById('ai-remed-desc');
+      const execBtn = document.getElementById('btn-exec-remediation');
+      const resetBtn = document.getElementById('btn-reset-remediation');
+      const consoleEl = document.getElementById('remediation-live-console');
+
+      if (d.remediated) {
+        // Render as Remediated
+        badgeEl.innerText = '✅ RESOLVED • Autonomous Self-Healed';
+        badgeEl.className = 'px-3 py-1 rounded-full bg-success-tint text-success font-mono text-[11px] font-bold';
+        renderIncidentSignals(d.healedSignals, true);
+
+        remedBox.className = 'p-4 rounded-xl bg-emerald-50 border border-emerald-300 flex flex-col gap-4 transition-all';
+        remedTitle.innerText = '✅ Autonomous Self-Healing Successful';
+        remedTitle.className = 'text-emerald-800 block text-[13px] font-bold';
+        remedDesc.innerText = d.remediationSummary;
+
+        execBtn.className = 'px-4 py-2 rounded-lg bg-emerald-600 text-white text-[12px] font-semibold transition-all shrink-0 cursor-default shadow-xs flex items-center gap-1.5 opacity-90';
+        document.getElementById('remed-btn-icon').innerText = 'check_circle';
+        document.getElementById('remed-btn-text').innerText = 'Remediated ✓';
+        execBtn.disabled = true;
+
+        if (resetBtn) resetBtn.classList.remove('hidden');
+        if (consoleEl) {
+          consoleEl.classList.remove('hidden');
+          const stepsContainer = document.getElementById('remed-execution-steps');
+          stepsContainer.innerHTML = d.steps.map(s => `<div class="text-emerald-300">${s}</div>`).join('');
+          document.getElementById('remed-execution-timer').innerText = '1.42s total';
+        }
+      } else {
+        // Render as Active / Breach
+        if (d.isCritical) {
+          badgeEl.innerText = 'Active Severity 1 (Critical)';
+          badgeEl.className = 'px-3 py-1 rounded-full bg-error-container text-accent-coral font-mono text-[11px] font-bold';
+        } else {
+          badgeEl.innerText = 'Investigating (Severity 2)';
+          badgeEl.className = 'px-3 py-1 rounded-full bg-accent-amber/20 text-[#854d0e] font-mono text-[11px] font-bold';
+        }
+        renderIncidentSignals(d.signals, false);
+
+        remedBox.className = 'p-4 rounded-xl bg-primary-tint border border-primary/20 flex flex-col gap-4 transition-all';
+        remedTitle.innerText = d.actionTitle;
+        remedTitle.className = 'text-primary-pressed block text-[13px] font-bold';
+        remedDesc.innerText = d.actionDesc;
+
+        execBtn.className = 'px-4 py-2 rounded-lg bg-primary hover:bg-primary-pressed text-white text-[12px] font-semibold transition-all shrink-0 cursor-pointer shadow-xs flex items-center gap-1.5';
+        document.getElementById('remed-btn-icon').innerText = 'bolt';
+        document.getElementById('remed-btn-text').innerText = 'Execute Remediation';
+        execBtn.disabled = false;
+
+        if (resetBtn) resetBtn.classList.add('hidden');
+        if (consoleEl) consoleEl.classList.add('hidden');
+      }
+
+      notify(`Loaded diagnosis for incident ${d.code}`, 'psychology');
+    }
+
+    async function dispatchRemediationAction() {
+      const d = INCIDENT_DETAILS[activeIncidentId];
+      if (!d || d.remediated) return;
+
+      const execBtn = document.getElementById('btn-exec-remediation');
+      const btnIcon = document.getElementById('remed-btn-icon');
+      const btnText = document.getElementById('remed-btn-text');
+      const consoleEl = document.getElementById('remediation-live-console');
+      const stepsContainer = document.getElementById('remed-execution-steps');
+      const timerEl = document.getElementById('remed-execution-timer');
+      const remedBox = document.getElementById('remediation-action-box');
+      const remedTitle = document.getElementById('ai-remed-title');
+      const remedDesc = document.getElementById('ai-remed-desc');
+      const badgeEl = document.getElementById('ai-inc-badge');
+      const resetBtn = document.getElementById('btn-reset-remediation');
+
+      // 1. Loading UI state
+      execBtn.disabled = true;
+      btnIcon.innerText = 'refresh';
+      btnIcon.className = 'material-symbols-outlined text-[16px] animate-spin';
+      btnText.innerText = 'Transmitting Autonomous Payload...';
+      execBtn.className = 'px-4 py-2 rounded-lg bg-primary/70 text-white text-[12px] font-semibold transition-all shrink-0 cursor-not-allowed shadow-xs flex items-center gap-1.5';
+
+      // 2. Reveal Console
+      consoleEl.classList.remove('hidden');
+      stepsContainer.innerHTML = '';
+      timerEl.innerText = '0.0s elapsed';
+
+      // 3. Stepwise execution animation
+      let stepIndex = 0;
+      const startTime = performance.now();
+      const stepTimer = setInterval(() => {
+        const elapsedSec = ((performance.now() - startTime) / 1000).toFixed(2);
+        timerEl.innerText = `${elapsedSec}s elapsed`;
+
+        if (stepIndex < d.steps.length) {
+          const row = document.createElement('div');
+          row.className = 'text-emerald-300 font-mono transition-opacity duration-300';
+          row.innerText = d.steps[stepIndex];
+          stepsContainer.appendChild(row);
+          stepIndex++;
+        } else {
+          clearInterval(stepTimer);
+
+          // Mark remediated
+          d.remediated = true;
+
+          // 4. Transform signals to green
+          renderIncidentSignals(d.healedSignals, true);
+
+          // 5. Update header badge
+          badgeEl.innerText = '✅ RESOLVED • Autonomous Self-Healed';
+          badgeEl.className = 'px-3 py-1 rounded-full bg-success-tint text-success font-mono text-[11px] font-bold';
+
+          // 6. Update left stream card
+          const listCard = document.getElementById(`inc-card-${d.id}`);
+          const listBadge = document.getElementById(`inc-badge-${d.id}`);
+          const listTime = document.getElementById(`inc-time-${d.id}`);
+          if (listCard) {
+            listCard.classList.remove('border-l-accent-coral', 'border-l-accent-amber');
+            listCard.classList.add('border-l-success');
+          }
+          if (listBadge) {
+            listBadge.className = 'px-2 py-0.5 rounded bg-success-tint text-success font-bold';
+            listBadge.innerText = `RESOLVED • ${d.code}`;
+          }
+          if (listTime) {
+            listTime.className = 'text-success font-semibold';
+            listTime.innerText = 'Just now (Self-Healed)';
+          }
+
+          // 7. Update Remediation Box
+          remedBox.className = 'p-4 rounded-xl bg-emerald-50 border border-emerald-300 flex flex-col gap-4 transition-all';
+          remedTitle.innerText = '✅ Autonomous Self-Healing Successful';
+          remedTitle.className = 'text-emerald-800 block text-[13px] font-bold';
+          remedDesc.innerText = d.remediationSummary;
+
+          // 8. Update Button
+          btnIcon.innerText = 'check_circle';
+          btnIcon.className = 'material-symbols-outlined text-[16px]';
+          btnText.innerText = 'Remediated ✓';
+          execBtn.className = 'px-4 py-2 rounded-lg bg-emerald-600 text-white text-[12px] font-semibold transition-all shrink-0 cursor-default shadow-xs flex items-center gap-1.5 opacity-90';
+
+          if (resetBtn) resetBtn.classList.remove('hidden');
+
+          notify(`Autonomous remediation packet executed on ${d.node}. Telemetry normalized.`, 'smart_toy');
+
+          // 9. Fire backend call in background to clear alerts & inject baseline
+          fetch(`/api/v1/incidents/${d.id}/remediate`, { method: 'POST' }).catch(() => {});
+        }
+      }, 260);
+    }
+
+    async function resetCurrentIncident() {
+      const d = INCIDENT_DETAILS[activeIncidentId];
+      if (!d) return;
+
+      d.remediated = false;
+      const listCard = document.getElementById(`inc-card-${d.id}`);
+      const listBadge = document.getElementById(`inc-badge-${d.id}`);
+      const listTime = document.getElementById(`inc-time-${d.id}`);
+
+      if (d.id === 1) {
+        if (listCard) {
+          listCard.classList.remove('border-l-success');
+          listCard.classList.add('border-l-accent-coral');
+        }
+        if (listBadge) {
+          listBadge.className = 'px-2 py-0.5 rounded bg-error-container text-accent-coral font-bold';
+          listBadge.innerText = 'CRITICAL • INC-8941';
+        }
+        if (listTime) {
+          listTime.className = 'text-accent-coral font-semibold';
+          listTime.innerText = '4 mins ago';
+        }
+      }
+
+      // Refresh inspector view
+      selectIncidentItem(activeIncidentId);
+      notify(`Reset incident ${d.code} to active fault state.`, 'restart_alt');
+
+      // Reset on backend
+      fetch(`/api/v1/incidents/${d.id}/reset`, { method: 'POST' }).catch(() => {});
     }
 
     // Architecture Packet Tracer

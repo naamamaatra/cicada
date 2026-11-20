@@ -249,3 +249,32 @@ def test_fleet_latest_metrics():
     assert node_a_rec["cpu"] == 40.0  # Latest for node_a
 
 
+# 16. Incident inspection and autonomous remediation execution
+def test_incidents_remediation_lifecycle():
+    # List incidents
+    resp = client.get("/api/v1/incidents")
+    assert resp.status_code == 200
+    incidents = resp.json()["data"]
+    assert len(incidents) == 3
+
+    # Get specific incident
+    inc_resp = client.get("/api/v1/incidents/1")
+    assert inc_resp.status_code == 200
+    assert inc_resp.json()["data"]["code"] == "INC-8941"
+
+    # Execute remediation
+    remed_resp = client.post("/api/v1/incidents/1/remediate")
+    assert remed_resp.status_code == 200
+    data = remed_resp.json()["data"]
+    assert data["status"] == "RESOLVED"
+    assert data["incident_id"] == "INC-8941"
+    assert "zk_audit_digest" in data
+    assert len(data["actions_taken"]) > 0
+
+    # Reset incident
+    reset_resp = client.post("/api/v1/incidents/1/reset")
+    assert reset_resp.status_code == 200
+    assert reset_resp.json()["data"]["status"] == "ACTIVE"
+
+
+
