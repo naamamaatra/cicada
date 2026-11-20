@@ -181,6 +181,27 @@ with st.sidebar:
         </div>
     </div>
     """, unsafe_allow_html=True)
+    
+    st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;'>PLATFORM ENVIRONMENT</div>", unsafe_allow_html=True)
+    mode_options = [
+        "⚡ Workload Simulator & Labs (Phase 2)",
+        "🏢 SentinelOps Multi-Tenant SaaS Cloud (Milestone 5)",
+    ]
+    is_saas = st.session_state.get("platform_mode") == "saas"
+    selected_mode = st.selectbox(
+        "Platform Mode",
+        mode_options,
+        index=1 if is_saas else 0,
+        key="platform_mode_selectbox",
+        label_visibility="collapsed",
+    )
+    if "SaaS" in selected_mode and not is_saas:
+        st.session_state["platform_mode"] = "saas"
+        st.rerun()
+    elif "Simulator" in selected_mode and is_saas:
+        st.session_state["platform_mode"] = "simulator"
+        st.rerun()
+
     st.markdown("---")
 
     # Main Navigation
@@ -241,6 +262,15 @@ cluster_health = "POOR" if "POOR" in overall_states else ("FAIR" if "FAIR" in ov
 total_nodes = len(latest_by_node)
 crit_count = sum(1 for a in active_alerts if a.get("severity") == "CRITICAL")
 avg_lat = round(sum(d["latency_ms"] for d in latest_by_node.values()) / total_nodes, 1) if total_nodes > 0 else 0.0
+
+
+# =============================================================================
+# SAAS PLATFORM ROUTING (Milestone 5 Multi-Tenant SaaS Cloud)
+# =============================================================================
+if st.session_state.get("platform_mode") == "saas":
+    from dashboard.saas_app import render_saas_platform
+    render_saas_platform()
+    st.stop()
 
 
 # =============================================================================
