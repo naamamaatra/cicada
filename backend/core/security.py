@@ -84,3 +84,4 @@ def hash_collector_token(raw_token: str) -> str:
     Raw tokens are never stored in the database.
     """
     return hashlib.sha256(raw_token.strip().encode("utf-8")).hexdigest()
+

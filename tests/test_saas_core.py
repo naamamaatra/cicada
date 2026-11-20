@@ -29,42 +29,42 @@ from backend.core.security import create_access_token
 
 from sqlalchemy.pool import StaticPool
 
-# Setup isolated in-memory test database for the API
-test_engine = create_engine(
-    "sqlite:///:memory:",
-    connect_args={"check_same_thread": False},
-    poolclass=StaticPool,
-)
-
-@event.listens_for(test_engine, "connect")
-def set_sqlite_pragma(dbapi_connection, connection_record):
-    cursor = dbapi_connection.cursor()
-    cursor.execute("PRAGMA foreign_keys=ON")
-    cursor.close()
-
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
-
-
-def override_get_db():
-    db = TestingSessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
-app.dependency_overrides[get_db] = override_get_db
+client = TestClient(app)
 
 
 @pytest.fixture(autouse=True)
 def setup_database():
-    """Create fresh database tables before each test and drop after."""
+    """Create fresh isolated database for each test and bind dependency override."""
+    test_engine = create_engine(
+        "sqlite:///:memory:",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+
+    @event.listens_for(test_engine, "connect")
+    def set_sqlite_pragma(dbapi_connection, connection_record):
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
+        cursor.close()
+
     Base.metadata.create_all(bind=test_engine)
+    TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
+
+    def override_get_db():
+        db = TestingSessionLocal()
+        try:
+            yield db
+        finally:
+            db.close()
+
+    app.dependency_overrides[get_db] = override_get_db
+    # Store on app for helper access if needed
+    app.state.TestingSessionLocal = TestingSessionLocal
+
     yield
+
+    app.dependency_overrides.pop(get_db, None)
     Base.metadata.drop_all(bind=test_engine)
-
-
-client = TestClient(app)
 
 
 # -----------------------------------------------------------------------------
@@ -286,7 +286,7 @@ def test_role_based_permissions():
     viewer_id = viewer_resp.json()["user"]["id"]
 
     # Add viewer to RBAC Corp via DB
-    db = TestingSessionLocal()
+    db = app.state.TestingSessionLocal()
     db.add(Membership(user_id=viewer_id, organization_id=org_id, role="viewer"))
     db.commit()
     db.close()

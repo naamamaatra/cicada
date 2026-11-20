@@ -157,3 +157,4 @@ async def get_authenticated_collector(
     db.commit()
 
     return collector
+

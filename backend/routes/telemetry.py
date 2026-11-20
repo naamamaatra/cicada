@@ -17,6 +17,7 @@ from backend.schemas import (
 )
 from backend.storage import storage
 from backend.services.alert_service import evaluate_telemetry_alerts
+from backend.services.ai_service import ai_service
 from backend.db.session import get_db
 from backend.db.models import Collector, TelemetryRecord, Organization
 from backend.core.dependencies import get_authenticated_collector
@@ -99,6 +100,14 @@ async def ingest_telemetry(
             db.commit()
         except Exception:
             db.rollback()  # If deduplication conflict or validation, ignore persistent save
+
+        # 3b. Run Member 2 AI Incident Intelligence analysis and persist incidents
+        try:
+            ai_service.process_telemetry_for_tenant(
+                payload.model_dump(mode="json"), target_org_id, db
+            )
+        except Exception:
+            pass
 
     # 4. Evaluate basic threshold alerts (Phase 1)
     triggered_alerts = evaluate_telemetry_alerts(payload)

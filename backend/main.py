@@ -16,6 +16,9 @@ from backend.routes.health import router as health_router
 from backend.routes.auth import router as auth_router
 from backend.routes.orgs import router as orgs_router
 from backend.routes.collectors import router as collectors_router
+from backend.routes.incidents import router as incidents_router
+from backend.routes.privacy import router as privacy_router
+from backend.routes.metrics import router as metrics_router
 
 
 @asynccontextmanager
@@ -93,6 +96,9 @@ app.include_router(health_router)
 app.include_router(auth_router)
 app.include_router(orgs_router)
 app.include_router(collectors_router)
+app.include_router(incidents_router)
+app.include_router(metrics_router)
+app.include_router(privacy_router)
 app.include_router(telemetry_router)
 app.include_router(alerts_router)
 

@@ -151,3 +151,4 @@ def revoke_collector(
         "success": True,
         "message": f"Collector '{collector.name}' ({collector.id}) access revoked successfully",
     }
+
