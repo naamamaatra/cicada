@@ -1,9 +1,10 @@
 """
 SentinelOps AI - Shared Constants & Configurations.
-Reference thresholds, health states, and default infrastructure nodes.
+Reference thresholds, health states, default infrastructure nodes, and allow-lists.
+Agreed across Member 1 (Collector), Member 2 (AI), Member 3 (Dashboard), and Member 4 (Backend).
 """
 
-# Suggested Hackathon Thresholds (Section 14 of Project Plan)
+# Thresholds for Health Evaluation (Section 14 of Project Plan)
 THRESHOLDS = {
     "cpu": {
         "excellent_max": 50.0,
@@ -55,23 +56,23 @@ HEALTH_STATES = ["EXCELLENT", "GOOD", "FAIR", "POOR"]
 DEFAULT_SERVERS = [
     {
         "source_id": "node_a81f",
-        "real_hostname": "prod-app-srv-01.internal.corp",
         "role": "App Server (Production-Web)",
         "region": "us-east-1",
+        "real_hostname": "prod-app-srv-01.internal.corp",
         "base_ip": "10.240.10.15",
     },
     {
         "source_id": "node_b92c",
-        "real_hostname": "prod-db-master-01.internal.corp",
-        "role": "Database Master (PostgreSQL)",
+        "role": "Database Master (Postgres)",
         "region": "us-east-1",
+        "real_hostname": "prod-db-master-01.internal.corp",
         "base_ip": "10.240.10.20",
     },
     {
         "source_id": "node_c73d",
-        "real_hostname": "prod-ingress-gw-01.internal.corp",
         "role": "API Ingress & Gateway",
         "region": "us-east-1",
+        "real_hostname": "prod-ingress-gw-01.internal.corp",
         "base_ip": "10.240.10.30",
     },
 ]
@@ -92,4 +93,3 @@ ALLOWED_TELEMETRY_FIELDS = {
     "collector_status",
     "event_category",
 }
-

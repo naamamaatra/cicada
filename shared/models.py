@@ -91,18 +91,20 @@ class TelemetryPayload(BaseModel):
 
 class BasicAlert(BaseModel):
     """
-    Alert record triggered by abnormal thresholds or rules.
+    Alert record triggered when an abnormal threshold or rule is breached.
+    Supports both Member 3 Dashboard and Member 1/4 Backend formats.
     """
     alert_id: str = Field(..., description="Unique alert ID (e.g. alt_xxxx)")
-    payload_id: Optional[str] = Field(default=None, description="Associated telemetry payload ID")
     source_id: str = Field(..., description="Affected infrastructure source / node")
-    alert_type: str = Field(..., description="Type of alert (e.g. HIGH_CPU, HIGH_MEMORY)")
+    metric: str = Field(default="threshold", description="Metric that triggered the alert (e.g. cpu, memory)")
+    current_value: float = Field(default=0.0, description="Observed metric value")
+    threshold: float = Field(..., description="Threshold exceeded")
     severity: str = Field(..., description="Alert severity: WARNING, CRITICAL")
     message: str = Field(..., description="Human-readable explanation of the alert")
-    metric_value: float = Field(..., description="Observed metric value")
-    threshold: float = Field(..., description="Threshold exceeded")
     timestamp_utc: str = Field(
         default_factory=lambda: datetime.now(timezone.utc).isoformat(),
         description="Timestamp when the alert was triggered",
     )
-
+    payload_id: Optional[str] = Field(default=None, description="Associated telemetry payload ID")
+    alert_type: Optional[str] = Field(default=None, description="Type of alert (e.g. HIGH_CPU, HIGH_MEMORY)")
+    metric_value: Optional[float] = Field(default=None, description="Observed metric value alias")
