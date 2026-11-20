@@ -68,3 +68,37 @@ async def get_alerts_by_source(
         data=[alert.model_dump(mode="json") for alert in alerts],
     )
 
+
+@router.delete(
+    "",
+    response_model=ApiResponse,
+    summary="Clear Stored Alerts",
+    description="Clear active and historical alerts, optionally filtered by source_id.",
+)
+async def clear_alerts(
+    source_id: Optional[str] = Query(None, description="Optional source ID filter"),
+) -> ApiResponse:
+    storage.clear_alerts(source_id=source_id)
+    return ApiResponse(
+        success=True,
+        message=f"Alerts cleared{' for source ' + source_id if source_id else ' across all sources'}",
+        data={"cleared": True},
+    )
+
+
+@router.post(
+    "/clear",
+    response_model=ApiResponse,
+    summary="Reset/Clear Alerts (POST helper)",
+    description="Convenience POST endpoint to clear alerts.",
+)
+async def reset_alerts(
+    source_id: Optional[str] = Query(None, description="Optional source ID filter"),
+) -> ApiResponse:
+    storage.clear_alerts(source_id=source_id)
+    return ApiResponse(
+        success=True,
+        message=f"Alerts cleared{' for source ' + source_id if source_id else ' across all sources'}",
+        data={"cleared": True},
+    )
+

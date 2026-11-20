@@ -142,6 +142,7 @@ class MetricsSummary(BaseModel):
     warning_sources: int = 0
     critical_sources: int = 0
     active_alert_count: int = 0
+    fleet_latency_avg: float = 0.0
     four_state_breakdown: Optional[Dict[str, int]] = Field(
         default=None,
         description="Section 4 Four-State Health: EXCELLENT, GOOD, FAIR, POOR counts"

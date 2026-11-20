@@ -1,30 +1,39 @@
 """
-Telemetry Data Service for SentinelOps AI Dashboard.
-Synchronized with Member 4's FastAPI Backend:
-- Submits failure-injected telemetry to POST /api/v1/telemetry
-- Polls latest metrics from GET /api/v1/metrics
-- Polls alerts from GET /api/v1/alerts
-- Seamlessly falls back to local simulation if backend is offline.
+Telemetry & Privacy Data Service for SentinelOps AI Dashboard (Phase 1 & Phase 2).
+Synchronized with Member 1's Collector & Privacy Engine and Member 4's FastAPI Backend:
+- Handles Multi-Server Infrastructure Monitoring (Phase 1)
+- Drives Privacy Redaction & Egress Audit Testing (Phase 2)
+- Integrates with LocalCollector and REST APIs
 """
 import random
 import time
 from datetime import datetime, timezone, timedelta
+from typing import Dict, Any, List, Tuple
 import pandas as pd
 import requests
 
 from shared.models import TelemetryPayload, BasicAlert
 from shared.constants import DEFAULT_SERVERS
 from dashboard.components.cards import calculate_overall_health, evaluate_metric_health
+from collector.collector import LocalCollector
+from collector.egress_audit import EgressAuditLogger, EgressAuditRecord
 
 
 class TelemetryDataService:
     def __init__(self, backend_url: str = "http://127.0.0.1:8000"):
         self.backend_url = backend_url
         self.active_scenario = "normal"
-        self.history = []  # sliding window of telemetry records
-        self.alerts = []
+        self.history: List[Dict[str, Any]] = []
+        self.alerts: List[Dict[str, Any]] = []
         self.backend_connected = False
+
+        # Phase 2 Collector & Privacy Engine instance
+        self.collector = LocalCollector(api_url=f"{self.backend_url}/api/v1/telemetry")
+        self.last_privacy_demo_result: Dict[str, Any] = {}
+
         self._init_mock_history()
+        # Seed an initial privacy demo record so Phase 2 tab immediately shows proof
+        self._init_privacy_baseline()
 
     def _init_mock_history(self):
         """Populates initial 20 points of healthy history for the 3 servers."""
@@ -35,33 +44,60 @@ class TelemetryDataService:
                 item = self._generate_healthy_point(s["source_id"], ts)
                 self.history.append(item)
 
+    def _init_privacy_baseline(self):
+        """Runs an initial privacy redaction demo to prime the audit state."""
+        try:
+            self.last_privacy_demo_result = self.collector.run_privacy_demo()
+        except Exception:
+            pass
+
     def _generate_healthy_point(self, source_id: str, ts: str = None) -> dict:
         if ts is None:
             ts = datetime.now(timezone.utc).isoformat()
+        
+        # Dynamic node-specific realistic baselines with subtle natural jitter
+        if source_id == "node_a81f":
+            # Primary Web/Application Server
+            c_val = round(random.uniform(24.0, 36.5), 1)
+            m_val = round(random.uniform(38.0, 48.5), 1)
+            d_val = round(random.uniform(48.0, 56.0), 1)
+            lat_val = round(random.uniform(11.0, 19.5), 1)
+        elif source_id == "node_b92c":
+            # PostgreSQL Database Master
+            c_val = round(random.uniform(28.0, 42.0), 1)
+            m_val = round(random.uniform(44.0, 54.0), 1)
+            d_val = round(random.uniform(58.0, 68.0), 1)
+            lat_val = round(random.uniform(14.0, 24.0), 1)
+        elif source_id == "node_c73d":
+            # API Gateway & Edge Ingress
+            c_val = round(random.uniform(16.0, 26.5), 1)
+            m_val = round(random.uniform(28.0, 36.5), 1)
+            d_val = round(random.uniform(30.0, 38.0), 1)
+            lat_val = round(random.uniform(6.5, 14.5), 1)
+        else:
+            c_val = round(random.uniform(20.0, 35.0), 1)
+            m_val = round(random.uniform(35.0, 50.0), 1)
+            d_val = round(random.uniform(40.0, 55.0), 1)
+            lat_val = round(random.uniform(10.0, 20.0), 1)
+
         return {
             "payload_id": f"evt_{random.randint(10000, 99999)}",
             "tenant_id": "tenant_demo",
             "source_id": source_id,
             "timestamp_utc": ts,
-            "cpu": round(random.uniform(22.0, 42.0), 1),
-            "memory": round(random.uniform(38.0, 55.0), 1),
-            "disk": round(random.uniform(45.0, 62.0), 1),
-            "latency_ms": round(random.uniform(18.0, 42.0), 1),
-            "packet_loss_pct": 0.0 if random.random() > 0.1 else 0.1,
-            "error_count": random.choice([0, 0, 0, 1]),
+            "cpu": c_val,
+            "memory": m_val,
+            "disk": d_val,
+            "latency_ms": lat_val,
+            "packet_loss_pct": round(random.uniform(0.0, 0.05), 2),
+            "error_count": 0 if random.random() > 0.05 else 1,
             "failed_logins": 0,
             "collector_status": "online",
             "event_category": "normal_telemetry"
         }
 
     def set_scenario(self, scenario_name: str):
-        """
-        Switches current simulation scenario:
-        - 'normal': All 3 servers healthy
-        - 'spike_node_a': Severe CPU & RAM spike on node_a81f
-        - 'network_degrade_node_c': High latency and packet loss on node_c73d
-        - 'db_overload_node_b': DB overload and disk pressure on node_b92c
-        """
+        """Switches current simulation scenario for Phase 1 demo."""
         self.active_scenario = scenario_name
 
     def _generate_current_payloads(self) -> dict[str, dict]:
@@ -133,8 +169,6 @@ class TelemetryDataService:
         1. Submits scenario telemetry via POST /api/v1/telemetry
         2. Retrieves stored metrics from GET /api/v1/metrics
         3. Retrieves active alerts from GET /api/v1/alerts
-        If Backend is offline:
-        Smoothly runs in standalone engine mode.
         """
         generated = self._generate_current_payloads()
 
@@ -149,6 +183,13 @@ class TelemetryDataService:
         if backend_healthy:
             self.backend_connected = True
             try:
+                # If normal baseline is active, reset past threshold alerts from backend storage
+                if self.active_scenario == "normal":
+                    try:
+                        requests.delete(f"{self.backend_url}/api/v1/alerts", timeout=0.5)
+                    except Exception:
+                        pass
+
                 # 1. Forward scenario data to backend API
                 for payload in generated.values():
                     requests.post(f"{self.backend_url}/api/v1/telemetry", json=payload, timeout=0.5)
@@ -164,27 +205,32 @@ class TelemetryDataService:
                         self.history.append(rec)
 
                     # 3. Retrieve backend-generated alerts
-                    a_resp = requests.get(f"{self.backend_url}/api/v1/alerts", timeout=0.6)
-                    if a_resp.status_code == 200:
-                        a_body = a_resp.json()
-                        backend_alerts = a_body.get("data", []) if isinstance(a_body, dict) else a_body
-                        # Map backend alert fields
-                        formatted_alerts = []
-                        for ba in backend_alerts:
-                            formatted_alerts.append({
-                                "alert_id": ba.get("alert_id", "alt_0"),
-                                "source_id": ba.get("source_id", "node"),
-                                "metric": ba.get("alert_type", "METRIC"),
-                                "value": f"{ba.get('metric_value', '')}",
-                                "severity": ba.get("severity", "WARNING"),
-                                "message": ba.get("message", "Alert triggered")
-                            })
-                        self.alerts = formatted_alerts
+                    if self.active_scenario == "normal":
+                        self.alerts = []
+                    else:
+                        a_resp = requests.get(f"{self.backend_url}/api/v1/alerts", timeout=0.6)
+                        if a_resp.status_code == 200:
+                            a_body = a_resp.json()
+                            backend_alerts = a_body.get("data", []) if isinstance(a_body, dict) else a_body
+                            formatted_alerts = []
+                            for ba in backend_alerts:
+                                src = ba.get("source_id", "node")
+                                # Alert is considered ACTIVE only if this node is currently non-healthy
+                                node_data = latest_by_node.get(src)
+                                if node_data and calculate_overall_health(node_data) in ("POOR", "FAIR"):
+                                    formatted_alerts.append({
+                                        "alert_id": ba.get("alert_id", "alt_0"),
+                                        "source_id": src,
+                                        "metric": ba.get("alert_type", "METRIC"),
+                                        "value": f"{ba.get('metric_value', '')}",
+                                        "severity": ba.get("severity", "WARNING"),
+                                        "message": ba.get("message", "Alert triggered")
+                                    })
+                            self.alerts = formatted_alerts
 
                     self._trim_history()
                     return latest_by_node, self.alerts
             except Exception:
-                # In case of partial backend failure, fall through to local fallback
                 pass
 
         # Standalone Engine Fallback Mode
@@ -195,6 +241,34 @@ class TelemetryDataService:
         self._check_alerts(latest_by_node)
         self._trim_history()
         return latest_by_node, self.alerts
+
+    # --- PHASE 2: PRIVACY & EGRESS AUDIT METHODS ---
+
+    def run_privacy_test(self, scenario: str = "cpu_spike") -> Dict[str, Any]:
+        """
+        Executes a real-time Privacy Engine & Allow-List Policy test:
+        1. Generates a raw un-redacted event containing passwords, API keys, and real internal hostnames.
+        2. Pipes it through the PrivacyEngine and AllowListPolicy.
+        3. Captures the safe payload and logs an EgressAuditRecord.
+        """
+        raw_event = self.collector.generator.generate_raw_event_with_secrets(
+            server_index=random.choice([0, 1, 2]),
+            scenario=scenario
+        )
+        res = self.collector.process_and_send(raw_event)
+        latest_audit = self.collector.audit_logger.get_latest()
+
+        self.last_privacy_demo_result = {
+            "original_raw_event": raw_event,
+            "pipeline_result": res,
+            "egress_audit_proof": latest_audit.model_dump() if latest_audit else None,
+        }
+        return self.last_privacy_demo_result
+
+    def get_egress_audit_records(self, limit: int = 25) -> List[Dict[str, Any]]:
+        """Returns recent egress audit records for the Phase 2 audit trail table."""
+        records = self.collector.audit_logger.get_all(limit=limit)
+        return [r.model_dump() for r in records]
 
     def _trim_history(self):
         if len(self.history) > 120:

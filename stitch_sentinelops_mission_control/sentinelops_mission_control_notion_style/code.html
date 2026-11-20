@@ -1,0 +1,179 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
+.notion-hairline { border: 1px solid rgba(0, 0, 0, 0.08); }
+.notion-hairline-b { border-bottom: 1px solid rgba(0, 0, 0, 0.08); }
+.notion-hairline-r { border-right: 1px solid rgba(0, 0, 0, 0.08); }
+.notion-card { 
+  background-color: #FFFFFF; 
+  border: 1px solid rgba(0, 0, 0, 0.08); 
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03), 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+.notion-card-subtle {
+  background-color: #F9F9F8;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "primary": "#0075DE",
+          "primary-focus": "#0075DE",
+          "primary-pressed": "#005BAB",
+          "primary-tint": "#E6F3FE",
+          "body-secondary": "#615D59",
+          "muted": "#A39E98",
+          "surface-warm": "#F6F5F4",
+          "card-subtle": "#F9F9F8",
+          "hairline": "#DFDCD9",
+          "ink": "#000000",
+          "accent-red": "#E32D14",
+          "accent-coral": "#F64932",
+          "accent-amber": "#FFB110",
+          "accent-amber-deep": "#E89D01",
+          "accent-indigo": "#1313BA",
+          "chip-lavender": "#EADBFA",
+          "success": "#1AAE39",
+          "success-tint": "#D0F4D8",
+          "surface": "#FFFFFF",
+          "surface-container": "#F6F5F4",
+          "surface-container-low": "#F9F9F8",
+          "surface-container-high": "#EEEBE7",
+          "surface-container-lowest": "#FFFFFF",
+          "on-surface": "#000000",
+          "on-surface-variant": "#615D59",
+          "error": "#E32D14",
+          "error-container": "#FDF2F1",
+          "on-error-container": "#93000A"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "button": "0.5rem",
+          "panel": "0.75rem",
+          "full": "9999px"
+        },
+        "fontFamily": {
+          "sans": ["Inter", "system-ui", "-apple-system", "sans-serif"],
+          "serif": ["\"Source Serif 4\"", "Georgia", "serif"],
+          "mono": ["\"JetBrains Mono\"", "monospace"],
+          "body": ["Inter", "sans-serif"],
+          "quote": ["\"Source Serif 4\"", "Georgia", "serif"]
+        }
+      },
+    },
+  }</script></head><body class="bg-white font-sans text-[14px] text-ink antialiased" style="min-height: 100vh; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);"><!-- Notion App Top Navigation Header --><header class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md notion-hairline-b h-14"><div class="h-14 w-full px-5 flex items-center justify-between gap-4"><div class="flex items-center gap-6"><div class="flex items-center gap-2.5 select-none"><div class="w-8 h-8 rounded-[8px] bg-surface-warm flex items-center justify-center border border-black/10 shadow-xs"><img alt="SentinelOps Logo" class="h-5 w-5 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrBEBUgoO-A9JSkvg-GauxjnXNJkQ6besbFId3q-tA2DHFrxmYPCwm6PxLVDdDLX0mV9aIneuRL-qk2y17UJodJtQ79t8D1ixXuF4FAYSYnQoAMyiw-QdhV5CdrUWV2IAuNioeFD2OCbQRW0S8ac4MqMEJlPNjfxansZAezJLDZlIzKiveUR-qGbJjnYz_g18NS3-mNTBh_A5_YUlTdNmL-xv7u7p9cKKQf6A5l4_Kypbw"></div><div class="flex items-center gap-1.5"><span class="font-bold text-[15px] tracking-tight text-ink">SentinelOps AI</span><span class="text-muted text-[13px]">/</span><span class="text-body-secondary text-[13px] font-normal hidden sm:inline">Mission Control</span></div></div><div class="hidden xl:flex items-center gap-2 px-2.5 py-1 rounded-full bg-success-tint/60 text-[#0f5c22] text-[12px] font-mono border border-success/20"><span class="w-1.5 h-1.5 rounded-full bg-success animate-pulse"></span><span>localhost:8000 (FastAPI Synchronized)</span></div><div class="hidden 2xl:flex items-center gap-2 px-2.5 py-1 rounded-full bg-error-container text-accent-coral text-[12px] font-medium border border-accent-coral/20"><span class="w-1.5 h-1.5 rounded-full bg-accent-coral"></span><span>1 Server Degrading</span></div></div><!-- Notion-Style Centered Sub-Nav --><nav class="hidden lg:flex items-center gap-1 p-1 bg-surface-warm rounded-[8px] border border-black/5" data-active-classes="bg-white text-ink shadow-xs font-semibold rounded-[6px]"><a class="px-3 py-1 rounded-[6px] text-[13px] font-medium text-body-secondary hover:text-ink hover:bg-black/5 transition-all" data-path="overview-map" href="#">Overview</a><a class="px-3 py-1 rounded-[6px] text-[13px] font-medium text-body-secondary hover:text-ink hover:bg-black/5 transition-all" data-path="incidents" href="#">Incidents</a><a class="px-3 py-1 rounded-[6px] text-[13px] font-medium text-body-secondary hover:text-ink hover:bg-black/5 transition-all" data-path="ai-intelligence" href="#">AI Intelligence</a><a class="px-3 py-1 rounded-[6px] text-[13px] font-medium text-body-secondary hover:text-ink hover:bg-black/5 transition-all" data-path="privacy-center" href="#">Privacy Center</a><a class="px-3 py-1 rounded-[6px] text-[13px] font-medium text-body-secondary hover:text-ink hover:bg-black/5 transition-all" data-path="architecture-walkthrough" href="#">Architecture</a></nav><div class="flex items-center gap-3"><div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-card-subtle font-mono text-[12px] text-body-secondary border border-black/5"><span class="material-symbols-outlined text-[15px] text-muted">schedule</span><span id="system-telemetry-clock">23:59:14 UTC</span></div><div class="relative"><button class="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] bg-primary hover:bg-primary-pressed text-white text-[13px] font-medium transition-colors shadow-xs" type="button"><span class="material-symbols-outlined text-[16px]">play_arrow</span><span>Quick Simulation</span><span class="material-symbols-outlined text-[16px]">expand_more</span></button></div><div class="w-7 h-7 rounded-full bg-surface-warm border border-black/10 flex items-center justify-center text-body-secondary hover:text-ink cursor-pointer"><span class="material-symbols-outlined text-[16px]">person</span></div></div></div></header><!-- Notion Document Layout: Sidebar + Canvas --><aside class="fixed left-0 top-14 h-[calc(100vh-3.5rem)] w-64 bg-surface-warm notion-hairline-r z-40 flex flex-col justify-between p-4 overflow-y-auto"><div class="flex flex-col gap-6"><div class="flex items-center justify-between pb-3 notion-hairline-b"><div class="flex items-center gap-2"><span class="w-6 h-6 rounded-[6px] bg-white border border-black/10 flex items-center justify-center text-[13px]">🛡️</span><div><div class="text-[13px] font-bold text-ink leading-tight">SentinelOps AI</div><div class="text-[11px] text-muted font-medium">Autonomous Observability</div></div></div><span class="text-[10px] px-1.5 py-0.5 rounded bg-black/5 font-mono text-body-secondary">AIOPS</span></div><!-- Phase 1: Workload Simulator Controls --><div class="flex flex-col gap-2.5"><div><div class="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-muted font-semibold"><span>⚡</span><span>Workload Simulator</span></div><p class="text-[12px] text-body-secondary mt-0.5 font-normal leading-normal">Inject operational fault states into fleet nodes.</p></div><div class="flex flex-col gap-1.5" id="sidebar-scenario-radios"><label class="flex items-center gap-2.5 p-2 rounded-[8px] cursor-pointer transition-colors bg-white/70 hover:bg-white border border-black/5"><input class="w-3.5 h-3.5 text-primary accent-primary cursor-pointer" name="fleet_sim" onchange="setFleetScenario('normal')" type="radio" value="normal"><span class="w-2 h-2 rounded-full bg-success shrink-0"></span><span class="text-[12px] font-medium text-ink leading-snug">Normal Baseline (3 Healthy)</span></label><label class="flex items-center gap-2.5 p-2 rounded-[8px] cursor-pointer transition-colors bg-white/70 hover:bg-white border border-black/5"><input class="w-3.5 h-3.5 text-primary accent-primary cursor-pointer" name="fleet_sim" onchange="setFleetScenario('spike')" type="radio" value="spike"><span class="w-2 h-2 rounded-full bg-accent-amber shrink-0"></span><span class="text-[12px] font-medium text-ink leading-snug">CPU &amp; Mem Spike (node_a81f)</span></label><label class="flex items-center gap-2.5 p-2 rounded-[8px] cursor-pointer transition-colors bg-white/70 hover:bg-white border border-black/5"><input class="w-3.5 h-3.5 text-primary accent-primary cursor-pointer" name="fleet_sim" onchange="setFleetScenario('network')" type="radio" value="network"><span class="w-2 h-2 rounded-full bg-accent-coral shrink-0"></span><span class="text-[12px] font-medium text-ink leading-snug">Network Outage (node_c73d)</span></label><label class="flex items-center gap-2.5 p-2 rounded-[8px] cursor-pointer transition-colors bg-white border border-primary/40 shadow-xs"><input checked="" class="w-3.5 h-3.5 text-primary accent-primary cursor-pointer" name="fleet_sim" onchange="setFleetScenario('degraded')" type="radio" value="degraded"><span class="w-2 h-2 rounded-full bg-accent-coral animate-ping shrink-0"></span><span class="text-[12px] font-semibold text-ink leading-snug">Database Overload (node_b92c)</span></label></div><button class="w-full mt-1 flex items-center justify-center gap-2 py-2 px-3 rounded-[8px] bg-primary hover:bg-primary-pressed text-white text-[12px] font-medium shadow-xs transition-colors cursor-pointer" onclick="refreshFleetMetrics()" type="button"><span class="material-symbols-outlined text-[15px]">sync</span><span>Refresh Fleet Metrics</span></button></div><!-- Phase 2: Privacy Engine Tester --><div class="flex flex-col gap-2.5 pt-3 notion-hairline-t"><div><div class="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-muted font-semibold"><span class="material-symbols-outlined text-[14px] text-primary">verified_user</span><span>Privacy Engine Tester</span></div><p class="text-[12px] text-body-secondary mt-0.5 font-normal leading-normal">Zero-knowledge PII token redaction.</p></div><div class="relative"><select class="w-full py-1.5 px-2.5 pr-7 rounded-[8px] bg-white border border-black/10 text-[12px] text-ink font-medium appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20" id="privacy-payload-selector" onchange="handlePrivacySelection(this.value)"><option value="cascade">Cascade Outage with DB Secrets &amp; PII</option><option value="normal">Normal Telemetry Stream</option><option value="token">API Bearer Token Leak</option><option value="auth">Authentication Failure Dump</option></select><span class="material-symbols-outlined absolute right-2 top-2 text-[16px] text-muted pointer-events-none">expand_more</span></div><button class="w-full flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-[8px] bg-primary-tint hover:bg-[#d8ebfd] text-primary-pressed text-[12px] font-medium transition-colors cursor-pointer" onclick="testPrivacyRedaction()" type="button"><span class="material-symbols-outlined text-[15px]">bolt</span><span>Test Privacy Redaction</span></button></div></div><!-- Sidebar Footer --><div class="pt-3 notion-hairline-t flex flex-col gap-2"><div class="flex items-center gap-2 px-2.5 py-1.5 rounded-[8px] bg-success-tint/60 text-[#0f5c22] border border-success/20"><span class="w-2 h-2 rounded-full bg-success animate-pulse"></span><span class="font-mono text-[11px] font-semibold">FASTAPI 8000: SYNCHRONIZED</span></div><div class="text-[11px] font-mono text-muted">Tier 1: Customer VPC • Tier 2: SaaS Cloud</div></div></aside><!-- Main Content Area --><div class="pl-64"><main class="relative w-full pt-14 min-h-screen bg-white"><div class="max-w-[1360px] mx-auto px-6 lg:px-10 py-8 flex flex-col gap-8"><!-- Document Title & Notion Heading --><div class="flex flex-col gap-4"><div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-1"><div class="flex flex-col gap-1.5"><div class="flex flex-wrap items-center gap-3"><h1 class="text-[32px] md:text-[38px] font-extrabold text-ink tracking-tight leading-tight font-sans">SentinelOps AI</h1><span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-primary-tint text-primary-pressed font-mono text-[11px] font-semibold tracking-wide border border-primary/20 leading-none">TIER-2 AIOPS SAAS</span></div><p class="font-quote text-[16px] text-body-secondary italic leading-normal">Privacy-First Infrastructure Observability &amp; Autonomous Incident Intelligence</p></div><div class="flex flex-row md:flex-col items-center md:items-end justify-between gap-2 self-start md:self-auto shrink-0"><div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-error-container border border-accent-coral/20 shadow-xs"><span class="text-[11px] uppercase tracking-wider text-muted font-bold leading-none">STATUS</span><span class="w-2 h-2 rounded-full bg-accent-coral animate-ping shrink-0"></span><span class="font-mono text-[12px] font-bold text-accent-coral uppercase leading-none" id="badge-cluster-status">POOR</span></div><div class="text-[12px] font-mono text-muted tracking-tight">tenant_demo • us-east-1 • UTC</div></div></div><!-- Minimalist Segmented Underline Tabs --><div class="flex items-center gap-6 notion-hairline-b pt-1"><button class="flex items-center gap-2 pb-3 border-b-2 border-primary text-ink text-[14px] font-semibold transition-all" id="tab-phase1" onclick="switchMainTab('phase1')" type="button"><span class="material-symbols-outlined text-[18px] text-primary">laptop_chromebook</span><span>Fleet Infrastructure (Phase 1)</span></button><button class="flex items-center gap-2 pb-3 border-b-2 border-transparent text-body-secondary hover:text-ink text-[14px] font-medium transition-all" id="tab-phase2" onclick="switchMainTab('phase2')" type="button"><span class="material-symbols-outlined text-[18px] text-muted">shield</span><span>Privacy Engine &amp; Egress Proof (Phase 2)</span></button><button class="flex items-center gap-2 pb-3 border-b-2 border-transparent text-body-secondary hover:text-ink text-[14px] font-medium transition-all" id="tab-phase3" onclick="switchMainTab('phase3')" type="button"><span class="material-symbols-outlined text-[18px] text-muted">architecture</span><span>Two-Tier Architecture &amp; Global Design</span></button></div></div><!-- Notion Metric Cards: 4 Column Grid --><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="phase1-kpi-grid"><div class="p-5 rounded-[12px] notion-card flex flex-col justify-between gap-4 transition-all hover:border-black/20"><div class="flex items-center justify-between"><span class="text-[11px] uppercase font-bold tracking-wider text-muted leading-none">MONITORED NODES</span><span class="material-symbols-outlined text-[18px] text-muted shrink-0">dns</span></div><div class="flex items-baseline justify-between gap-3"><span class="text-[36px] font-extrabold text-ink tracking-tight font-sans leading-none" id="kpi-val-nodes">3</span><div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-success-tint/60 text-[#0f5c22] font-mono text-[11px] font-semibold leading-none shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-success animate-pulse shrink-0"></span><span>ONLINE</span></div></div></div><div class="p-5 rounded-[12px] notion-card flex flex-col justify-between gap-4 transition-all hover:border-black/20"><div class="flex items-center justify-between"><span class="text-[11px] uppercase font-bold tracking-wider text-muted leading-none">CLUSTER HEALTH</span><span class="material-symbols-outlined text-[18px] text-accent-coral shrink-0">error</span></div><div class="flex items-baseline"><span class="font-extrabold text-accent-coral tracking-tight font-sans leading-none text-[24px]" id="kpi-val-health">POOR</span></div></div><div class="p-5 rounded-[12px] notion-card flex flex-col justify-between gap-4 transition-all hover:border-black/20"><div class="flex items-center justify-between"><span class="text-[11px] uppercase font-bold tracking-wider text-muted leading-none">ACTIVE ALERTS</span><span class="material-symbols-outlined text-[18px] text-accent-coral shrink-0">notifications_active</span></div><div class="flex items-baseline gap-2"><span class="text-[36px] font-extrabold text-accent-coral tracking-tight font-sans leading-none" id="kpi-val-alerts">100</span><span class="text-[12px] text-muted font-medium font-mono shrink-0">(100 Crit)</span></div></div><div class="p-5 rounded-[12px] notion-card flex flex-col justify-between gap-4 transition-all hover:border-black/20"><div class="flex items-center justify-between"><span class="text-[11px] uppercase font-bold tracking-wider text-muted leading-none">FLEET LATENCY AVG</span><span class="material-symbols-outlined text-[18px] text-muted shrink-0">speed</span></div><div class="flex items-baseline gap-1.5"><span class="text-[36px] font-extrabold text-ink tracking-tight font-sans leading-none" id="kpi-val-latency">88.7</span><span class="text-[13px] text-muted font-mono font-medium shrink-0">ms</span></div></div></div><!-- Live Anomaly & Threshold Alerts Section --><div class="flex flex-col gap-3.5"><div class="flex flex-wrap items-center justify-between gap-2 pb-0.5"><div class="flex items-center gap-2"><span class="text-[14px] leading-none select-none">🚨</span><h2 class="text-[12px] uppercase tracking-wider text-muted font-bold font-sans leading-none">LIVE ANOMALY &amp; THRESHOLD ALERTS</h2></div><span class="text-[11px] text-muted font-mono leading-none tracking-tight">Stream: active (auto-evaluating)</span></div><div class="flex flex-col gap-2.5" id="alerts-container"><div class="p-4 rounded-[12px] notion-card hover:border-black/20 transition-all flex flex-col gap-2 relative border-l-4 border-l-accent-coral"><div class="flex flex-wrap items-center justify-between gap-2.5"><div class="flex flex-wrap items-center gap-2"><span class="w-2 h-2 rounded-full bg-accent-coral shrink-0"></span><span class="font-mono text-[13px] font-semibold text-ink leading-snug">CRITICAL • node_b92c — HIGH_ERROR_COUNT (20.0)</span><span class="inline-flex items-center px-2 py-0.5 rounded-full bg-chip-lavender text-[#5b21b6] font-mono text-[10px] font-semibold leading-none shrink-0">PostgreSQL</span></div><span class="font-mono text-[11px] text-muted uppercase tracking-wider shrink-0">UTC INGESTION</span></div><p class="text-[13px] text-body-secondary pl-4 leading-normal">Application error count at 20 exceeds threshold &gt;= 20</p></div><div class="p-4 rounded-[12px] notion-card hover:border-black/20 transition-all flex flex-col gap-2 relative border-l-4 border-l-accent-coral"><div class="flex flex-wrap items-center justify-between gap-2.5"><div class="flex flex-wrap items-center gap-2"><span class="w-2 h-2 rounded-full bg-accent-coral shrink-0"></span><span class="font-mono text-[13px] font-semibold text-ink leading-snug">CRITICAL • node_b92c — SECURITY_FAILED_LOGINS (14.0)</span><span class="inline-flex items-center px-2 py-0.5 rounded-full bg-accent-amber/20 text-[#854d0e] font-mono text-[10px] font-semibold leading-none shrink-0">Security Threat</span></div><span class="font-mono text-[11px] text-muted uppercase tracking-wider shrink-0">UTC INGESTION</span></div><p class="text-[13px] text-body-secondary pl-4 leading-normal">Security alert: 14 failed logins detected (threshold &gt;= 5)</p></div><div class="p-4 rounded-[12px] notion-card hover:border-black/20 transition-all flex flex-col gap-2 relative border-l-4 border-l-accent-coral"><div class="flex flex-wrap items-center justify-between gap-2.5"><div class="flex flex-wrap items-center gap-2"><span class="w-2 h-2 rounded-full bg-accent-coral shrink-0"></span><span class="font-mono text-[13px] font-semibold text-ink leading-snug">CRITICAL • node_b92c — HIGH_DISK (98.0)</span><span class="inline-flex items-center px-2 py-0.5 rounded-full bg-error-container text-accent-coral font-mono text-[10px] font-semibold leading-none shrink-0">Disk Vol</span></div><span class="font-mono text-[11px] text-muted uppercase tracking-wider shrink-0">UTC INGESTION</span></div><p class="text-[13px] text-body-secondary pl-4 leading-normal">Disk utilization at 98.0% exceeds threshold of 90.0%</p></div><div class="p-4 rounded-[12px] notion-card hover:border-black/20 transition-all flex flex-col gap-2 relative border-l-4 border-l-accent-coral"><div class="flex flex-wrap items-center justify-between gap-2.5"><div class="flex flex-wrap items-center gap-2"><span class="w-2 h-2 rounded-full bg-accent-coral shrink-0"></span><span class="font-mono text-[13px] font-semibold text-ink leading-snug">CRITICAL • node_c73d — HIGH_ERROR_COUNT (25.0)</span><span class="inline-flex items-center px-2 py-0.5 rounded-full bg-primary-tint text-primary-pressed font-mono text-[10px] font-semibold leading-none shrink-0">Edge Gateway</span></div><span class="font-mono text-[11px] text-muted uppercase tracking-wider shrink-0">UTC INGESTION</span></div><p class="text-[13px] text-body-secondary pl-4 leading-normal">Application error count at 25 exceeds threshold &gt;= 20</p></div></div></div></div></main></div><!-- CLIENT-SIDE INTERACTIVITY CONTROLLER --><script>
+const nodeData = {
+  'node_a81f': {
+    name: 'node_a81f',
+    role: 'Production Application Cluster',
+    icon: 'web',
+    status: 'Nominal',
+    cpu: '28.1%',
+    mem: '42.0%',
+    lat: '14 ms'
+  },
+  'node_b92c': {
+    name: 'node_b92c',
+    role: 'PostgreSQL Primary Cluster',
+    icon: 'database',
+    status: 'Degrading',
+    cpu: '74.2%',
+    mem: '91.4%',
+    lat: '182 ms'
+  },
+  'node_c73d': {
+    name: 'node_c73d',
+    role: 'Edge API Gateway',
+    icon: 'router',
+    status: 'Nominal',
+    cpu: '19.4%',
+    mem: '31.2%',
+    lat: '8 ms'
+  }
+};
+
+function setFleetScenario(scenario) {
+  const healthEl = document.getElementById('kpi-val-health');
+  const badgeStatus = document.getElementById('badge-cluster-status');
+  const alertsEl = document.getElementById('kpi-val-alerts');
+  const latencyEl = document.getElementById('kpi-val-latency');
+  const alertsContainer = document.getElementById('alerts-container');
+  if (!healthEl) return;
+  
+  if (scenario === 'normal') {
+    healthEl.innerText = 'NOMINAL';
+    healthEl.className = 'text-[36px] font-extrabold text-success tracking-tight font-sans leading-none';
+    badgeStatus.innerText = 'OPTIMAL';
+    badgeStatus.className = 'font-mono text-[12px] font-bold text-success uppercase';
+    alertsEl.innerText = '0';
+    alertsEl.className = 'text-[36px] font-extrabold text-success tracking-tight font-sans leading-none';
+    latencyEl.innerText = '14.2';
+    alertsContainer.innerHTML = '<div class="p-4 rounded-[12px] notion-card border-l-4 border-l-success flex items-center justify-between"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-success"></span><span class="text-[13px] font-mono text-success font-medium">All fleet nodes operating within nominal thresholds. No active anomalies.</span></div><span class="font-mono text-[11px] text-muted">SYNCED</span></div>';
+  } else if (scenario === 'spike') {
+    healthEl.innerText = 'DEGRADED';
+    healthEl.className = 'text-[36px] font-extrabold text-accent-amber-deep tracking-tight font-sans leading-none';
+    badgeStatus.innerText = 'DEGRADED';
+    badgeStatus.className = 'font-mono text-[12px] font-bold text-accent-amber-deep uppercase';
+    alertsEl.innerText = '14';
+    alertsEl.className = 'text-[36px] font-extrabold text-accent-amber-deep tracking-tight font-sans leading-none';
+    latencyEl.innerText = '64.5';
+    alertsContainer.innerHTML = '<div class="p-4 rounded-[12px] notion-card border-l-4 border-l-accent-amber flex flex-col gap-1.5"><div class="flex justify-between items-center"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-accent-amber shrink-0"></span><span class="font-mono font-semibold text-[13px] text-ink">WARNING • node_a81f — CPU_UTILIZATION_HIGH (92.4%)</span></div><span class="font-mono text-[11px] text-muted">UTC INGESTION</span></div><p class="text-[13px] text-body-secondary pl-4">Worker CPU sustained &gt; 90% for 3 evaluation windows</p></div>';
+  } else if (scenario === 'network') {
+    healthEl.innerText = 'DEGRADED';
+    healthEl.className = 'text-[36px] font-extrabold text-accent-amber-deep tracking-tight font-sans leading-none';
+    badgeStatus.innerText = 'PARTITION';
+    badgeStatus.className = 'font-mono text-[12px] font-bold text-accent-amber-deep uppercase';
+    alertsEl.innerText = '32';
+    alertsEl.className = 'text-[36px] font-extrabold text-accent-amber-deep tracking-tight font-sans leading-none';
+    latencyEl.innerText = '210.8';
+    alertsContainer.innerHTML = '<div class="p-4 rounded-[12px] notion-card border-l-4 border-l-accent-amber flex flex-col gap-1.5"><div class="flex justify-between items-center"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-accent-amber shrink-0"></span><span class="font-mono font-semibold text-[13px] text-ink">WARNING • node_c73d — NETWORK_PACKET_DROP (18.2%)</span></div><span class="font-mono text-[11px] text-muted">UTC INGESTION</span></div><p class="text-[13px] text-body-secondary pl-4">Edge ingress packet drop rate elevated across us-east transit gateway</p></div>';
+  } else {
+    healthEl.innerText = 'POOR';
+    healthEl.className = 'text-[36px] font-extrabold text-accent-coral tracking-tight font-sans leading-none';
+    badgeStatus.innerText = 'POOR';
+    badgeStatus.className = 'font-mono text-[12px] font-bold text-accent-coral uppercase';
+    alertsEl.innerText = '100';
+    alertsEl.className = 'text-[36px] font-extrabold text-accent-coral tracking-tight font-sans leading-none';
+    latencyEl.innerText = '88.7';
+    alertsContainer.innerHTML = '<div class="p-4 rounded-[12px] notion-card hover:border-black/20 transition-all flex flex-col gap-1.5 relative border-l-4 border-l-accent-coral"><div class="flex flex-wrap items-center justify-between gap-2"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-accent-coral shrink-0"></span><span class="font-mono text-[13px] font-semibold text-ink">CRITICAL • node_b92c — HIGH_ERROR_COUNT (20.0)</span><span class="px-2 py-0.5 rounded-full bg-chip-lavender text-[#5b21b6] font-mono text-[10px] font-semibold">PostgreSQL</span></div><span class="font-mono text-[11px] text-muted uppercase">UTC INGESTION</span></div><p class="text-[13px] text-body-secondary pl-4">Application error count at 20 exceeds threshold &gt;= 20</p></div><div class="p-4 rounded-[12px] notion-card hover:border-black/20 transition-all flex flex-col gap-1.5 relative border-l-4 border-l-accent-coral"><div class="flex flex-wrap items-center justify-between gap-2"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-accent-coral shrink-0"></span><span class="font-mono text-[13px] font-semibold text-ink">CRITICAL • node_b92c — SECURITY_FAILED_LOGINS (14.0)</span><span class="px-2 py-0.5 rounded-full bg-accent-amber/20 text-[#854d0e] font-mono text-[10px] font-semibold">Security Threat</span></div><span class="font-mono text-[11px] text-muted uppercase">UTC INGESTION</span></div><p class="text-[13px] text-body-secondary pl-4">Security alert: 14 failed logins detected (threshold &gt;= 5)</p></div><div class="p-4 rounded-[12px] notion-card hover:border-black/20 transition-all flex flex-col gap-1.5 relative border-l-4 border-l-accent-coral"><div class="flex flex-wrap items-center justify-between gap-2"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-accent-coral shrink-0"></span><span class="font-mono text-[13px] font-semibold text-ink">CRITICAL • node_b92c — HIGH_DISK (98.0)</span><span class="px-2 py-0.5 rounded-full bg-error-container text-accent-coral font-mono text-[10px] font-semibold">Disk Vol</span></div><span class="font-mono text-[11px] text-muted uppercase">UTC INGESTION</span></div><p class="text-[13px] text-body-secondary pl-4">Disk utilization at 98.0% exceeds threshold of 90.0%</p></div><div class="p-4 rounded-[12px] notion-card hover:border-black/20 transition-all flex flex-col gap-1.5 relative border-l-4 border-l-accent-coral"><div class="flex flex-wrap items-center justify-between gap-2"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-accent-coral shrink-0"></span><span class="font-mono text-[13px] font-semibold text-ink">CRITICAL • node_c73d — HIGH_ERROR_COUNT (25.0)</span><span class="px-2 py-0.5 rounded-full bg-primary-tint text-primary-pressed font-mono text-[10px] font-semibold">Edge Gateway</span></div><span class="font-mono text-[11px] text-muted uppercase">UTC INGESTION</span></div><p class="text-[13px] text-body-secondary pl-4">Application error count at 25 exceeds threshold &gt;= 20</p></div>';
+  }
+}
+
+function refreshFleetMetrics() {
+  const btn = event.currentTarget;
+  const origText = btn.innerHTML;
+  btn.innerHTML = '<span class="material-symbols-outlined text-[15px] animate-spin">sync</span><span>Syncing Fleet...</span>';
+  setTimeout(() => {
+    btn.innerHTML = origText;
+  }, 450);
+}
+
+function switchMainTab(tab) {
+  const tabs = ['tab-phase1', 'tab-phase2', 'tab-phase3'];
+  tabs.forEach(t => {
+    const el = document.getElementById(t);
+    if (el) {
+      el.className = 'flex items-center gap-2 pb-3 border-b-2 border-transparent text-body-secondary hover:text-ink text-[14px] font-medium transition-all';
+      const icon = el.querySelector('.material-symbols-outlined');
+      if (icon) icon.className = 'material-symbols-outlined text-[18px] text-muted';
+    }
+  });
+  const active = document.getElementById('tab-' + tab);
+  if (active) {
+    active.className = 'flex items-center gap-2 pb-3 border-b-2 border-primary text-ink text-[14px] font-semibold transition-all';
+    const activeIcon = active.querySelector('.material-symbols-outlined');
+    if (activeIcon) activeIcon.className = 'material-symbols-outlined text-[18px] text-primary';
+  }
+}
+
+function testPrivacyRedaction() {
+  const sel = document.getElementById('privacy-payload-selector');
+  const val = sel ? sel.value : 'payload';
+  alert('Notion Privacy Engine Verified: Zero-Knowledge redaction active. Payload "' + val + '" secured before egress.');
+}
+
+function handlePrivacySelection(val) {
+  // hook for payload switch
+}
+</script>
+
+</body></html>
