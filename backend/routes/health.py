@@ -58,6 +58,22 @@ async def health_check() -> HealthResponse:
 
 
 @router.get(
+    "/api/v1/metrics",
+    response_model=ApiResponse,
+    summary="Fleet Latest Server Metrics",
+    description="Return the latest telemetry event for each monitored server.",
+)
+async def fleet_latest_metrics() -> ApiResponse:
+    latest_dict = storage.get_latest_per_source()
+    data = [payload.model_dump(mode="json") for payload in latest_dict.values()]
+    return ApiResponse(
+        success=True,
+        message=f"Retrieved latest metrics for {len(data)} servers",
+        data=data,
+    )
+
+
+@router.get(
     "/api/v1/metrics/summary",
     response_model=ApiResponse,
     summary="Fleet Metrics & Health Summary",

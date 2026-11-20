@@ -229,4 +229,23 @@ def test_metrics_summary():
     assert data["warning_sources"] == 1
     assert data["critical_sources"] == 1
     assert data["active_alert_count"] == 1  # 1 critical CPU alert from node_crit
+    assert data["four_state_breakdown"]["POOR"] == 1
+
+
+# 15. Fleet latest metrics endpoint returns latest event per source
+def test_fleet_latest_metrics():
+    client.post("/api/v1/telemetry", json=make_valid_payload(payload_id="e1", source_id="node_a", cpu=30.0))
+    client.post("/api/v1/telemetry", json=make_valid_payload(payload_id="e2", source_id="node_a", cpu=40.0))
+    client.post("/api/v1/telemetry", json=make_valid_payload(payload_id="e3", source_id="node_b", cpu=55.0))
+
+    response = client.get("/api/v1/metrics")
+    assert response.status_code == 200
+    json_data = response.json()
+    assert json_data["success"] is True
+    records = json_data["data"]
+    assert len(records) == 2  # node_a and node_b
+
+    node_a_rec = next(r for r in records if r["source_id"] == "node_a")
+    assert node_a_rec["cpu"] == 40.0  # Latest for node_a
+
 
