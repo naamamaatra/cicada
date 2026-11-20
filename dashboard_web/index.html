@@ -1561,15 +1561,21 @@
         <!-- TAB 3: DATABASE INCIDENTS -->
         <div id="saas-tab-incidents" class="saas-tab-pane hidden space-y-6">
           <div class="p-6 rounded-2xl notion-card flex flex-col gap-4">
-            <div class="flex items-center justify-between pb-3 border-b border-black/5">
+            <div class="flex items-center justify-between pb-3 border-b border-black/5 flex-wrap gap-2">
               <div>
                 <h3 class="font-bold text-[16px] text-ink">Correlated Tenant Incidents (SQLite Backing)</h3>
                 <p class="text-[12px] text-body-secondary mt-0.5">Persistent incident records with state machine: Open → Investigating → Resolved → Dismissed.</p>
               </div>
-              <button onclick="saasFetchIncidents()" class="text-[12px] text-primary hover:underline flex items-center gap-1 cursor-pointer">
-                <span class="material-symbols-outlined text-[15px]">refresh</span>
-                <span>Refresh</span>
-              </button>
+              <div class="flex items-center gap-2.5">
+                <button onclick="saasSimulateIncident()" id="saas-btn-trigger-incident" class="px-3.5 py-1.5 rounded-lg bg-accent-coral/10 hover:bg-accent-coral/20 text-accent-coral text-[12px] font-bold border border-accent-coral/30 flex items-center gap-1.5 transition-all shadow-xs cursor-pointer">
+                  <span class="material-symbols-outlined text-[16px]">warning</span>
+                  <span>Simulate Fault Telemetry</span>
+                </button>
+                <button onclick="saasFetchIncidents()" class="text-[12px] text-primary hover:underline flex items-center gap-1 cursor-pointer">
+                  <span class="material-symbols-outlined text-[15px]">refresh</span>
+                  <span>Refresh</span>
+                </button>
+              </div>
             </div>
 
             <div id="saas-incidents-container" class="space-y-3">
@@ -3308,31 +3314,40 @@
 
         if (res.ok) {
           const incidents = await res.json();
+          const openCount = incidents.filter(i => i.status !== 'resolved' && i.status !== 'dismissed').length;
+          const ovIncEl = document.getElementById('saas-ov-incidents');
+          if (ovIncEl) ovIncEl.innerText = openCount;
+
           if (incidents.length === 0) {
             container.innerHTML = `
-              <div class="p-6 rounded-xl bg-card-subtle text-center text-muted border border-black/5">
-                <span class="material-symbols-outlined text-[32px] text-success block mb-2">task_alt</span>
-                <span class="font-bold text-ink">Zero Active Incidents in Organization</span>
-                <p class="text-[12px] text-body-secondary mt-1">All telemetry is nominal within Section 14 SLA baselines.</p>
+              <div class="p-8 rounded-xl bg-card-subtle text-center text-muted border border-black/5 flex flex-col items-center justify-center">
+                <span class="material-symbols-outlined text-[36px] text-success block mb-2">task_alt</span>
+                <span class="font-bold text-ink text-[15px]">Zero Active Incidents in Organization</span>
+                <p class="text-[12px] text-body-secondary mt-1 max-w-[440px]">All telemetry is nominal within Section 14 SLA baselines. To test AI anomaly correlation and lifecycle triage, click below to inject an SLA fault event.</p>
+                <button onclick="saasSimulateIncident()" class="mt-4 px-4 py-2 rounded-lg bg-primary hover:bg-primary-pressed text-white text-[12px] font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer">
+                  <span class="material-symbols-outlined text-[16px]">bolt</span>
+                  <span>Simulate AI Anomaly Fault</span>
+                </button>
               </div>
             `;
           } else {
             container.innerHTML = incidents.map(inc => `
-              <div class="p-4 rounded-xl notion-card flex flex-col md:flex-row md:items-center justify-between gap-4 border-l-4 ${inc.status === 'resolved' ? 'border-l-success' : 'border-l-accent-coral'}">
-                <div>
+              <div class="p-4 rounded-xl notion-card flex flex-col md:flex-row md:items-start justify-between gap-4 border-l-4 ${inc.status === 'resolved' ? 'border-l-success' : 'border-l-accent-coral'}">
+                <div class="space-y-1">
                   <div class="flex items-center gap-2 text-[11px] font-mono">
                     <span class="px-2 py-0.5 rounded font-bold ${inc.status === 'resolved' ? 'bg-success-tint text-success' : 'bg-error-container text-accent-coral'}">
-                      ${inc.severity} • ${inc.id.substring(0, 8)}
+                      ${inc.severity} • ${inc.id.substring(0, 12)}
                     </span>
                     <span class="text-muted">Status: <strong class="text-ink uppercase">${inc.status}</strong></span>
+                    ${inc.source_id ? `<span class="text-muted">• Node: <code class="text-ink font-semibold">${inc.source_id}</code></span>` : ''}
                   </div>
-                  <h4 class="font-bold text-ink mt-1.5">${escapeHtml(inc.title)}</h4>
-                  <p class="text-[12px] text-body-secondary mt-0.5">${escapeHtml(inc.description || 'Automated anomaly correlated by AI engine.')}</p>
+                  <h4 class="font-bold text-ink text-[14px] mt-1.5">${escapeHtml(inc.title)}</h4>
+                  <div class="text-[12px] text-body-secondary font-mono bg-card-subtle p-3 rounded-lg border border-black/5 whitespace-pre-line mt-2">${escapeHtml(inc.description || 'Automated anomaly correlated by AI engine.')}</div>
                 </div>
-                <div class="flex items-center gap-2 shrink-0">
-                  ${inc.status !== 'investigating' ? `<button onclick="saasUpdateIncidentStatus('${inc.id}', 'investigating')" class="px-3 py-1.5 rounded-lg border border-black/10 text-ink text-[11px] font-semibold hover:bg-black/5">Investigate</button>` : ''}
-                  ${inc.status !== 'resolved' ? `<button onclick="saasUpdateIncidentStatus('${inc.id}', 'resolved')" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-[11px] font-semibold hover:bg-emerald-700 shadow-xs">Resolve ✓</button>` : ''}
-                  ${inc.status !== 'dismissed' ? `<button onclick="saasUpdateIncidentStatus('${inc.id}', 'dismissed')" class="px-2.5 py-1.5 rounded-lg text-muted text-[11px] hover:text-ink">Dismiss</button>` : ''}
+                <div class="flex items-center gap-2 shrink-0 pt-1">
+                  ${inc.status !== 'investigating' && inc.status !== 'resolved' ? `<button onclick="saasUpdateIncidentStatus('${inc.id}', 'investigating')" class="px-3 py-1.5 rounded-lg border border-black/10 text-ink text-[11px] font-semibold hover:bg-black/5 cursor-pointer">Investigate</button>` : ''}
+                  ${inc.status !== 'resolved' ? `<button onclick="saasUpdateIncidentStatus('${inc.id}', 'resolved')" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-[11px] font-semibold hover:bg-emerald-700 shadow-xs cursor-pointer">Resolve ✓</button>` : ''}
+                  ${inc.status !== 'dismissed' ? `<button onclick="saasUpdateIncidentStatus('${inc.id}', 'dismissed')" class="px-2.5 py-1.5 rounded-lg text-muted text-[11px] hover:text-ink cursor-pointer">Dismiss</button>` : ''}
                 </div>
               </div>
             `).join('');
@@ -3340,6 +3355,47 @@
         }
       } catch (err) {
         container.innerHTML = '<div class="p-3 text-center text-accent-coral text-[12px]">Failed to load incidents.</div>';
+      }
+    }
+
+    async function saasSimulateIncident() {
+      if (!saasState.token || !saasState.activeOrg) {
+        notify('Please sign in first to simulate tenant incidents.', 'lock');
+        return;
+      }
+
+      notify('Injecting SLA anomaly telemetry to trigger AI incident...', 'bolt');
+      try {
+        const payload = {
+          payload_id: 'evt_sim_' + Math.random().toString(36).substring(2, 9),
+          tenant_id: saasState.activeOrg.id,
+          source_id: 'node_a81f',
+          timestamp_utc: new Date().toISOString(),
+          cpu: 98.6,
+          memory: 93.4,
+          disk: 81.2,
+          latency_ms: 315.0,
+          packet_loss_pct: 7.8,
+          error_count: 24,
+          failed_logins: 0,
+          collector_status: 'online',
+          event_category: 'incident_spike'
+        };
+
+        const res = await fetch('/api/v1/telemetry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          notify('AI Incident Intelligence engine correlated fault and committed incident to database!', 'verified');
+          await saasFetchIncidents();
+        } else {
+          notify('Failed to ingest simulation event.', 'error');
+        }
+      } catch (err) {
+        notify('Network error triggering simulation.', 'wifi_off');
       }
     }
 
