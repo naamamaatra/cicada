@@ -1611,7 +1611,12 @@
               </div>
               <div>
                 <label class="block text-[11px] font-bold text-muted uppercase tracking-wider mb-1">Password</label>
-                <input id="saas-in-password" type="password" placeholder="Min. 8 characters" class="w-full px-3.5 py-2 rounded-lg border border-black/15 text-[13px] outline-none" value="password123" />
+                <div class="relative flex items-center">
+                  <input id="saas-in-password" type="password" placeholder="Min. 8 characters" class="w-full pl-3.5 pr-11 py-2 rounded-lg border border-black/15 text-[13px] outline-none focus:border-primary transition-colors" value="password123" />
+                  <button type="button" onclick="saasTogglePasswordVisibility()" id="saas-pwd-toggle-btn" class="absolute right-2 px-1.5 py-1 text-muted hover:text-ink transition-colors flex items-center justify-center cursor-pointer rounded" title="Toggle password visibility" aria-label="Toggle password visibility">
+                    <span id="saas-pwd-toggle-icon" class="material-symbols-outlined text-[19px] select-none">visibility</span>
+                  </button>
+                </div>
               </div>
 
               <button onclick="saasSubmitAuth()" id="saas-auth-submit-btn" class="w-full py-2.5 rounded-lg bg-primary hover:bg-primary-pressed text-white text-[13px] font-semibold transition-all shadow-xs mt-2 cursor-pointer">
@@ -2955,6 +2960,24 @@
         btnLog.className = 'py-1.5 rounded-md bg-white text-ink shadow-xs transition-all cursor-pointer';
         btnReg.className = 'py-1.5 rounded-md text-muted hover:text-ink transition-all cursor-pointer';
         submitBtn.innerText = 'Sign In to Workspace';
+      }
+    }
+
+    function saasTogglePasswordVisibility() {
+      const pwdInput = document.getElementById('saas-in-password');
+      const icon = document.getElementById('saas-pwd-toggle-icon');
+      if (!pwdInput || !icon) return;
+
+      if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+        icon.innerText = 'visibility_off';
+        icon.classList.add('text-primary');
+        icon.classList.remove('text-muted');
+      } else {
+        pwdInput.type = 'password';
+        icon.innerText = 'visibility';
+        icon.classList.remove('text-primary');
+        icon.classList.add('text-muted');
       }
     }
 
