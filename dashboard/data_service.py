@@ -54,17 +54,43 @@ class TelemetryDataService:
     def _generate_healthy_point(self, source_id: str, ts: str = None) -> dict:
         if ts is None:
             ts = datetime.now(timezone.utc).isoformat()
+        
+        # Dynamic node-specific realistic baselines with subtle natural jitter
+        if source_id == "node_a81f":
+            # Primary Web/Application Server
+            c_val = round(random.uniform(24.0, 36.5), 1)
+            m_val = round(random.uniform(38.0, 48.5), 1)
+            d_val = round(random.uniform(48.0, 56.0), 1)
+            lat_val = round(random.uniform(11.0, 19.5), 1)
+        elif source_id == "node_b92c":
+            # PostgreSQL Database Master
+            c_val = round(random.uniform(28.0, 42.0), 1)
+            m_val = round(random.uniform(44.0, 54.0), 1)
+            d_val = round(random.uniform(58.0, 68.0), 1)
+            lat_val = round(random.uniform(14.0, 24.0), 1)
+        elif source_id == "node_c73d":
+            # API Gateway & Edge Ingress
+            c_val = round(random.uniform(16.0, 26.5), 1)
+            m_val = round(random.uniform(28.0, 36.5), 1)
+            d_val = round(random.uniform(30.0, 38.0), 1)
+            lat_val = round(random.uniform(6.5, 14.5), 1)
+        else:
+            c_val = round(random.uniform(20.0, 35.0), 1)
+            m_val = round(random.uniform(35.0, 50.0), 1)
+            d_val = round(random.uniform(40.0, 55.0), 1)
+            lat_val = round(random.uniform(10.0, 20.0), 1)
+
         return {
             "payload_id": f"evt_{random.randint(10000, 99999)}",
             "tenant_id": "tenant_demo",
             "source_id": source_id,
             "timestamp_utc": ts,
-            "cpu": round(random.uniform(22.0, 42.0), 1),
-            "memory": round(random.uniform(38.0, 55.0), 1),
-            "disk": round(random.uniform(45.0, 62.0), 1),
-            "latency_ms": round(random.uniform(18.0, 42.0), 1),
-            "packet_loss_pct": 0.0 if random.random() > 0.1 else 0.1,
-            "error_count": random.choice([0, 0, 0, 1]),
+            "cpu": c_val,
+            "memory": m_val,
+            "disk": d_val,
+            "latency_ms": lat_val,
+            "packet_loss_pct": round(random.uniform(0.0, 0.05), 2),
+            "error_count": 0 if random.random() > 0.05 else 1,
             "failed_logins": 0,
             "collector_status": "online",
             "event_category": "normal_telemetry"
@@ -157,6 +183,13 @@ class TelemetryDataService:
         if backend_healthy:
             self.backend_connected = True
             try:
+                # If normal baseline is active, reset past threshold alerts from backend storage
+                if self.active_scenario == "normal":
+                    try:
+                        requests.delete(f"{self.backend_url}/api/v1/alerts", timeout=0.5)
+                    except Exception:
+                        pass
+
                 # 1. Forward scenario data to backend API
                 for payload in generated.values():
                     requests.post(f"{self.backend_url}/api/v1/telemetry", json=payload, timeout=0.5)
@@ -172,21 +205,28 @@ class TelemetryDataService:
                         self.history.append(rec)
 
                     # 3. Retrieve backend-generated alerts
-                    a_resp = requests.get(f"{self.backend_url}/api/v1/alerts", timeout=0.6)
-                    if a_resp.status_code == 200:
-                        a_body = a_resp.json()
-                        backend_alerts = a_body.get("data", []) if isinstance(a_body, dict) else a_body
-                        formatted_alerts = []
-                        for ba in backend_alerts:
-                            formatted_alerts.append({
-                                "alert_id": ba.get("alert_id", "alt_0"),
-                                "source_id": ba.get("source_id", "node"),
-                                "metric": ba.get("alert_type", "METRIC"),
-                                "value": f"{ba.get('metric_value', '')}",
-                                "severity": ba.get("severity", "WARNING"),
-                                "message": ba.get("message", "Alert triggered")
-                            })
-                        self.alerts = formatted_alerts
+                    if self.active_scenario == "normal":
+                        self.alerts = []
+                    else:
+                        a_resp = requests.get(f"{self.backend_url}/api/v1/alerts", timeout=0.6)
+                        if a_resp.status_code == 200:
+                            a_body = a_resp.json()
+                            backend_alerts = a_body.get("data", []) if isinstance(a_body, dict) else a_body
+                            formatted_alerts = []
+                            for ba in backend_alerts:
+                                src = ba.get("source_id", "node")
+                                # Alert is considered ACTIVE only if this node is currently non-healthy
+                                node_data = latest_by_node.get(src)
+                                if node_data and calculate_overall_health(node_data) in ("POOR", "FAIR"):
+                                    formatted_alerts.append({
+                                        "alert_id": ba.get("alert_id", "alt_0"),
+                                        "source_id": src,
+                                        "metric": ba.get("alert_type", "METRIC"),
+                                        "value": f"{ba.get('metric_value', '')}",
+                                        "severity": ba.get("severity", "WARNING"),
+                                        "message": ba.get("message", "Alert triggered")
+                                    })
+                            self.alerts = formatted_alerts
 
                     self._trim_history()
                     return latest_by_node, self.alerts

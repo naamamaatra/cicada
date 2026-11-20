@@ -253,6 +253,12 @@ def calculate_metrics_summary(storage: InMemoryStorage) -> MetricsSummary:
         four_state = classify_four_state_health(payload)
         four_state_counts[four_state] = four_state_counts.get(four_state, 0) + 1
 
+    fleet_latency_avg = (
+        round(sum(p.latency_ms for p in latest_per_source.values()) / total_sources, 1)
+        if total_sources > 0
+        else 0.0
+    )
+
     return MetricsSummary(
         total_sources=total_sources,
         total_telemetry_events=total_events,
@@ -260,6 +266,7 @@ def calculate_metrics_summary(storage: InMemoryStorage) -> MetricsSummary:
         warning_sources=warning_count,
         critical_sources=critical_count,
         active_alert_count=active_alerts,
+        fleet_latency_avg=fleet_latency_avg,
         four_state_breakdown=four_state_counts,
     )
 

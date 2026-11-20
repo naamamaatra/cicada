@@ -1553,38 +1553,103 @@
       document.getElementById('target-node-role').innerText = scn.targetRole;
       document.getElementById('target-node-initial').innerText = scn.targetNode.includes('a81f') ? 'A' : (scn.targetNode.includes('b92c') ? 'B' : 'C');
 
-      // Update Metrics and Bars
-      document.getElementById('bar-val-cpu').innerText = scn.cpu.toFixed(1) + '%';
-      document.getElementById('bar-fill-cpu').style.width = Math.min(100, scn.cpu) + '%';
-      document.getElementById('bar-fill-cpu').className = 'h-full transition-all duration-500 ' + (scn.cpu > 90 ? 'bg-accent-coral' : 'bg-success');
+      // Request dynamic, realistic telemetry from backend simulate endpoint
+      let targetCpu = scn.cpu;
+      let targetMem = scn.mem;
+      let targetLat = scn.lat;
+      let targetLoss = scn.loss;
+      let targetDisk = scn.disk;
+      let targetErrors = scn.errors;
+      let targetLogins = scn.logins;
+      let fleetLatAvg = scn.lat;
+      let alertsList = scn.alerts;
 
-      document.getElementById('bar-val-mem').innerText = scn.mem.toFixed(1) + '%';
-      document.getElementById('bar-fill-mem').style.width = Math.min(100, scn.mem) + '%';
-      document.getElementById('bar-fill-mem').className = 'h-full transition-all duration-500 ' + (scn.mem > 90 ? 'bg-accent-coral' : 'bg-success');
+      try {
+        const simRes = await fetch('/api/v1/telemetry/simulate/' + key, { method: 'POST' });
+        if (simRes.ok) {
+          const simBody = await simRes.json();
+          if (simBody.data) {
+            fleetLatAvg = simBody.data.fleet_latency_avg;
+            const sources = simBody.data.sources || [];
+            const tgt = sources.find(s => s.source_id === scn.targetNode);
+            if (tgt) {
+              targetCpu = tgt.cpu;
+              targetMem = tgt.memory;
+              targetLat = tgt.latency_ms;
+              targetLoss = tgt.packet_loss_pct;
+              targetDisk = tgt.disk;
+              targetErrors = tgt.error_count;
+              targetLogins = tgt.failed_logins;
+            }
+            // Update the mini-cards for all 3 nodes with live data
+            sources.forEach(s => {
+              const miniCpu = document.getElementById('mini-cpu-' + s.source_id);
+              const miniMem = document.getElementById('mini-mem-' + s.source_id);
+              const miniLat = document.getElementById('mini-lat-' + s.source_id);
+              const miniBadge = document.getElementById('mini-badge-' + s.source_id);
+              const miniCard = document.getElementById('mini-card-' + s.source_id);
+              if (miniCpu) miniCpu.innerText = s.cpu + '%';
+              if (miniMem) miniMem.innerText = s.memory + '%';
+              if (miniLat) miniLat.innerText = s.latency_ms + 'ms';
+              if (miniBadge && miniCard) {
+                const isCrit = (s.cpu > 90 || s.latency_ms > 250 || s.packet_loss_pct > 5 || s.disk > 95);
+                miniBadge.innerText = isCrit ? 'CRIT' : 'OK';
+                miniBadge.className = isCrit ? 'text-[10px] font-mono font-bold text-accent-coral' : 'text-[10px] font-mono font-bold text-success';
+                miniCard.className = isCrit ? 'p-4 rounded-xl notion-card flex flex-col justify-between gap-3 border-t-2 border-t-accent-coral' : 'p-4 rounded-xl notion-card flex flex-col justify-between gap-3 border-t-2 border-t-success';
+              }
+            });
+            if (simBody.data.alerts && simBody.data.alerts.length > 0) {
+              alertsList = simBody.data.alerts.map(a => ({
+                type: `${a.alert_type} (${a.metric_value})`,
+                sev: a.severity,
+                msg: a.message
+              }));
+            } else if (key === 'normal') {
+              alertsList = [];
+            }
+          }
+        }
+      } catch (err) {
+        // Fallback: apply natural organic jitter so values never stay static
+        const jitter = (Math.random() * 3.6 - 1.8);
+        targetCpu = +(scn.cpu + jitter).toFixed(1);
+        targetMem = +(scn.mem + (Math.random() * 2.4 - 1.2)).toFixed(1);
+        targetLat = +(scn.lat + (Math.random() * 4.0 - 2.0)).toFixed(1);
+        fleetLatAvg = targetLat;
+      }
 
-      document.getElementById('bar-val-lat').innerText = scn.lat.toFixed(1) + ' ms';
-      document.getElementById('bar-fill-lat').style.width = Math.min(100, (scn.lat / 450) * 100) + '%';
-      document.getElementById('bar-fill-lat').className = 'h-full transition-all duration-500 ' + (scn.lat > 250 ? 'bg-accent-coral' : 'bg-success');
+      // Update Metrics and Bars with dynamically varied numbers
+      document.getElementById('bar-val-cpu').innerText = Number(targetCpu).toFixed(1) + '%';
+      document.getElementById('bar-fill-cpu').style.width = Math.min(100, targetCpu) + '%';
+      document.getElementById('bar-fill-cpu').className = 'h-full transition-all duration-500 ' + (targetCpu > 90 ? 'bg-accent-coral' : 'bg-success');
 
-      document.getElementById('bar-val-loss').innerText = scn.loss.toFixed(1) + '%';
-      document.getElementById('bar-fill-loss').style.width = Math.min(100, scn.loss * 5) + '%';
-      document.getElementById('bar-fill-loss').className = 'h-full transition-all duration-500 ' + (scn.loss > 5 ? 'bg-accent-coral' : 'bg-success');
+      document.getElementById('bar-val-mem').innerText = Number(targetMem).toFixed(1) + '%';
+      document.getElementById('bar-fill-mem').style.width = Math.min(100, targetMem) + '%';
+      document.getElementById('bar-fill-mem').className = 'h-full transition-all duration-500 ' + (targetMem > 90 ? 'bg-accent-coral' : 'bg-success');
 
-      document.getElementById('node-stat-disk').innerText = scn.disk + '%';
-      document.getElementById('node-stat-errors').innerText = scn.errors;
-      document.getElementById('node-stat-logins').innerText = scn.logins;
+      document.getElementById('bar-val-lat').innerText = Number(targetLat).toFixed(1) + ' ms';
+      document.getElementById('bar-fill-lat').style.width = Math.min(100, (targetLat / 450) * 100) + '%';
+      document.getElementById('bar-fill-lat').className = 'h-full transition-all duration-500 ' + (targetLat > 250 ? 'bg-accent-coral' : 'bg-success');
 
-      // Update Workspace KPIs
-      document.getElementById('ws-val-latency').innerText = scn.lat.toFixed(1);
-      document.getElementById('ws-val-alerts').innerText = scn.alerts.length;
-      document.getElementById('ws-val-crit-alerts').innerText = '(' + scn.alerts.length + ' Critical)';
-      document.getElementById('ws-val-health').innerText = scn.alerts.length > 0 ? (scn.alerts.length > 2 ? 'POOR' : 'DEGRADED') : 'EXCELLENT';
-      document.getElementById('ws-val-health').className = 'text-[26px] font-extrabold tracking-tight font-sans ' + (scn.alerts.length > 0 ? 'text-accent-coral' : 'text-success');
+      document.getElementById('bar-val-loss').innerText = Number(targetLoss).toFixed(1) + '%';
+      document.getElementById('bar-fill-loss').style.width = Math.min(100, targetLoss * 5) + '%';
+      document.getElementById('bar-fill-loss').className = 'h-full transition-all duration-500 ' + (targetLoss > 5 ? 'bg-accent-coral' : 'bg-success');
+
+      document.getElementById('node-stat-disk').innerText = targetDisk + '%';
+      document.getElementById('node-stat-errors').innerText = targetErrors;
+      document.getElementById('node-stat-logins').innerText = targetLogins;
+
+      // Update Workspace KPIs (Fleet Latency is real fleet average)
+      document.getElementById('ws-val-latency').innerText = Number(fleetLatAvg).toFixed(1);
+      document.getElementById('ws-val-alerts').innerText = alertsList.length;
+      document.getElementById('ws-val-crit-alerts').innerText = '(' + alertsList.length + ' Critical)';
+      document.getElementById('ws-val-health').innerText = alertsList.length > 0 ? (alertsList.length > 2 ? 'POOR' : 'DEGRADED') : 'EXCELLENT';
+      document.getElementById('ws-val-health').className = 'text-[26px] font-extrabold tracking-tight font-sans ' + (alertsList.length > 0 ? 'text-accent-coral' : 'text-success');
 
       // Update Scenario Alerts list
       const alertContainer = document.getElementById('scenario-alerts-container');
       if (alertContainer) {
-        if (scn.alerts.length === 0) {
+        if (alertsList.length === 0) {
           alertContainer.innerHTML = `
             <div class="p-3.5 rounded-xl bg-success-tint/60 border border-success/20 flex items-center justify-between text-[12px] font-mono text-[#0f5c22]">
               <div class="flex items-center gap-2">
@@ -1594,7 +1659,7 @@
               <span>OK</span>
             </div>`;
         } else {
-          alertContainer.innerHTML = scn.alerts.map(a => `
+          alertContainer.innerHTML = alertsList.map(a => `
             <div class="p-3 rounded-xl bg-surface border-l-4 border-l-accent-coral border border-black/5 flex flex-col gap-1 text-[12px]">
               <div class="flex items-center justify-between">
                 <strong class="text-accent-coral font-mono">${a.type}</strong>
@@ -1605,24 +1670,19 @@
         }
       }
 
-      // Update Forensic log
+      // Update Forensic log with fresh timestamp
       const forensic = document.getElementById('forensic-log-display');
-      if (forensic) forensic.innerText = scn.forensicLog;
+      if (forensic) {
+        const timeNow = new Date().toISOString().substring(11, 19);
+        forensic.innerText = scn.forensicLog.replace(/\[\d\d:\d\d:\d\d UTC\]/g, `[${timeNow} UTC]`);
+      }
 
-      // Inject into FastAPI backend
-      await pushScenarioToBackend(key);
-      notify(`Loaded workspace: ${scn.title}`, 'science');
+      notify(`Workspace active: ${scn.title}`, 'science');
     }
 
     async function executeScenarioAction() {
-      const scn = SCENARIOS[currentScenarioKey];
-      if (!scn) return;
-      notify(`Dispatched action: ${scn.actionLabel}`, 'smart_toy');
-      if (scn.actionNext) {
-        setTimeout(() => {
-          loadScenario(scn.actionNext);
-        }, 600);
-      }
+      notify(`Injecting dynamic load variation for ${currentScenarioKey}...`, 'bolt');
+      await loadScenario(currentScenarioKey);
     }
 
     async function refreshScenarioMetrics() {

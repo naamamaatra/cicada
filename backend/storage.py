@@ -161,6 +161,19 @@ class InMemoryStorage:
         with self._lock:
             return len(self._alerts_list)
 
+    def clear_alerts(self, source_id: Optional[str] = None) -> None:
+        """
+        Clear active/historical alerts, optionally filtered by source_id.
+        """
+        with self._lock:
+            if source_id:
+                self._alerts_list = [a for a in self._alerts_list if a.source_id != source_id]
+                if source_id in self._alerts_by_source:
+                    self._alerts_by_source[source_id].clear()
+            else:
+                self._alerts_list.clear()
+                self._alerts_by_source.clear()
+
     def clear(self) -> None:
         """
         Clear all stored records (useful for test isolation).

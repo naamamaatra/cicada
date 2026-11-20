@@ -53,20 +53,46 @@ class TelemetryGenerator:
         """
         Generate healthy/normal telemetry for a server.
         Health State: EXCELLENT / GOOD
+        Provides realistic natural jitter across the 3 nodes.
         """
         sid = source_id or self.servers[0]["source_id"]
         ts = timestamp_utc or datetime.now(timezone.utc).isoformat()
+
+        # Differentiate normal baselines per server for realistic variety
+        if "a81f" in sid:
+            # Primary Web App Cluster
+            c_val = round(random.uniform(24.0, 36.0), 1)
+            m_val = round(random.uniform(38.0, 48.0), 1)
+            d_val = round(random.uniform(36.0, 42.0), 1)
+            lat_val = round(random.uniform(11.0, 19.5), 1)
+        elif "b92c" in sid:
+            # PostgreSQL Master Cluster
+            c_val = round(random.uniform(28.0, 42.0), 1)
+            m_val = round(random.uniform(44.0, 54.0), 1)
+            d_val = round(random.uniform(48.0, 56.0), 1)
+            lat_val = round(random.uniform(14.0, 24.0), 1)
+        elif "c73d" in sid:
+            # Edge API Gateway
+            c_val = round(random.uniform(16.0, 26.0), 1)
+            m_val = round(random.uniform(28.0, 36.0), 1)
+            d_val = round(random.uniform(22.0, 28.0), 1)
+            lat_val = round(random.uniform(6.5, 14.5), 1)
+        else:
+            c_val = round(random.uniform(22.0, 48.0), 1)
+            m_val = round(random.uniform(36.0, 58.0), 1)
+            d_val = round(random.uniform(42.0, 64.0), 1)
+            lat_val = round(random.uniform(14.0, 35.0), 1)
 
         return {
             "payload_id": self._next_payload_id("evt_norm"),
             "tenant_id": self.tenant_id,
             "source_id": sid,
             "timestamp_utc": ts,
-            "cpu": round(random.uniform(22.0, 48.0), 1),
-            "memory": round(random.uniform(36.0, 58.0), 1),
-            "disk": round(random.uniform(42.0, 64.0), 1),
-            "latency_ms": round(random.uniform(18.0, 42.0), 1),
-            "packet_loss_pct": round(random.uniform(0.0, 0.2), 2),
+            "cpu": c_val,
+            "memory": m_val,
+            "disk": d_val,
+            "latency_ms": lat_val,
+            "packet_loss_pct": round(random.uniform(0.0, 0.05), 2),
             "error_count": random.choice([0, 0, 0, 1]),
             "failed_logins": 0,
             "collector_status": "online",
@@ -76,21 +102,24 @@ class TelemetryGenerator:
     def generate_cpu_spike(
         self,
         source_id: Optional[str] = None,
-        cpu_val: float = 96.8,
+        cpu_val: Optional[float] = None,
     ) -> Dict[str, Any]:
         """Generate CPU exhaustion scenario (triggers HIGH_CPU alert)."""
         sid = source_id or self.servers[0]["source_id"]
+        c_val = float(cpu_val) if cpu_val is not None else round(random.uniform(93.4, 98.7), 1)
+        m_val = round(random.uniform(89.0, 94.8), 1)
+        lat_val = round(random.uniform(72.0, 118.0), 1)
         return {
             "payload_id": self._next_payload_id("evt_cpu"),
             "tenant_id": self.tenant_id,
             "source_id": sid,
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-            "cpu": float(cpu_val),
-            "memory": 62.4,
-            "disk": 58.0,
-            "latency_ms": 48.5,
-            "packet_loss_pct": 0.0,
-            "error_count": 3,
+            "cpu": c_val,
+            "memory": m_val,
+            "disk": round(random.uniform(48.0, 62.0), 1),
+            "latency_ms": lat_val,
+            "packet_loss_pct": round(random.uniform(0.2, 1.8), 2),
+            "error_count": random.randint(4, 14),
             "failed_logins": 0,
             "collector_status": "online",
             "event_category": "resource_pressure",
@@ -99,21 +128,22 @@ class TelemetryGenerator:
     def generate_memory_leak(
         self,
         source_id: Optional[str] = None,
-        memory_val: float = 95.2,
+        memory_val: Optional[float] = None,
     ) -> Dict[str, Any]:
         """Generate Memory Leak scenario (triggers HIGH_MEMORY alert)."""
         sid = source_id or self.servers[1]["source_id"]
+        m_val = float(memory_val) if memory_val is not None else round(random.uniform(92.0, 97.2), 1)
         return {
             "payload_id": self._next_payload_id("evt_mem"),
             "tenant_id": self.tenant_id,
             "source_id": sid,
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-            "cpu": 64.0,
-            "memory": float(memory_val),
-            "disk": 68.0,
-            "latency_ms": 65.0,
-            "packet_loss_pct": 0.0,
-            "error_count": 6,
+            "cpu": round(random.uniform(62.0, 78.0), 1),
+            "memory": m_val,
+            "disk": round(random.uniform(65.0, 78.0), 1),
+            "latency_ms": round(random.uniform(58.0, 95.0), 1),
+            "packet_loss_pct": round(random.uniform(0.0, 0.4), 2),
+            "error_count": random.randint(3, 10),
             "failed_logins": 0,
             "collector_status": "online",
             "event_category": "memory_leak",
@@ -122,22 +152,24 @@ class TelemetryGenerator:
     def generate_network_degradation(
         self,
         source_id: Optional[str] = None,
-        latency_val: float = 380.0,
-        packet_loss_val: float = 9.4,
+        latency_val: Optional[float] = None,
+        packet_loss_val: Optional[float] = None,
     ) -> Dict[str, Any]:
         """Generate Network Congestion scenario (triggers HIGH_LATENCY and HIGH_PACKET_LOSS)."""
         sid = source_id or self.servers[2]["source_id"]
+        lat_val = float(latency_val) if latency_val is not None else round(random.uniform(375.0, 520.0), 1)
+        loss_val = float(packet_loss_val) if packet_loss_val is not None else round(random.uniform(14.0, 23.5), 1)
         return {
             "payload_id": self._next_payload_id("evt_net"),
             "tenant_id": self.tenant_id,
             "source_id": sid,
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-            "cpu": 45.0,
-            "memory": 52.0,
-            "disk": 50.0,
-            "latency_ms": float(latency_val),
-            "packet_loss_pct": float(packet_loss_val),
-            "error_count": 12,
+            "cpu": round(random.uniform(45.0, 68.0), 1),
+            "memory": round(random.uniform(48.0, 60.0), 1),
+            "disk": round(random.uniform(28.0, 42.0), 1),
+            "latency_ms": lat_val,
+            "packet_loss_pct": loss_val,
+            "error_count": random.randint(22, 58),
             "failed_logins": 0,
             "collector_status": "online",
             "event_category": "network_degradation",
