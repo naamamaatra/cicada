@@ -4,12 +4,12 @@ SentinelOps AI monitors servers, applications, and networks, detects unusual beh
 
 ---
 
-## Member 4 — Backend & Integration (Phase 1)
+## Team Division & Deliverables (Phase 1)
 
-This repository contains the **Phase 1 Backend Foundation**, built with **FastAPI**, **Pydantic**, and a modular in-memory storage layer ready for integration with:
-- **Member 1 (Collector & Privacy Engine):** Ingests sanitized telemetry payloads at `POST /api/v1/telemetry`.
-- **Member 2 (AI & Incident Intelligence):** Consumes telemetry data and integrates advanced anomaly detection.
-- **Member 3 (Dashboard & UI):** Queries live metrics, alerts, health status, and fleet summaries via REST API with pre-configured local CORS.
+- **Member 1 (Collector & Privacy Engine):** Local telemetry generator, deep privacy redaction, hostname pseudonymization, allow-list policy gate, offline buffering, and egress audit proof logging.
+- **Member 4 (Backend & Integration):** Phase 1 Backend Foundation built with **FastAPI**, **Pydantic**, and in-memory storage.
+- **Member 2 (AI & Incident Intelligence):** Anomaly detection, alert correlation, and root-cause engine.
+- **Member 3 (Dashboard & UI):** Streamlit dashboard querying live metrics, alerts, health status, and egress proof.
 
 ---
 
@@ -17,6 +17,20 @@ This repository contains the **Phase 1 Backend Foundation**, built with **FastAP
 
 ```text
 cicada/
+│
+├── collector/
+│   ├── __init__.py
+│   ├── generator.py             # Multi-node synthetic telemetry & incident injector
+│   ├── privacy.py               # Deep secret redaction & hostname pseudonymizer
+│   ├── policy.py                # Strict allow-list policy gate & validation
+│   ├── buffer.py                # Offline FIFO buffer with duplicate prevention
+│   ├── egress_audit.py          # Egress audit logger & transmission proof
+│   └── collector.py            # Local agent coordinator & CLI entrypoint
+│
+├── shared/
+│   ├── __init__.py
+│   ├── models.py                # Shared Pydantic data contracts (TelemetryPayload, BasicAlert)
+│   └── constants.py             # Thresholds, health states, default servers, allow-list
 │
 ├── backend/
 │   ├── __init__.py
@@ -34,7 +48,12 @@ cicada/
 │
 ├── tests/
 │   ├── __init__.py
-│   └── test_api.py              # Pytest suite covering all validation & endpoints (14 tests)
+│   ├── test_api.py              # FastAPI endpoints & validation tests (14 tests)
+│   ├── test_privacy.py          # Secret redaction & pseudonymization tests (9 tests)
+│   ├── test_policy.py           # Allow-list policy gate & boundary tests (5 tests)
+│   ├── test_generator.py        # Telemetry generator & incident simulation tests (7 tests)
+│   ├── test_buffer.py           # Offline buffer & egress audit tests (4 tests)
+│   └── test_collector.py       # End-to-end integration & demo workflow tests (5 tests)
 │
 ├── requirements.txt
 ├── README.md
@@ -230,18 +249,65 @@ curl "http://127.0.0.1:8000/api/v1/metrics/summary"
 
 ---
 
-## Running the Automated Tests
+## Running Member 1: Local Collector & Privacy Engine
 
-The test suite runs with `pytest` using FastAPI's `TestClient`:
+The collector agent generates multi-node telemetry, performs privacy sanitization and pseudonymization, applies the allow-list policy gate, and delivers safe payloads to the backend API.
+
+### 1. Run Full Phase 1 Demo Flow
+Generates normal baseline telemetry for all 3 simulated servers (`node_a81f`, `node_b92c`, `node_c73d`), injects a simulated failure on `node_a81f`, and displays backend alerts:
 
 ```powershell
-python -m pytest tests/test_api.py -v
+python -m collector.collector --mode demo-phase1
 ```
 
-All 14 tests verify:
-- Root and health endpoints.
-- Valid telemetry ingestion.
-- Validation rejects for out-of-range CPU, memory, disk, packet loss, negative latency, and empty IDs.
-- Telemetry retrieval, newest-first ordering, and source-level filtering.
-- Alert generation on threshold violations.
-- Fleet metrics health calculation.
+### 2. Run Privacy Engine & Egress Proof Demo
+Simulates a raw local event containing fake sensitive secrets (passwords, bearer tokens, API keys, real internal hostnames) and proves that secrets are redacted, unapproved fields stripped, and hostnames pseudonymized before leaving the node:
+
+```powershell
+python -m collector.collector --mode demo-privacy
+```
+
+### 3. Send Normal Fleet Telemetry
+```powershell
+python -m collector.collector --mode normal
+```
+
+### 4. Inject Failure Scenario
+Inject specific simulated failures onto any node:
+```powershell
+# CPU spike on node_a81f
+python -m collector.collector --mode failure --source node_a81f --scenario cpu_spike
+
+# Memory leak on node_b92c
+python -m collector.collector --mode failure --source node_b92c --scenario memory_leak
+
+# Network degradation on node_c73d
+python -m collector.collector --mode failure --source node_c73d --scenario network_degradation
+
+# Full critical cascade failure
+python -m collector.collector --mode failure --source node_a81f --scenario cascade_failure
+```
+
+### 5. Flush Local Offline Buffer
+Drain any locally buffered telemetry events when connectivity to backend is restored:
+```powershell
+python -m collector.collector --mode flush
+```
+
+---
+
+## Running the Automated Tests
+
+The complete SentinelOps AI test suite runs with `pytest`:
+
+```powershell
+python -m pytest -v
+```
+
+All 44 automated tests verify:
+- **Backend & API (`tests/test_api.py`, 14 tests):** Root, health, valid ingest, validation rejection (CPU, memory, packet loss, negative latency, empty IDs), ordering, alert engine, and fleet summary.
+- **Privacy Engine (`tests/test_privacy.py`, 9 tests):** Host pseudonymization (deterministic mapping & hash), bearer token redaction, API key redaction, database URL password redaction, private key masking, dictionary scrubbing.
+- **Allow-List Policy Gate (`tests/test_policy.py`, 5 tests):** Telemetry field allow-listing, stripping unapproved fields (raw logs, emails, passwords), required field enforcement, bounds checking.
+- **Telemetry Generator (`tests/test_generator.py`, 7 tests):** 3-node fleet normal metrics, CPU spike, memory leak, network degradation, cascade failure, raw event generator with embedded secrets.
+- **Offline Buffer & Audit (`tests/test_buffer.py`, 4 tests):** Enqueue, deduplication, retry handling, status transitions (pending -> sent/failed), egress audit proof generation.
+- **End-to-End Integration (`tests/test_collector.py`, 5 tests):** Full privacy pipeline -> backend API ingest -> alert generation -> egress audit verification -> offline buffering upon outage -> recovery buffer flush.
