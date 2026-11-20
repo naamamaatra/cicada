@@ -213,3 +213,4 @@ def calculate_metrics_summary(storage: InMemoryStorage) -> MetricsSummary:
         critical_sources=critical_count,
         active_alert_count=active_alerts,
     )
+

@@ -229,3 +229,4 @@ def test_metrics_summary():
     assert data["warning_sources"] == 1
     assert data["critical_sources"] == 1
     assert data["active_alert_count"] == 1  # 1 critical CPU alert from node_crit
+

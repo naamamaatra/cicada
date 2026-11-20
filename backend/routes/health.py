@@ -70,3 +70,4 @@ async def metrics_summary() -> ApiResponse:
         message="Fleet metrics summary calculated successfully",
         data=summary.model_dump(mode="json"),
     )
+

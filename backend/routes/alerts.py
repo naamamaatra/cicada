@@ -67,3 +67,4 @@ async def get_alerts_by_source(
         message=f"Retrieved {len(alerts)} alerts for source '{source_id}'",
         data=[alert.model_dump(mode="json") for alert in alerts],
     )
+
