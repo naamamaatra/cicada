@@ -4,8 +4,6 @@ Provides endpoints for Member 1 (Collector) to push and Member 3 (Dashboard) / M
 """
 
 from typing import Optional, List
-import random
-from datetime import datetime, timezone
 from fastapi import APIRouter, HTTPException, Query, status
 from backend.schemas import (
     TelemetryPayload,
@@ -14,7 +12,6 @@ from backend.schemas import (
 )
 from backend.storage import storage
 from backend.services.alert_service import evaluate_telemetry_alerts
-from collector.generator import TelemetryGenerator
 
 router = APIRouter(prefix="/api/v1/telemetry", tags=["Telemetry"])
 
@@ -110,82 +107,5 @@ async def get_telemetry_by_source(
         success=True,
         message=f"Retrieved {len(records)} records for source '{source_id}'",
         data=[record.model_dump(mode="json") for record in records],
-    )
-
-
-@router.post(
-    "/simulate/{scenario}",
-    response_model=ApiResponse,
-    summary="Simulate Realistic Dynamic Scenario Telemetry",
-    description="Generate dynamic, realistic, non-static telemetry across all 3 nodes with natural jitter.",
-)
-async def simulate_scenario(scenario: str) -> ApiResponse:
-    gen = TelemetryGenerator()
-    now = datetime.now(timezone.utc).isoformat()
-    norm_scn = scenario.lower().replace("-", "_")
-
-    payloads = []
-
-    # Reset historical alerts for clean, non-conflicting scenario presentation
-    storage.clear_alerts()
-
-    if norm_scn in ("spike", "cpu_spike"):
-        # node_a81f spiked with dynamic realistic variation
-        p_a = gen.generate_cpu_spike(source_id="node_a81f")
-        p_b = gen.generate_normal(source_id="node_b92c", timestamp_utc=now)
-        p_c = gen.generate_normal(source_id="node_c73d", timestamp_utc=now)
-        payloads = [p_a, p_b, p_c]
-    elif norm_scn in ("network", "network_outage"):
-        # node_c73d degraded with dynamic realistic latency & loss
-        p_a = gen.generate_normal(source_id="node_a81f", timestamp_utc=now)
-        p_b = gen.generate_normal(source_id="node_b92c", timestamp_utc=now)
-        p_c = gen.generate_network_degradation(source_id="node_c73d")
-        payloads = [p_a, p_b, p_c]
-    elif norm_scn in ("degraded", "db_overload", "database_overload"):
-        # node_b92c database overload with dynamic variation
-        p_a = gen.generate_normal(source_id="node_a81f", timestamp_utc=now)
-        p_b = {
-            "payload_id": gen._next_payload_id("evt_db"),
-            "tenant_id": gen.tenant_id,
-            "source_id": "node_b92c",
-            "timestamp_utc": now,
-            "cpu": round(random.uniform(72.0, 84.5), 1),
-            "memory": round(random.uniform(90.5, 95.8), 1),
-            "disk": round(random.uniform(96.8, 99.4), 1),
-            "latency_ms": round(random.uniform(165.0, 245.0), 1),
-            "packet_loss_pct": round(random.uniform(0.1, 0.4), 2),
-            "error_count": random.randint(18, 38),
-            "failed_logins": random.randint(9, 22),
-            "collector_status": "online",
-            "event_category": "database_overload",
-        }
-        p_c = gen.generate_normal(source_id="node_c73d", timestamp_utc=now)
-        payloads = [p_a, p_b, p_c]
-    else:
-        # normal baseline: all 3 healthy with fresh realistic jitter
-        payloads = gen.generate_fleet_normal()
-
-    all_alerts = []
-    pydantic_payloads = []
-    for raw in payloads:
-        pyd = TelemetryPayload(**raw)
-        storage.add_telemetry(pyd)
-        pydantic_payloads.append(pyd)
-        alerts = evaluate_telemetry_alerts(pyd)
-        if alerts:
-            storage.add_alerts(alerts)
-            all_alerts.extend(alerts)
-
-    fleet_lat_avg = round(sum(p.latency_ms for p in pydantic_payloads) / len(pydantic_payloads), 1)
-
-    return ApiResponse(
-        success=True,
-        message=f"Simulated realistic {norm_scn} telemetry across fleet",
-        data={
-            "scenario": norm_scn,
-            "fleet_latency_avg": fleet_lat_avg,
-            "sources": [p.model_dump(mode="json") for p in pydantic_payloads],
-            "alerts": [a.model_dump(mode="json") for a in all_alerts],
-        },
     )
 

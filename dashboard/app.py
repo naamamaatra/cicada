@@ -798,9 +798,13 @@ elif st.session_state["active_view"] == "privacy_lab":
             }.get(x, x),
             label_visibility="collapsed",
         )
+    if "tested_privacy_scenario" not in st.session_state:
+        st.session_state["tested_privacy_scenario"] = None
+
     with p_col2:
         if st.button("⚡ Test Privacy Redaction Now", use_container_width=True, type="primary"):
             data_service.run_privacy_test(scenario=privacy_scenario)
+            st.session_state["tested_privacy_scenario"] = privacy_scenario
             st.toast("✅ Privacy Engine redacted sensitive tokens and recorded Egress Proof!", icon="🔒")
             st.rerun()
 
@@ -810,9 +814,17 @@ elif st.session_state["active_view"] == "privacy_lab":
     st.markdown("<div class='kpi-label'>🔍 Live Side-by-Side Egress Verification (What Leaves vs What Stays Behind)</div>", unsafe_allow_html=True)
     c_raw, c_safe = st.columns(2)
 
+    is_tested = (st.session_state.get("tested_privacy_scenario") == privacy_scenario)
+
     raw_event = privacy_result.get("original_raw_event", {})
     safe_payload = privacy_result.get("egress_audit_proof", {}).get("safe_payload", {}) or privacy_result.get("pipeline_result", {}).get("safe_payload", {})
     audit_proof = privacy_result.get("egress_audit_proof", {})
+
+    # Tier 1 Raw Local Event
+    if is_tested and raw_event:
+        display_raw = raw_event
+    else:
+        display_raw = data_service.collector.generator.generate_raw_event_with_secrets(scenario=privacy_scenario)
 
     with c_raw:
         st.markdown("""
@@ -823,18 +835,34 @@ elif st.session_state["active_view"] == "privacy_lab":
             </span>
         </div>
         """, unsafe_allow_html=True)
-        st.json(raw_event if raw_event else {"status": "Click 'Test Privacy Redaction Now' above to run live proof"})
+        st.json(display_raw)
 
     with c_safe:
-        st.markdown("""
+        st.markdown(f"""
         <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;'>
-            <span style='color: #34D399; font-weight: 700; font-size: 0.85rem;'>TIER 2: SANITIZED EGRESS PAYLOAD (SaaS Ingest)</span>
-            <span style='background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 700;'>
-                🔒 APPROVED METADATA ONLY
+            <span style='color: {"#34D399" if is_tested else "#8B949E"}; font-weight: 700; font-size: 0.85rem;'>TIER 2: SANITIZED EGRESS PAYLOAD (SaaS Ingest)</span>
+            <span style='background: {"rgba(16, 185, 129, 0.15)" if is_tested else "rgba(255, 255, 255, 0.05)"}; color: {"#34d399" if is_tested else "#8b949e"}; border: 1px solid {"rgba(16, 185, 129, 0.35)" if is_tested else "rgba(255, 255, 255, 0.1)"}; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 700;'>
+                {"🔒 APPROVED METADATA ONLY" if is_tested else "⏳ AWAITING TEST"}
             </span>
         </div>
         """, unsafe_allow_html=True)
-        st.json(safe_payload if safe_payload else {"status": "Awaiting transmission"})
+        if is_tested and safe_payload:
+            st.json(safe_payload)
+        else:
+            st.markdown("""
+            <div style='background: #0d1217; border: 1px dashed rgba(255, 255, 255, 0.15); border-radius: 10px; padding: 42px 20px; text-align: center; min-height: 320px; display: flex; flex-direction: column; justify-content: center; align-items: center;'>
+                <div style='font-size: 1.8rem; margin-bottom: 6px;'>🔒</div>
+                <strong style='color: #F0F3F8; font-size: 0.95rem;'>Tier 2 Ingest Isolated (Awaiting Redaction)</strong>
+                <p style='color: #8B949E; font-size: 0.82rem; margin: 6px auto 0 auto; max-width: 340px; line-height: 1.45;'>
+                    Raw credentials remain strictly quarantined inside Tier 1 VPC. Click <strong style='color: #38BDF8;'>\"⚡ Test Privacy Redaction Now\"</strong> above to scrub secrets and stream sanitized telemetry.
+                </p>
+                <div style='margin-top: 14px;'>
+                    <span style='background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25); padding: 4px 12px; border-radius: 6px; font-size: 0.74rem; font-family: monospace; font-weight: 700;'>
+                        EGRESS RESTRICTED • PENDING TEST
+                    </span>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
     st.markdown("<div style='height: 16px;'></div>", unsafe_allow_html=True)
 
