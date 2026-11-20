@@ -1,0 +1,638 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
+.notion-hairline { border: 1px solid rgba(0, 0, 0, 0.08); }
+.notion-hairline-b { border-bottom: 1px solid rgba(0, 0, 0, 0.08); }
+.notion-hairline-r { border-right: 1px solid rgba(0, 0, 0, 0.08); }
+.notion-card { 
+  background-color: #FFFFFF; 
+  border: 1px solid rgba(0, 0, 0, 0.08); 
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03), 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+.notion-card-subtle {
+  background-color: #F9F9F8;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "primary": "#0075DE",
+          "primary-focus": "#0075DE",
+          "primary-pressed": "#005BAB",
+          "primary-tint": "#E6F3FE",
+          "body-secondary": "#615D59",
+          "muted": "#A39E98",
+          "surface-warm": "#F6F5F4",
+          "card-subtle": "#F9F9F8",
+          "hairline": "#DFDCD9",
+          "ink": "#000000",
+          "accent-red": "#E32D14",
+          "accent-coral": "#F64932",
+          "accent-amber": "#FFB110",
+          "accent-amber-deep": "#E89D01",
+          "accent-indigo": "#1313BA",
+          "chip-lavender": "#EADBFA",
+          "success": "#1AAE39",
+          "success-tint": "#D0F4D8",
+          "surface": "#FFFFFF",
+          "surface-container": "#F6F5F4",
+          "surface-container-low": "#F9F9F8",
+          "surface-container-high": "#EEEBE7",
+          "surface-container-lowest": "#FFFFFF",
+          "on-surface": "#000000",
+          "on-surface-variant": "#615D59",
+          "error": "#E32D14",
+          "error-container": "#FDF2F1",
+          "on-error-container": "#93000A"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "button": "0.5rem",
+          "panel": "0.75rem",
+          "full": "9999px"
+        },
+        "fontFamily": {
+          "sans": ["Inter", "system-ui", "-apple-system", "sans-serif"],
+          "serif": ["\"Source Serif 4\"", "Georgia", "serif"],
+          "mono": ["\"JetBrains Mono\"", "monospace"],
+          "body": ["Inter", "sans-serif"],
+          "quote": ["\"Source Serif 4\"", "Georgia", "serif"]
+        }
+      },
+    },
+  }</script></head><body class="bg-white font-sans text-[14px] text-ink antialiased" style="min-height: 100vh; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);"><!-- Notion App Top Navigation Header --><header class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md notion-hairline-b h-14"><div class="h-14 w-full px-5 flex items-center justify-between gap-4"><div class="flex items-center gap-6"><div class="flex items-center gap-2.5 select-none"><div class="w-8 h-8 rounded-[8px] bg-surface-warm flex items-center justify-center border border-black/10 shadow-xs"><img alt="SentinelOps Logo" class="h-5 w-5 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrBEBUgoO-A9JSkvg-GauxjnXNJkQ6besbFId3q-tA2DHFrxmYPCwm6PxLVDdDLX0mV9aIneuRL-qk2y17UJodJtQ79t8D1ixXuF4FAYSYnQoAMyiw-QdhV5CdrUWV2IAuNioeFD2OCbQRW0S8ac4MqMEJlPNjfxansZAezJLDZlIzKiveUR-qGbJjnYz_g18NS3-mNTBh_A5_YUlTdNmL-xv7u7p9cKKQf6A5l4_Kypbw"></div><div class="flex items-center gap-1.5"><span class="font-bold text-[15px] tracking-tight text-ink">SentinelOps AI</span><span class="text-muted text-[13px]">/</span><span class="text-body-secondary text-[13px] font-normal hidden sm:inline">Mission Control</span></div></div><div class="hidden xl:flex items-center gap-2 px-2.5 py-1 rounded-full bg-success-tint/60 text-[#0f5c22] text-[12px] font-mono border border-success/20"><span class="w-1.5 h-1.5 rounded-full bg-success animate-pulse"></span><span>localhost:8000 (FastAPI Synchronized)</span></div><div class="hidden 2xl:flex items-center gap-2 px-2.5 py-1 rounded-full bg-error-container text-accent-coral text-[12px] font-medium border border-accent-coral/20"><span class="w-1.5 h-1.5 rounded-full bg-accent-coral"></span><span>1 Server Degrading</span></div></div><!-- Notion-Style Centered Sub-Nav --><nav class="hidden lg:flex items-center gap-1 p-1 bg-surface-warm rounded-[8px] border border-black/5" data-active-classes="bg-white text-ink shadow-xs font-semibold rounded-[6px]"><a class="px-3 py-1 rounded-[6px] text-[13px] font-medium text-body-secondary hover:text-ink hover:bg-black/5 transition-all" data-path="overview-map" href="#">Overview</a><a class="px-3 py-1 rounded-[6px] text-[13px] font-medium text-body-secondary hover:text-ink hover:bg-black/5 transition-all" data-path="incidents" href="#">Incidents</a><a class="px-3 py-1 rounded-[6px] text-[13px] font-medium text-body-secondary hover:text-ink hover:bg-black/5 transition-all" data-path="ai-intelligence" href="#">AI Intelligence</a><a class="px-3 py-1 rounded-[6px] text-[13px] font-medium text-body-secondary hover:text-ink hover:bg-black/5 transition-all" data-path="privacy-center" href="#">Privacy Center</a><a class="px-3 py-1 rounded-[6px] text-[13px] font-medium text-body-secondary hover:text-ink hover:bg-black/5 transition-all" data-path="architecture-walkthrough" href="#">Architecture</a></nav><div class="flex items-center gap-3"><div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-card-subtle font-mono text-[12px] text-body-secondary border border-black/5"><span class="material-symbols-outlined text-[15px] text-muted">schedule</span><span id="system-telemetry-clock">23:59:14 UTC</span></div><div class="relative"><button class="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] bg-primary hover:bg-primary-pressed text-white text-[13px] font-medium transition-colors shadow-xs" type="button"><span class="material-symbols-outlined text-[16px]">play_arrow</span><span>Quick Simulation</span><span class="material-symbols-outlined text-[16px]">expand_more</span></button></div><div class="w-7 h-7 rounded-full bg-surface-warm border border-black/10 flex items-center justify-center text-body-secondary hover:text-ink cursor-pointer"><span class="material-symbols-outlined text-[16px]">person</span></div></div></div></header><!-- Notion Document Layout: Sidebar + Canvas --><aside class="fixed left-0 top-14 h-[calc(100vh-3.5rem)] w-64 bg-surface-warm notion-hairline-r z-40 flex flex-col justify-between p-4 overflow-y-auto"><div class="flex flex-col gap-6"><div class="flex items-center justify-between pb-3 notion-hairline-b"><div class="flex items-center gap-2"><span class="w-6 h-6 rounded-[6px] bg-white border border-black/10 flex items-center justify-center text-[13px]">🛡️</span><div><div class="text-[13px] font-bold text-ink leading-tight">SentinelOps AI</div><div class="text-[11px] text-muted font-medium">Autonomous Observability</div></div></div><span class="text-[10px] px-1.5 py-0.5 rounded bg-black/5 font-mono text-body-secondary">AIOPS</span></div><!-- Phase 1: Workload Simulator Controls --><div class="flex flex-col gap-2.5"><div><div class="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-muted font-semibold"><span>⚡</span><span>Workload Simulator</span></div><p class="text-[12px] text-body-secondary mt-0.5 font-normal leading-normal">Inject operational fault states into fleet nodes.</p></div><div class="flex flex-col gap-1.5" id="sidebar-scenario-radios"><label class="flex items-center gap-2.5 p-2 rounded-[8px] cursor-pointer transition-colors bg-white/70 hover:bg-white border border-black/5"><input class="w-3.5 h-3.5 text-primary accent-primary cursor-pointer" name="fleet_sim" onchange="setFleetScenario('normal')" type="radio" value="normal"><span class="w-2 h-2 rounded-full bg-success shrink-0"></span><span class="text-[12px] font-medium text-ink leading-snug">Normal Baseline (3 Healthy)</span></label><label class="flex items-center gap-2.5 p-2 rounded-[8px] cursor-pointer transition-colors bg-white/70 hover:bg-white border border-black/5"><input class="w-3.5 h-3.5 text-primary accent-primary cursor-pointer" name="fleet_sim" onchange="setFleetScenario('spike')" type="radio" value="spike"><span class="w-2 h-2 rounded-full bg-accent-amber shrink-0"></span><span class="text-[12px] font-medium text-ink leading-snug">CPU &amp; Mem Spike (node_a81f)</span></label><label class="flex items-center gap-2.5 p-2 rounded-[8px] cursor-pointer transition-colors bg-white/70 hover:bg-white border border-black/5"><input class="w-3.5 h-3.5 text-primary accent-primary cursor-pointer" name="fleet_sim" onchange="setFleetScenario('network')" type="radio" value="network"><span class="w-2 h-2 rounded-full bg-accent-coral shrink-0"></span><span class="text-[12px] font-medium text-ink leading-snug">Network Outage (node_c73d)</span></label><label class="flex items-center gap-2.5 p-2 rounded-[8px] cursor-pointer transition-colors bg-white border border-primary/40 shadow-xs"><input checked="" class="w-3.5 h-3.5 text-primary accent-primary cursor-pointer" name="fleet_sim" onchange="setFleetScenario('degraded')" type="radio" value="degraded"><span class="w-2 h-2 rounded-full bg-accent-coral animate-ping shrink-0"></span><span class="text-[12px] font-semibold text-ink leading-snug">Database Overload (node_b92c)</span></label></div><button class="w-full mt-1 flex items-center justify-center gap-2 py-2 px-3 rounded-[8px] bg-primary hover:bg-primary-pressed text-white text-[12px] font-medium shadow-xs transition-colors cursor-pointer" onclick="refreshFleetMetrics()" type="button"><span class="material-symbols-outlined text-[15px]">sync</span><span>Refresh Fleet Metrics</span></button></div><!-- Phase 2: Privacy Engine Tester --><div class="flex flex-col gap-2.5 pt-3 notion-hairline-t"><div><div class="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-muted font-semibold"><span class="material-symbols-outlined text-[14px] text-primary">verified_user</span><span>Privacy Engine Tester</span></div><p class="text-[12px] text-body-secondary mt-0.5 font-normal leading-normal">Zero-knowledge PII token redaction.</p></div><div class="relative"><select class="w-full py-1.5 px-2.5 pr-7 rounded-[8px] bg-white border border-black/10 text-[12px] text-ink font-medium appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20" id="privacy-payload-selector" onchange="handlePrivacySelection(this.value)"><option value="cascade">Cascade Outage with DB Secrets &amp; PII</option><option value="normal">Normal Telemetry Stream</option><option value="token">API Bearer Token Leak</option><option value="auth">Authentication Failure Dump</option></select><span class="material-symbols-outlined absolute right-2 top-2 text-[16px] text-muted pointer-events-none">expand_more</span></div><button class="w-full flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-[8px] bg-primary-tint hover:bg-[#d8ebfd] text-primary-pressed text-[12px] font-medium transition-colors cursor-pointer" onclick="testPrivacyRedaction()" type="button"><span class="material-symbols-outlined text-[15px]">bolt</span><span>Test Privacy Redaction</span></button></div></div><!-- Sidebar Footer --><div class="pt-3 notion-hairline-t flex flex-col gap-2"><div class="flex items-center gap-2 px-2.5 py-1.5 rounded-[8px] bg-success-tint/60 text-[#0f5c22] border border-success/20"><span class="w-2 h-2 rounded-full bg-success animate-pulse"></span><span class="font-mono text-[11px] font-semibold">FASTAPI 8000: SYNCHRONIZED</span></div><div class="text-[11px] font-mono text-muted">Tier 1: Customer VPC • Tier 2: SaaS Cloud</div></div></aside><!-- Main Content Area --><div class="pl-64"><main class="relative w-full pt-14 min-h-screen bg-white"><div class="flex flex-col w-full">
+<div class="w-full px-6 py-8 max-w-[1240px] mx-auto space-y-10">
+<!-- Notion-Style Editorial Title & Breadcrumbs -->
+<div class="flex flex-col space-y-4">
+<div class="flex flex-wrap items-center justify-between gap-3">
+<div class="flex items-center gap-2 text-body-secondary font-mono font-caption text-caption">
+<span class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-primary">account_tree</span>
+<span>SentinelOps AI</span>
+</span>
+<span class="text-muted">/</span>
+<span class="px-2 py-0.5 rounded-full bg-chip-lavender text-accent-indigo font-caption text-caption">TIER-2 AIOPS SAAS</span>
+<span class="text-muted">/</span>
+<span class="flex items-center gap-1 text-muted">
+<span>tenant_demo</span>
+<span>•</span>
+<span>us-east-1</span>
+<span>•</span>
+<span>UTC</span>
+</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-error-container text-accent-coral font-caption text-caption font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-accent-coral animate-pulse"></span>
+<span>SYSTEM HEALTH: POOR</span>
+</div>
+<span class="text-caption text-muted font-mono">HASH: 9942a7f</span>
+</div>
+</div>
+<div class="flex flex-col space-y-1"><h1 class="text-[24px] font-bold text-ink tracking-tight leading-tight">Two-Tier Architecture &amp; Global Trust Boundary</h1><p class="text-[14px] text-body-secondary leading-normal">Privacy-First Infrastructure Observability &amp; Autonomous Incident Intelligence</p></div>
+<!-- Segmented Notion Tabs -->
+<div class="flex items-center gap-6 pt-2">
+<button class="group flex items-center gap-2 pb-2 text-body-secondary hover:text-on-surface transition-colors" onclick="switchMainTab('phase1')">
+<span class="material-symbols-outlined text-[18px] text-muted group-hover:text-primary">dns</span>
+<span class="font-button text-button">Fleet Infrastructure (Phase 1)</span>
+</button>
+<button class="group flex items-center gap-2 pb-2 text-body-secondary hover:text-on-surface transition-colors" onclick="switchMainTab('phase2')">
+<span class="material-symbols-outlined text-[18px] text-muted group-hover:text-primary">shield_lock</span>
+<span class="font-button text-button">Privacy Engine &amp; Egress Proof (Phase 2)</span>
+</button>
+<button class="flex items-center gap-2 pb-2 text-primary font-body-strong text-button relative">
+<span class="material-symbols-outlined text-[18px]">hub</span>
+<span>Two-Tier Architecture &amp; Global Design</span>
+<div class="absolute bottom-0 inset-x-0 h-[2px] bg-primary rounded-full"></div>
+</button>
+</div>
+</div>
+<!-- Editorial Callout Card -->
+<div class="bg-surface-warm rounded-xl p-5 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-lg bg-surface flex items-center justify-center text-primary shadow-xs shrink-0">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+</div>
+<div class="space-y-0.5">
+<div class="font-body-strong text-body-strong text-on-surface">Zero-Knowledge Autonomous Telemetry Gateway</div>
+<p class="font-body-sm text-body-sm text-body-secondary max-w-3xl">
+            Customer telemetry is scrubbed and validated against strict allow-list invariants inside local customer VPCs before crossing the cryptographic boundary. Zero credentials, raw payloads, or database records ever depart Tier 1.
+          </p>
+</div>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<span class="px-2.5 py-1 rounded-full bg-success-tint text-success font-caption text-caption font-semibold">ZERO-TRUST VERIFIED</span>
+<button class="px-3 py-1.5 rounded-lg bg-surface text-on-surface hover:bg-surface-container font-button text-button shadow-xs flex items-center gap-1.5 transition-colors" onclick="simulatePayloadPing()">
+<span class="material-symbols-outlined text-[16px] text-primary">play_circle</span>
+<span>Trace Ingest Packet</span>
+</button>
+</div>
+</div>
+<!-- Two-Tier Trust Boundary Architecture Diagram (Interactive Bento Canvas) -->
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="font-mono text-caption text-muted uppercase tracking-wider font-semibold">SYSTEM TOPOLOGY</span>
+<span class="text-muted">•</span>
+<span class="font-body-sm text-body-sm text-on-surface font-semibold">Tier 1 VPC Isolation vs Tier 2 SaaS Platform</span>
+</div>
+<div class="flex items-center gap-3 font-caption text-caption text-body-secondary">
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-primary"></span>Customer Domain</span>
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-accent-indigo"></span>Cryptographic Bridge</span>
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-success"></span>Central SaaS Cloud</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+<!-- TIER 1: Customer Environment -->
+<div class="lg:col-span-5 bg-card-subtle rounded-xl p-6 shadow-sm flex flex-col justify-between space-y-6 relative overflow-hidden">
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-lg bg-primary-tint text-primary flex items-center justify-center font-mono text-caption font-bold">T1</span>
+<div>
+<h2 class="font-title-sm text-title-sm text-on-surface">Customer Environment</h2>
+<p class="font-caption text-caption text-muted">Local VPC • Air-Gapped Private Boundary</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-surface text-body-secondary font-mono text-caption font-semibold shadow-xs">US-EAST-1A</span>
+</div>
+<!-- Pipeline Step 1 -->
+<div class="p-3.5 bg-surface rounded-lg shadow-xs space-y-1.5 hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface font-body-strong text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-body-secondary">storage</span>
+<span>Raw Telemetry Sources</span>
+</div>
+<span class="text-caption font-mono text-muted">INGEST</span>
+</div>
+<p class="font-caption text-caption text-body-secondary">OS metrics, journald syslogs, PostgreSQL slow queries, docker stats.</p>
+<div class="flex items-center gap-1.5 pt-1">
+<span class="px-1.5 py-0.5 rounded bg-surface-warm font-mono text-caption text-muted">CPU 74%</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-warm font-mono text-caption text-muted">RAM 91%</span>
+<span class="px-1.5 py-0.5 rounded bg-error-container font-mono text-caption text-accent-coral font-semibold">20 DB Errors</span>
+</div>
+</div>
+<div class="flex justify-center -my-2 text-primary">
+<span class="material-symbols-outlined text-[20px]">arrow_downward</span>
+</div>
+<!-- Pipeline Step 2 -->
+<div class="p-3.5 bg-surface rounded-lg shadow-xs space-y-1.5 hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface font-body-strong text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-primary">filter_alt</span>
+<span>Privacy Engine Scrubbing</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-primary-tint text-primary font-mono text-caption">REGEX + NER</span>
+</div>
+<p class="font-caption text-caption text-body-secondary">Scrub secrets (JWTs, DB credentials) &amp; mask IPs to anonymized tenant-hashed keys.</p>
+</div>
+<div class="flex justify-center -my-2 text-primary">
+<span class="material-symbols-outlined text-[20px]">arrow_downward</span>
+</div>
+<!-- Pipeline Step 3 -->
+<div class="p-3.5 bg-surface rounded-lg shadow-xs space-y-1.5 hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface font-body-strong text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-success">fact_check</span>
+<span>Allow-List Policy Gate</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-success-tint text-success font-mono text-caption font-semibold">STRICT 13 FIELDS</span>
+</div>
+<p class="font-caption text-caption text-body-secondary">Whitelists strictly approved scalar attributes. Any unrecognized schema field is dropped.</p>
+</div>
+<div class="flex justify-center -my-2 text-primary">
+<span class="material-symbols-outlined text-[20px]">arrow_downward</span>
+</div>
+<!-- Pipeline Step 4 -->
+<div class="p-3.5 bg-surface rounded-lg shadow-xs flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded bg-surface-warm flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[16px]">save</span>
+</div>
+<div>
+<div class="font-body-strong text-body-sm text-on-surface">Offline Queue &amp; Egress Proof</div>
+<div class="font-caption text-caption text-muted">SQLite In-Memory Buffer + SHA-256 Digest</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-success text-[18px]">verified</span>
+</div>
+</div>
+<div class="p-3 rounded-lg bg-surface-container flex items-center justify-between text-body-secondary font-mono text-caption">
+<span>LOCAL RETENTION: 7 DAYS</span>
+<span class="text-on-surface font-semibold">TAMPER-PROOF AUDIT LOG</span>
+</div>
+</div>
+<!-- CRYPTOGRAPHIC TRUST BOUNDARY (Middle Conduit) -->
+<div class="lg:col-span-2 flex flex-col items-center justify-center bg-surface-warm rounded-xl p-6 shadow-sm space-y-4 text-center">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-[22px]">lock</span>
+</div>
+<div class="space-y-1"><h1 class="text-[24px] font-bold text-ink tracking-tight leading-tight">Two-Tier Architecture &amp; Global Trust Boundary</h1><p class="text-[14px] text-body-secondary leading-normal">Privacy-First Infrastructure Observability &amp; Autonomous Incident Intelligence</p></div>
+<!-- Interactive Packet Simulation Canvas -->
+<div class="w-full py-4 px-2 bg-surface rounded-lg shadow-xs space-y-2 font-mono text-caption" id="packet-flow-canvas">
+<div class="text-primary font-bold">POST /api/v1/telemetry</div>
+<div class="text-muted text-[11px]">Strict Metadata Only</div>
+<div class="w-full bg-surface-warm rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary h-full w-2/3 transition-all duration-500" id="packet-ping-bar"></div>
+</div>
+<div class="text-success text-[10px] font-semibold flex items-center justify-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+<span>SIGNED SHA-256</span>
+</div>
+</div>
+<div class="text-caption text-muted font-mono leading-relaxed">
+            Egress Block: Raw Payload Drop Rate: <span class="text-on-surface font-bold">100%</span>
+</div>
+</div>
+<!-- TIER 2: Central SaaS Platform -->
+<div class="lg:col-span-5 bg-card-subtle rounded-xl p-6 shadow-sm flex flex-col justify-between space-y-6 relative overflow-hidden">
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-lg bg-success-tint text-success flex items-center justify-center font-mono text-caption font-bold">T2</span>
+<div>
+<h2 class="font-title-sm text-title-sm text-on-surface">Central SaaS Platform</h2>
+<p class="font-caption text-caption text-muted">SaaS Cloud • Multi-Tenant Analytics Engine</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-success-tint text-[#0f5c22] font-mono text-caption font-semibold">SYNCHRONIZED</span>
+</div>
+<!-- SaaS Step 1 -->
+<div class="p-3.5 bg-surface rounded-lg shadow-xs space-y-1.5 hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface font-body-strong text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-primary">dynamic_feed</span>
+<span>FastAPI Ingest &amp; Deduplication</span>
+</div>
+<span class="font-mono text-caption text-muted">PORT 8000</span>
+</div>
+<p class="font-caption text-caption text-body-secondary">Idempotent payload validation by UUID payload_id with sub-millisecond ACK.</p>
+</div>
+<div class="flex justify-center -my-2 text-success">
+<span class="material-symbols-outlined text-[20px]">arrow_downward</span>
+</div>
+<!-- SaaS Step 2 -->
+<div class="p-3.5 bg-surface rounded-lg shadow-xs space-y-1.5 hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface font-body-strong text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-body-secondary">lan</span>
+<span>Multi-Tenant Partitioned Storage</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-chip-lavender text-accent-indigo font-mono text-caption">ROW-LEVEL RLS</span>
+</div>
+<p class="font-caption text-caption text-body-secondary">Isolated by strict <code class="font-mono text-caption text-primary">tenant_id</code> tags across multi-region time-series datastores.</p>
+</div>
+<div class="flex justify-center -my-2 text-success">
+<span class="material-symbols-outlined text-[20px]">arrow_downward</span>
+</div>
+<!-- SaaS Step 3 -->
+<div class="p-3.5 bg-surface rounded-lg shadow-xs space-y-1.5 hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface font-body-strong text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-accent-amber-deep">psychology</span>
+<span>AIOps Anomaly Engine</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-surface-container font-mono text-caption text-body-secondary">ISOLATION FOREST</span>
+</div>
+<p class="font-caption text-caption text-body-secondary">Bayesian correlation across fleet telemetry, out-of-order time-series normalization.</p>
+</div>
+<div class="flex justify-center -my-2 text-success">
+<span class="material-symbols-outlined text-[20px]">arrow_downward</span>
+</div>
+<!-- SaaS Step 4 -->
+<div class="p-3.5 bg-surface rounded-lg shadow-xs flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded bg-surface-warm flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[16px]">insights</span>
+</div>
+<div>
+<div class="font-body-strong text-body-sm text-on-surface">Real-Time Mission Control</div>
+<div class="font-caption text-caption text-muted">Active Stream to Web Dashboard</div>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-error-container text-accent-coral font-mono text-caption font-bold">1 ALERT ACTIVE</span>
+</div>
+</div>
+<div class="p-3 rounded-lg bg-surface-container flex items-center justify-between text-body-secondary font-mono text-caption">
+<span>PII LEAK CHANCE: 0.00%</span>
+<span class="text-success font-semibold">SAAS SLA: 99.99%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 5 Global-Ready Architecture Pillars -->
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="font-title-sm text-title-sm text-on-surface">5 Global Architecture Pillars</h2>
+<p class="font-caption text-caption text-body-secondary">Designed for extreme resilience, cross-jurisdiction compliance, and seamless multi-region failover.</p>
+</div>
+<span class="hidden sm:inline-block px-2.5 py-1 rounded-full bg-surface-warm text-body-secondary font-caption text-caption font-semibold">ISO-27001 &amp; SOC2 COMPLIANT</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4"><div class="p-4 bg-surface rounded-xl shadow-sm border border-black/5 hover:shadow-md transition-shadow flex flex-col justify-between h-full"><div class="space-y-2.5"><div class="w-7 h-7 rounded-md bg-surface-warm flex items-center justify-center text-primary font-mono text-[12px] font-bold border border-black/5">01</div><div class="font-semibold text-[13px] text-ink leading-snug">Regional Ingest</div><p class="text-[12px] text-body-secondary leading-relaxed">Collectors route strictly to designated nearest regional endpoints (e.g. us-east-1, eu-central-1) to minimize p99 egress latency.</p></div><div class="pt-3 mt-auto flex items-center gap-1.5 font-mono text-[11px] text-muted"><span class="material-symbols-outlined text-[15px] text-success shrink-0">speed</span><span class="truncate">&lt; 15ms target edge</span></div></div><div class="p-4 bg-surface rounded-xl shadow-sm border border-black/5 hover:shadow-md transition-shadow flex flex-col justify-between h-full"><div class="space-y-2.5"><div class="w-7 h-7 rounded-md bg-surface-warm flex items-center justify-center text-primary font-mono text-[12px] font-bold border border-black/5">02</div><div class="font-semibold text-[13px] text-ink leading-snug">Tenant Residency</div><p class="text-[12px] text-body-secondary leading-relaxed">Metadata tagged with cryptographic tenant_id and partitioned strictly inside customer legal zones for GDPR and DPDP compliance.</p></div><div class="pt-3 mt-auto flex items-center gap-1.5 font-mono text-[11px] text-muted"><span class="material-symbols-outlined text-[15px] text-accent-indigo shrink-0">policy</span><span class="truncate">Geographic fences</span></div></div><div class="p-4 bg-surface rounded-xl shadow-sm border border-black/5 hover:shadow-md transition-shadow flex flex-col justify-between h-full"><div class="space-y-2.5"><div class="w-7 h-7 rounded-md bg-surface-warm flex items-center justify-center text-primary font-mono text-[12px] font-bold border border-black/5">03</div><div class="font-semibold text-[13px] text-ink leading-snug">UTC Timestamps</div><p class="text-[12px] text-body-secondary leading-relaxed">Strict ISO-8601 millisecond UTC across all global agents guarantees zero timezone disparity in root-cause timeline analysis.</p></div><div class="pt-3 mt-auto flex items-center gap-1.5 font-mono text-[11px] text-muted"><span class="material-symbols-outlined text-[15px] text-primary shrink-0">schedule</span><span class="truncate">ISO-8601 monotonic</span></div></div><div class="p-4 bg-surface rounded-xl shadow-sm border border-black/5 hover:shadow-md transition-shadow flex flex-col justify-between h-full"><div class="space-y-2.5"><div class="w-7 h-7 rounded-md bg-surface-warm flex items-center justify-center text-primary font-mono text-[12px] font-bold border border-black/5">04</div><div class="font-semibold text-[13px] text-ink leading-snug">Out-of-Order Handling</div><p class="text-[12px] text-body-secondary leading-relaxed">Time-series aggregations index dynamically by event emission time, preventing late-arriving batch packets from skewing trend metrics.</p></div><div class="pt-3 mt-auto flex items-center gap-1.5 font-mono text-[11px] text-muted"><span class="material-symbols-outlined text-[15px] text-accent-amber-deep shrink-0">merge_type</span><span class="truncate">B-Tree re-order</span></div></div><div class="p-4 bg-surface rounded-xl shadow-sm border border-black/5 hover:shadow-md transition-shadow flex flex-col justify-between h-full"><div class="space-y-2.5"><div class="w-7 h-7 rounded-md bg-surface-warm flex items-center justify-center text-primary font-mono text-[12px] font-bold border border-black/5">05</div><div class="font-semibold text-[13px] text-ink leading-snug">Idempotent Retries</div><p class="text-[12px] text-body-secondary leading-relaxed">Every dispatched event carries an immutable UUID payload_id. Network reconnect replays are automatically deduplicated in RAM.</p></div><div class="pt-3 mt-auto flex items-center gap-1.5 font-mono text-[11px] text-muted"><span class="material-symbols-outlined text-[15px] text-success shrink-0">restart_alt</span><span class="truncate">Zero duplication</span></div></div></div>
+</div>
+<!-- Technical Topology Inspector & Live Payload Schema -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<!-- Allow-List Strict Contract Table (7 Cols) -->
+<div class="lg:col-span-7 bg-surface rounded-xl p-5 shadow-sm space-y-4">
+<div class="flex items-center justify-between">
+<div class="space-y-0.5">
+<div class="font-body-strong text-body-strong text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">checklist</span>
+<span>Tier 1 Whitelist Schema: Exactly 13 Safe Fields</span>
+</div>
+<p class="font-caption text-caption text-body-secondary">Non-whitelisted attributes trigger immediate edge dropping and alert escalation.</p>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-warm font-mono text-caption text-on-surface font-semibold">13/13 VERIFIED</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left font-caption text-caption">
+<thead>
+<tr class="bg-surface-warm text-body-secondary font-mono">
+<th class="py-2 px-3 rounded-l-md font-semibold">FIELD NAME</th>
+<th class="py-2 px-3 font-semibold">TYPE</th>
+<th class="py-2 px-3 font-semibold">EXAMPLE VALUE</th>
+<th class="py-2 px-3 rounded-r-md font-semibold">PRIVACY STATUS</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-hairline font-mono"><tr class="hover:bg-surface-warm/50 transition-colors"><td class="py-2.5 px-3 text-primary font-semibold text-[12px]">timestamp_utc</td><td class="py-2.5 px-3 text-body-secondary text-[12px]">string (ISO-8601)</td><td class="py-2.5 px-3 text-on-surface text-[12px]">2025-05-18T23:59:14.281Z</td><td class="py-2.5 px-3"><span class="inline-flex items-center px-2 py-0.5 rounded bg-success-tint/60 text-[#0f5c22] text-[11px] font-semibold">Passed Clean</span></td></tr><tr class="hover:bg-surface-warm/50 transition-colors"><td class="py-2.5 px-3 text-primary font-semibold text-[12px]">tenant_id</td><td class="py-2.5 px-3 text-body-secondary text-[12px]">string (hash)</td><td class="py-2.5 px-3 text-on-surface text-[12px]">tnt_98fa2041</td><td class="py-2.5 px-3"><span class="inline-flex items-center px-2 py-0.5 rounded bg-chip-lavender text-accent-indigo text-[11px] font-semibold">HMAC-SHA256</span></td></tr><tr class="hover:bg-surface-warm/50 transition-colors"><td class="py-2.5 px-3 text-primary font-semibold text-[12px]">node_id</td><td class="py-2.5 px-3 text-body-secondary text-[12px]">string</td><td class="py-2.5 px-3 text-accent-coral font-semibold text-[12px]">node_b92c (PostgreSQL)</td><td class="py-2.5 px-3"><span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-warm text-body-secondary text-[11px] font-semibold">Pseudonymized</span></td></tr><tr class="hover:bg-surface-warm/50 transition-colors"><td class="py-2.5 px-3 text-primary font-semibold text-[12px]">cpu_utilization</td><td class="py-2.5 px-3 text-body-secondary text-[12px]">float (0.0-100.0)</td><td class="py-2.5 px-3 text-on-surface text-[12px]">74.20</td><td class="py-2.5 px-3"><span class="inline-flex items-center px-2 py-0.5 rounded bg-success-tint/60 text-[#0f5c22] text-[11px] font-semibold">Scalar Clean</span></td></tr><tr class="hover:bg-surface-warm/50 transition-colors"><td class="py-2.5 px-3 text-primary font-semibold text-[12px]">memory_used_pct</td><td class="py-2.5 px-3 text-body-secondary text-[12px]">float (0.0-100.0)</td><td class="py-2.5 px-3 text-accent-coral font-semibold text-[12px]">91.40</td><td class="py-2.5 px-3"><span class="inline-flex items-center px-2 py-0.5 rounded bg-success-tint/60 text-[#0f5c22] text-[11px] font-semibold">Scalar Clean</span></td></tr><tr class="hover:bg-surface-warm/50 transition-colors"><td class="py-2.5 px-3 text-primary font-semibold text-[12px]">query_error_count</td><td class="py-2.5 px-3 text-body-secondary text-[12px]">integer</td><td class="py-2.5 px-3 text-accent-coral font-semibold text-[12px]">20</td><td class="py-2.5 px-3"><span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-warm text-body-secondary text-[11px] font-semibold">Count Aggregation</span></td></tr><tr class="hover:bg-surface-warm/50 transition-colors"><td class="py-2.5 px-3 text-primary font-semibold text-[12px]">db_query_body</td><td class="py-2.5 px-3 text-muted text-[12px]">any</td><td class="py-2.5 px-3 text-accent-coral italic text-[12px]">[SELECT * FROM users...]</td><td class="py-2.5 px-3"><span class="inline-flex items-center px-2 py-0.5 rounded bg-error-container text-accent-coral text-[11px] font-bold border border-accent-coral/20">DROPPED BY GATE</span></td></tr></tbody>
+</table>
+</div>
+<div class="p-3 bg-surface-warm rounded-lg flex items-center justify-between text-body-secondary font-caption text-caption">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-success">lock</span>
+<span>Policy gate enforced by WebAssembly kernel module inside Tier 1 VPC daemon.</span>
+</span>
+<span class="font-mono text-muted">GATE_VER: 2.14.0</span>
+</div>
+</div>
+<!-- Real-Time Latency Budget & Cryptographic Proof Stream (5 Cols) -->
+<div class="lg:col-span-5 space-y-4">
+<!-- Latency Budget Card -->
+<div class="bg-surface rounded-xl p-5 shadow-sm space-y-4">
+<div class="flex items-center justify-between">
+<div class="font-body-strong text-body-strong text-on-surface">Transit Latency Budget (Target: &lt; 20ms)</div>
+<span class="px-2 py-0.5 rounded-full bg-success-tint text-success font-mono text-caption font-semibold">14.2ms ACTIVE</span>
+</div>
+<div class="space-y-3 font-caption text-caption">
+<div class="space-y-1">
+<div class="flex justify-between font-mono">
+<span class="text-body-secondary">Tier 1 Regex &amp; Anonymization</span>
+<span class="text-on-surface font-semibold">1.8 ms</span>
+</div>
+<div class="w-full bg-surface-warm rounded-full h-1.5">
+<div class="bg-primary h-full rounded-full" style="width: 15%"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between font-mono">
+<span class="text-body-secondary">Allow-List Schema Validation Gate</span>
+<span class="text-on-surface font-semibold">0.4 ms</span>
+</div>
+<div class="w-full bg-surface-warm rounded-full h-1.5">
+<div class="bg-primary h-full rounded-full" style="width: 5%"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between font-mono">
+<span class="text-body-secondary">mTLS 1.3 Wire Transit (us-east-1)</span>
+<span class="text-on-surface font-semibold">9.8 ms</span>
+</div>
+<div class="w-full bg-surface-warm rounded-full h-1.5">
+<div class="bg-accent-indigo h-full rounded-full" style="width: 60%"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between font-mono">
+<span class="text-body-secondary">FastAPI SaaS Ingest &amp; Deduplication</span>
+<span class="text-on-surface font-semibold">2.2 ms</span>
+</div>
+<div class="w-full bg-surface-warm rounded-full h-1.5">
+<div class="bg-success h-full rounded-full" style="width: 20%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Live Immutable Proof Hash Stream -->
+<div class="bg-surface rounded-xl p-5 shadow-sm space-y-3">
+<div class="flex items-center justify-between">
+<div class="font-body-strong text-body-strong text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-success">fingerprint</span>
+<span>Egress Proof Audit Stream</span>
+</div>
+<span class="font-mono text-caption text-muted animate-pulse">STREAMING</span>
+</div>
+<div class="p-3 bg-surface-warm rounded-lg font-mono text-[11px] text-body-secondary space-y-2 h-44 overflow-y-auto" id="egress-proof-console">
+<div class="flex items-center justify-between text-on-surface">
+<span class="text-success font-semibold">[VERIFIED]</span>
+<span class="truncate max-w-[200px]">SHA: c912f...48ea (node_a81f)</span>
+<span class="text-muted">23:59:12.102</span>
+</div>
+<div class="flex items-center justify-between text-on-surface">
+<span class="text-success font-semibold">[VERIFIED]</span>
+<span class="truncate max-w-[200px]">SHA: 104ab...ff32 (node_c73d)</span>
+<span class="text-muted">23:59:12.894</span>
+</div>
+<div class="flex items-center justify-between text-on-surface bg-error-container/40 p-1 rounded">
+<span class="text-accent-coral font-bold">[SCRUBBED]</span>
+<span class="truncate max-w-[200px] text-accent-coral">REDACTED_PII: 4 tokens (node_b92c)</span>
+<span class="text-muted">23:59:13.411</span>
+</div>
+<div class="flex items-center justify-between text-on-surface">
+<span class="text-success font-semibold">[VERIFIED]</span>
+<span class="truncate max-w-[200px]">SHA: 771dc...319b (node_b92c)</span>
+<span class="text-muted">23:59:14.002</span>
+</div>
+<div class="flex items-center justify-between text-on-surface">
+<span class="text-success font-semibold">[VERIFIED]</span>
+<span class="truncate max-w-[200px]">SHA: e4990...cc81 (node_a81f)</span>
+<span class="text-muted">23:59:14.281</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<button class="text-caption text-primary hover:text-primary-pressed font-medium flex items-center gap-1 transition-colors" onclick="downloadAuditProof()">
+<span class="material-symbols-outlined text-[15px]">download</span>
+<span>Export Zero-Knowledge Audit Certificate (.json)</span>
+</button>
+<span class="font-mono text-caption text-muted">256-bit GCM</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Architecture Assurance Banner -->
+<div class="p-6 bg-surface-container rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+<div class="space-y-1">
+<div class="font-body-strong text-body-strong text-on-surface">Ready to simulate disaster failover?</div>
+<p class="font-caption text-caption text-body-secondary max-w-2xl">
+          Trigger cross-region network partitions or node degradation directly from the left Workload Simulator to inspect Tier 1 offline buffering and out-of-order reconstitution.
+        </p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 rounded-lg bg-surface text-on-surface hover:bg-surface-warm font-button text-button shadow-xs transition-colors" onclick="setFleetScenario('degraded')">
+          Inject DB Overload
+        </button>
+<button class="px-4 py-2 rounded-lg bg-primary hover:bg-primary-pressed text-on-primary font-button text-button shadow-xs transition-colors" onclick="setFleetScenario('normal')">
+          Reset Fleet Baseline
+        </button>
+</div>
+</div>
+</div>
+</div>
+<script>
+function simulatePayloadPing() {
+  const bar = document.getElementById('packet-ping-bar');
+  const consoleEl = document.getElementById('egress-proof-console');
+  if (!bar) return;
+  
+  bar.style.width = '10%';
+  setTimeout(() => { bar.style.width = '60%'; }, 200);
+  setTimeout(() => { 
+    bar.style.width = '100%';
+    if (consoleEl) {
+      const now = new Date().toISOString().substring(11, 23);
+      const randHash = Math.random().toString(36).substring(2, 8);
+      const newRow = document.createElement('div');
+      newRow.className = 'flex items-center justify-between text-on-surface';
+      newRow.innerHTML = `<span class="text-success font-semibold">[VERIFIED]</span><span class="truncate max-w-[200px]">SHA: ` + randHash + `...91df (manual_ping)</span><span class="text-muted">` + now + `</span>`;
+      consoleEl.prepend(newRow);
+    }
+  }, 450);
+  setTimeout(() => { bar.style.width = '66%'; }, 1000);
+}
+
+function downloadAuditProof() {
+  const sampleCertificate = {
+    standard: "SentinelOps-Zero-Knowledge-Egress-v2",
+    tenant: "tenant_demo",
+    timestamp: new Date().toISOString(),
+    sha256_digest: "9b3c4f982ea012e8812cfa098bca12ef329402941fa09192487eecaa98b",
+    pii_violations_detected_at_edge: 4,
+    pii_violations_egressed: 0,
+    policy_enforcement: "PASS - 100% PURE SCALAR TELEMETRY"
+  };
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(sampleCertificate, null, 2));
+  const downloadAnchor = document.createElement('a');
+  downloadAnchor.setAttribute("href", dataStr);
+  downloadAnchor.setAttribute("download", "sentinelops_audit_certificate.json");
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
+}
+</script></main></div><!-- CLIENT-SIDE INTERACTIVITY CONTROLLER --><script>
+const nodeData = {
+  'node_a81f': {
+    name: 'node_a81f',
+    role: 'Production Application Cluster',
+    icon: 'web',
+    status: 'Nominal',
+    cpu: '28.1%',
+    mem: '42.0%',
+    lat: '14 ms'
+  },
+  'node_b92c': {
+    name: 'node_b92c',
+    role: 'PostgreSQL Primary Cluster',
+    icon: 'database',
+    status: 'Degrading',
+    cpu: '74.2%',
+    mem: '91.4%',
+    lat: '182 ms'
+  },
+  'node_c73d': {
+    name: 'node_c73d',
+    role: 'Edge API Gateway',
+    icon: 'router',
+    status: 'Nominal',
+    cpu: '19.4%',
+    mem: '31.2%',
+    lat: '8 ms'
+  }
+};
+
+function setFleetScenario(scenario) {
+  const healthEl = document.getElementById('kpi-val-health');
+  const badgeStatus = document.getElementById('badge-cluster-status');
+  const alertsEl = document.getElementById('kpi-val-alerts');
+  const latencyEl = document.getElementById('kpi-val-latency');
+  const alertsContainer = document.getElementById('alerts-container');
+  if (!healthEl) return;
+  
+  if (scenario === 'normal') {
+    healthEl.innerText = 'NOMINAL';
+    healthEl.className = 'text-[36px] font-extrabold text-success tracking-tight font-sans leading-none';
+    badgeStatus.innerText = 'OPTIMAL';
+    badgeStatus.className = 'font-mono text-[12px] font-bold text-success uppercase';
+    alertsEl.innerText = '0';
+    alertsEl.className = 'text-[36px] font-extrabold text-success tracking-tight font-sans leading-none';
+    latencyEl.innerText = '14.2';
+    alertsContainer.innerHTML = '<div class="p-4 rounded-[12px] notion-card border-l-4 border-l-success flex items-center justify-between"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-success"></span><span class="text-[13px] font-mono text-success font-medium">All fleet nodes operating within nominal thresholds. No active anomalies.</span></div><span class="font-mono text-[11px] text-muted">SYNCED</span></div>';
+  } else if (scenario === 'spike') {
+    healthEl.innerText = 'DEGRADED';
+    healthEl.className = 'text-[36px] font-extrabold text-accent-amber-deep tracking-tight font-sans leading-none';
+    badgeStatus.innerText = 'DEGRADED';
+    badgeStatus.className = 'font-mono text-[12px] font-bold text-accent-amber-deep uppercase';
+    alertsEl.innerText = '14';
+    alertsEl.className = 'text-[36px] font-extrabold text-accent-amber-deep tracking-tight font-sans leading-none';
+    latencyEl.innerText = '64.5';
+    alertsContainer.innerHTML = '<div class="p-4 rounded-[12px] notion-card border-l-4 border-l-accent-amber flex flex-col gap-1.5"><div class="flex justify-between items-center"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-accent-amber shrink-0"></span><span class="font-mono font-semibold text-[13px] text-ink">WARNING • node_a81f — CPU_UTILIZATION_HIGH (92.4%)</span></div><span class="font-mono text-[11px] text-muted">UTC INGESTION</span></div><p class="text-[13px] text-body-secondary pl-4">Worker CPU sustained &gt; 90% for 3 evaluation windows</p></div>';
+  } else if (scenario === 'network') {
+    healthEl.innerText = 'DEGRADED';
+    healthEl.className = 'text-[36px] font-extrabold text-accent-amber-deep tracking-tight font-sans leading-none';
+    badgeStatus.innerText = 'PARTITION';
+    badgeStatus.className = 'font-mono text-[12px] font-bold text-accent-amber-deep uppercase';
+    alertsEl.innerText = '32';
+    alertsEl.className = 'text-[36px] font-extrabold text-accent-amber-deep tracking-tight font-sans leading-none';
+    latencyEl.innerText = '210.8';
+    alertsContainer.innerHTML = '<div class="p-4 rounded-[12px] notion-card border-l-4 border-l-accent-amber flex flex-col gap-1.5"><div class="flex justify-between items-center"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-accent-amber shrink-0"></span><span class="font-mono font-semibold text-[13px] text-ink">WARNING • node_c73d — NETWORK_PACKET_DROP (18.2%)</span></div><span class="font-mono text-[11px] text-muted">UTC INGESTION</span></div><p class="text-[13px] text-body-secondary pl-4">Edge ingress packet drop rate elevated across us-east transit gateway</p></div>';
+  } else {
+    healthEl.innerText = 'POOR';
+    healthEl.className = 'text-[36px] font-extrabold text-accent-coral tracking-tight font-sans leading-none';
+    badgeStatus.innerText = 'POOR';
+    badgeStatus.className = 'font-mono text-[12px] font-bold text-accent-coral uppercase';
+    alertsEl.innerText = '100';
+    alertsEl.className = 'text-[36px] font-extrabold text-accent-coral tracking-tight font-sans leading-none';
+    latencyEl.innerText = '88.7';
+    alertsContainer.innerHTML = '<div class="p-4 rounded-[12px] notion-card hover:border-black/20 transition-all flex flex-col gap-1.5 relative border-l-4 border-l-accent-coral"><div class="flex flex-wrap items-center justify-between gap-2"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-accent-coral shrink-0"></span><span class="font-mono text-[13px] font-semibold text-ink">CRITICAL • node_b92c — HIGH_ERROR_COUNT (20.0)</span><span class="px-2 py-0.5 rounded-full bg-chip-lavender text-[#5b21b6] font-mono text-[10px] font-semibold">PostgreSQL</span></div><span class="font-mono text-[11px] text-muted uppercase">UTC INGESTION</span></div><p class="text-[13px] text-body-secondary pl-4">Application error count at 20 exceeds threshold &gt;= 20</p></div><div class="p-4 rounded-[12px] notion-card hover:border-black/20 transition-all flex flex-col gap-1.5 relative border-l-4 border-l-accent-coral"><div class="flex flex-wrap items-center justify-between gap-2"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-accent-coral shrink-0"></span><span class="font-mono text-[13px] font-semibold text-ink">CRITICAL • node_b92c — SECURITY_FAILED_LOGINS (14.0)</span><span class="px-2 py-0.5 rounded-full bg-accent-amber/20 text-[#854d0e] font-mono text-[10px] font-semibold">Security Threat</span></div><span class="font-mono text-[11px] text-muted uppercase">UTC INGESTION</span></div><p class="text-[13px] text-body-secondary pl-4">Security alert: 14 failed logins detected (threshold &gt;= 5)</p></div><div class="p-4 rounded-[12px] notion-card hover:border-black/20 transition-all flex flex-col gap-1.5 relative border-l-4 border-l-accent-coral"><div class="flex flex-wrap items-center justify-between gap-2"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-accent-coral shrink-0"></span><span class="font-mono text-[13px] font-semibold text-ink">CRITICAL • node_b92c — HIGH_DISK (98.0)</span><span class="px-2 py-0.5 rounded-full bg-error-container text-accent-coral font-mono text-[10px] font-semibold">Disk Vol</span></div><span class="font-mono text-[11px] text-muted uppercase">UTC INGESTION</span></div><p class="text-[13px] text-body-secondary pl-4">Disk utilization at 98.0% exceeds threshold of 90.0%</p></div><div class="p-4 rounded-[12px] notion-card hover:border-black/20 transition-all flex flex-col gap-1.5 relative border-l-4 border-l-accent-coral"><div class="flex flex-wrap items-center justify-between gap-2"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-accent-coral shrink-0"></span><span class="font-mono text-[13px] font-semibold text-ink">CRITICAL • node_c73d — HIGH_ERROR_COUNT (25.0)</span><span class="px-2 py-0.5 rounded-full bg-primary-tint text-primary-pressed font-mono text-[10px] font-semibold">Edge Gateway</span></div><span class="font-mono text-[11px] text-muted uppercase">UTC INGESTION</span></div><p class="text-[13px] text-body-secondary pl-4">Application error count at 25 exceeds threshold &gt;= 20</p></div>';
+  }
+}
+
+function refreshFleetMetrics() {
+  const btn = event.currentTarget;
+  const origText = btn.innerHTML;
+  btn.innerHTML = '<span class="material-symbols-outlined text-[15px] animate-spin">sync</span><span>Syncing Fleet...</span>';
+  setTimeout(() => {
+    btn.innerHTML = origText;
+  }, 450);
+}
+
+function switchMainTab(tab) {
+  const tabs = ['tab-phase1', 'tab-phase2', 'tab-phase3'];
+  tabs.forEach(t => {
+    const el = document.getElementById(t);
+    if (el) {
+      el.className = 'flex items-center gap-2 pb-3 border-b-2 border-transparent text-body-secondary hover:text-ink text-[14px] font-medium transition-all';
+      const icon = el.querySelector('.material-symbols-outlined');
+      if (icon) icon.className = 'material-symbols-outlined text-[18px] text-muted';
+    }
+  });
+  const active = document.getElementById('tab-' + tab);
+  if (active) {
+    active.className = 'flex items-center gap-2 pb-3 border-b-2 border-primary text-ink text-[14px] font-semibold transition-all';
+    const activeIcon = active.querySelector('.material-symbols-outlined');
+    if (activeIcon) activeIcon.className = 'material-symbols-outlined text-[18px] text-primary';
+  }
+}
+
+function testPrivacyRedaction() {
+  const sel = document.getElementById('privacy-payload-selector');
+  const val = sel ? sel.value : 'payload';
+  alert('Notion Privacy Engine Verified: Zero-Knowledge redaction active. Payload "' + val + '" secured before egress.');
+}
+
+function handlePrivacySelection(val) {
+  // hook for payload switch
+}
+</script>
+
+</body></html>

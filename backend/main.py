@@ -89,6 +89,19 @@ app.include_router(telemetry_router)
 app.include_router(alerts_router)
 app.include_router(audit_router)
 
+# Mount Web Dashboard (Mission Control)
+import os
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse
+
+dashboard_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "dashboard_web")
+if os.path.exists(dashboard_dir):
+    app.mount("/dashboard", StaticFiles(directory=dashboard_dir, html=True), name="dashboard")
+
+@app.get("/ui", include_in_schema=False)
+async def ui_redirect():
+    return RedirectResponse(url="/dashboard/")
+
 
 if __name__ == "__main__":
     import uvicorn

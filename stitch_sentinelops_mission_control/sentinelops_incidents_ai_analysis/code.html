@@ -1,0 +1,551 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>
+  @layer base {
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #FFFFFF;
+      color: #000000;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .notion-border {
+    border: 1px solid rgba(0, 0, 0, 0.09);
+  }
+  .notion-divider {
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "secondary-container": "#e5ded9",
+          "body-secondary": "#615D59",
+          "chip-lavender": "#EADBFA",
+          "primary-tint": "#E6F3FE",
+          "on-secondary-container": "#66625e",
+          "on-error": "#ffffff",
+          "on-tertiary-container": "#fffeff",
+          "surface-variant": "#e8e1db",
+          "surface-container-high": "#eee7e0",
+          "accent-red": "#E32D14",
+          "secondary-fixed-dim": "#ccc5c0",
+          "primary-fixed-dim": "#a8c8ff",
+          "accent-amber": "#FFB110",
+          "outline-variant": "#c1c6d5",
+          "surface-container-highest": "#e8e1db",
+          "primary-focus": "#0075DE",
+          "on-primary": "#ffffff",
+          "primary-fixed": "#d5e3ff",
+          "success": "#1AAE39",
+          "card-subtle": "#F9F9F8",
+          "on-background": "#1d1b17",
+          "surface-container-low": "#f9f3ec",
+          "surface-container": "#f3ede6",
+          "on-error-container": "#93000a",
+          "error-container": "#ffdad6",
+          "surface-warm": "#F6F5F4",
+          "tertiary-fixed": "#d5e3ff",
+          "outline": "#717784",
+          "tertiary": "#005dae",
+          "primary": "#0075DE",
+          "muted": "#A39E98",
+          "inverse-primary": "#a8c8ff",
+          "accent-coral": "#F64932",
+          "on-primary-fixed-variant": "#00468a",
+          "success-tint": "#D0F4D8",
+          "on-surface": "#1d1b17",
+          "surface": "#FFFFFF",
+          "tertiary-container": "#0076da",
+          "accent-indigo": "#1313BA",
+          "ink": "#000000",
+          "tertiary-fixed-dim": "#a6c8ff",
+          "on-secondary-fixed": "#1e1b18",
+          "background": "#FFFFFF",
+          "on-primary-container": "#fffeff",
+          "on-tertiary-fixed": "#001c3b",
+          "on-tertiary-fixed-variant": "#004787",
+          "on-primary-fixed": "#001b3c",
+          "surface-tint": "#0075DE",
+          "on-secondary-fixed-variant": "#4a4642",
+          "error": "#E32D14",
+          "inverse-on-surface": "#f6f0e9",
+          "secondary": "#615D59",
+          "surface-bright": "#FFFFFF",
+          "on-surface-variant": "#615D59",
+          "secondary-fixed": "#e8e1dc",
+          "hairline": "rgba(0,0,0,0.09)",
+          "surface-dim": "#F6F5F4",
+          "on-secondary": "#ffffff",
+          "on-tertiary": "#ffffff",
+          "primary-container": "#0075de",
+          "accent-amber-deep": "#E89D01",
+          "inverse-surface": "#33302c",
+          "surface-container-lowest": "#ffffff",
+          "primary-pressed": "#005BAB"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.375rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "fontFamily": {
+          sans: ["Inter", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
+          mono: ["JetBrains Mono", "SFMono-Regular", "Menlo", "monospace"]
+        }
+      },
+    },
+  }
+</script></head><body class="bg-surface text-ink antialiased selection:bg-[#cce5ff] selection:text-ink"><header class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md notion-border border-b border-t-0 border-x-0 h-14 flex items-center justify-between px-5"><div class="flex items-center gap-6"><div class="flex items-center gap-2.5"><div class="w-7 h-7 rounded-lg bg-surface-warm notion-border flex items-center justify-center text-ink"><span class="material-symbols-outlined text-[18px]">verified_user</span></div><div class="flex flex-col"><div class="flex items-center gap-1.5"><span class="text-[13px] font-semibold text-ink tracking-tight">SentinelOps AI</span><span class="text-[10px] uppercase font-mono px-1.5 py-0.2 rounded bg-surface-warm text-body-secondary notion-border">v2.4</span></div></div></div><div class="h-4 w-[1px] bg-black/10 hidden md:block"></div><nav class="hidden lg:flex items-center gap-1"><a class="px-2.5 py-1 rounded-md text-[13px] text-body-secondary hover:text-ink hover:bg-surface-warm transition-colors" data-path="overview-map" href="#">Overview</a><a aria-current="page" class="px-2.5 py-1 rounded-md text-[13px] bg-surface-warm text-ink font-semibold notion-border" data-path="incidents" href="#">Incidents</a><a class="px-2.5 py-1 rounded-md text-[13px] text-body-secondary hover:text-ink hover:bg-surface-warm transition-colors" data-path="ai-intelligence" href="#">AI Intelligence</a><a class="px-2.5 py-1 rounded-md text-[13px] text-body-secondary hover:text-ink hover:bg-surface-warm transition-colors" data-path="privacy-center" href="#">Privacy Center</a><a class="px-2.5 py-1 rounded-md text-[13px] text-body-secondary hover:text-ink hover:bg-surface-warm transition-colors" data-path="architecture-walkthrough" href="#">Topology</a></nav></div><div class="flex items-center gap-2.5"><div class="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-card-subtle notion-border text-[12px] font-mono text-body-secondary"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>FastAPI :8000</span></div><div class="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-md bg-surface-warm text-[12px] font-mono text-body-secondary notion-border"><span class="material-symbols-outlined text-[14px]">schedule</span><span id="system-telemetry-clock">23:59:14 UTC</span></div><button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary hover:bg-[#0066c0] text-white text-[12px] font-medium transition-colors shadow-sm" type="button"><span class="material-symbols-outlined text-[15px]">play_arrow</span><span>Quick Simulation</span></button><div class="w-7 h-7 rounded-full bg-surface-warm notion-border flex items-center justify-center text-ink text-[12px] font-medium cursor-pointer hover:bg-black/5 transition-colors">SO</div></div></header><aside class="fixed left-0 top-14 h-[calc(100vh-3.5rem)] w-60 bg-card-subtle notion-border border-r border-t-0 border-b-0 border-l-0 z-40 flex flex-col justify-between p-3"><div class="flex flex-col gap-5"><div class="flex flex-col gap-1"><span class="text-[10px] font-semibold uppercase tracking-wider text-body-secondary/70 px-2 py-1">Autonomous Engines</span><nav class="flex flex-col gap-0.5"><a class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-body-secondary hover:bg-white hover:text-ink text-[13px] transition-all" data-path="overview-map" href="#"><span class="material-symbols-outlined text-[17px] text-body-secondary">dashboard</span><span>Mission Control</span></a><a class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-body-secondary hover:bg-white hover:text-ink text-[13px] transition-all" data-path="telemetry-stream" href="#"><span class="material-symbols-outlined text-[17px] text-body-secondary">stream</span><span>Live Telemetry</span></a><a aria-current="page" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-white text-ink text-[13px] font-medium notion-border shadow-xs" data-path="incidents" href="#"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-[17px] text-accent-red">crisis_alert</span><span>Active Anomalies</span></div><span class="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-red-50 text-accent-red font-semibold border border-red-200">1</span></a></nav></div><div class="flex flex-col gap-1"><span class="text-[10px] font-semibold uppercase tracking-wider text-body-secondary/70 px-2 py-1">Privacy &amp; Policy</span><nav class="flex flex-col gap-0.5"><a class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-body-secondary hover:bg-white hover:text-ink text-[13px] transition-all" data-path="privacy-center" href="#"><span class="material-symbols-outlined text-[17px] text-body-secondary">shield</span><span>Zero-Leakage Mesh</span></a><a class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-body-secondary hover:bg-white hover:text-ink text-[13px] transition-all" data-path="ai-intelligence" href="#"><span class="material-symbols-outlined text-[17px] text-body-secondary">neurology</span><span>Neural Audits</span></a><a class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-body-secondary hover:bg-white hover:text-ink text-[13px] transition-all" data-path="architecture-walkthrough" href="#"><span class="material-symbols-outlined text-[17px] text-body-secondary">account_tree</span><span>Topology Graph</span></a></nav></div></div><div class="p-2.5 rounded-lg bg-surface-warm notion-border flex flex-col gap-1"><div class="flex items-center justify-between"><span class="text-[10px] font-semibold uppercase tracking-wider text-body-secondary">Data Enclave</span><span class="text-[10px] font-medium text-emerald-700 bg-emerald-100/70 px-1.5 py-0.5 rounded">Isolated</span></div><span class="text-[11px] font-mono text-body-secondary">ZK-Attested Local Core</span></div></aside><div class="pl-60"><main class="relative w-full pt-14 bg-white min-h-screen"><div class="flex flex-col w-full">
+<div class="px-8 py-8 flex flex-col gap-6 max-w-[1520px] mx-auto w-full">
+<!-- Notion Page Header Block -->
+<div class="flex flex-col gap-4">
+<div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4 pb-2 border-b notion-divider">
+<div class="flex flex-col gap-2"><!-- Breadcrumb / Tags -->
+<div class="flex items-center gap-2 text-[12px] flex-wrap">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-surface-warm text-body-secondary font-mono text-[11px] notion-border">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span>Engine v2.4</span>
+</span>
+<span class="text-black/20 font-mono">/</span>
+<span class="text-body-secondary font-medium text-[12px]">Alpha-9 (US-East)</span>
+<span class="text-black/20 font-mono">/</span>
+<span class="inline-flex items-center text-accent-red font-medium text-[11px] px-2 py-0.5 rounded bg-red-50 border border-red-200">1 Critical Anomaly</span>
+</div>
+<!-- Clean Minimal Headline -->
+<h1 class="text-[34px] font-bold text-ink tracking-tight leading-tight flex items-center gap-3 mt-1">
+  Active Anomalies &amp; Root Causes
+</h1>
+<p class="text-[14px] text-body-secondary max-w-3xl leading-relaxed mt-0.5">
+  Autonomous Bayesian telemetry engine correlating runtime divergence across distributed nodes. Executing sandboxed zero-knowledge mitigation envelopes.
+</p></div>
+<!-- Filters Strip -->
+<div class="flex items-center gap-2 self-start lg:self-center">
+<div class="flex items-center bg-card-subtle p-1 rounded-lg notion-border gap-1">
+<button class="filter-btn px-2.5 py-1 rounded-md text-[12px] font-medium text-body-secondary hover:text-ink transition-colors" id="filter-all">All (16)</button>
+<button class="filter-btn active-filter px-2.5 py-1 rounded-md text-[12px] font-medium bg-primary-tint text-primary notion-border" id="filter-active">
+          Active (1)
+        </button>
+<button class="filter-btn px-2.5 py-1 rounded-md text-[12px] font-medium text-body-secondary hover:text-ink transition-colors" id="filter-investigating">Investigating (1)</button>
+<button class="filter-btn px-2.5 py-1 rounded-md text-[12px] font-medium text-body-secondary hover:text-ink transition-colors" id="filter-resolved">Resolved (14)</button>
+</div>
+</div>
+</div>
+<!-- Notion Callout / CLI Telemetry Stream Banner -->
+<div class="flex flex-wrap items-center justify-between gap-3 px-3.5 py-2.5 bg-surface-warm rounded-lg notion-border"><div class="flex items-center gap-2.5 text-[12px] font-mono flex-wrap">
+<span class="material-symbols-outlined text-[16px] text-body-secondary">terminal</span>
+<span class="text-body-secondary select-none font-medium">CLI Stream:</span>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-white notion-border text-ink select-all shadow-xs">
+<span class="text-primary font-semibold select-none">$</span>
+<span class="text-[12px]">sentinelops incidents stream --live --cluster=alpha-9</span>
+</div>
+<button class="p-1 rounded hover:bg-white text-body-secondary hover:text-ink transition-colors flex items-center justify-center" onclick="navigator.clipboard &amp;&amp; navigator.clipboard.writeText('sentinelops incidents stream --live --cluster=alpha-9')" title="Copy command" type="button">
+<span class="material-symbols-outlined text-[15px]">content_copy</span>
+</button>
+</div>
+<div class="flex items-center gap-2 text-[12px] text-body-secondary font-mono">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span>Priors calibrated • 14.8M metrics/sec</span>
+</div></div>
+</div>
+<!-- Main Command Asymmetry Grid: Timeline Feed (5 cols) & AI Deep-Dive Inspector (7 cols) -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+<!-- Left Column: Correlated Incident Timeline Feed -->
+<div class="xl:col-span-5 flex flex-col gap-3">
+<div class="flex items-center justify-between px-1">
+<span class="text-[11px] font-semibold uppercase tracking-wider text-body-secondary">Incident Stream</span>
+<span class="text-[11px] font-mono text-body-secondary">Sorted by Priority</span>
+</div>
+<!-- Incident 1: Critical Active (Selected) -->
+<div class="group incident-card cursor-pointer bg-white rounded-xl p-4 notion-border shadow-xs hover:shadow-sm transition-all duration-150 relative border-l-4 border-l-accent-red" id="card-inc-1" onclick="selectIncident(1)"><div class="flex flex-col gap-2.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-red-50 text-accent-red border border-red-200 uppercase tracking-wide">
+  Critical
+</span>
+<span class="text-[11px] font-mono text-body-secondary">INC-8941</span>
+</div>
+<span class="text-[11px] font-mono text-accent-red font-medium">4 mins ago</span>
+</div>
+<div>
+<h2 class="text-[15px] font-semibold text-ink group-hover:text-primary transition-colors tracking-tight leading-snug">
+  Database Memory Exhaustion &amp; Query Latency Surge
+</h2>
+<div class="flex items-center gap-1.5 mt-1 text-[12px] text-body-secondary">
+<span class="material-symbols-outlined text-[14px]">dns</span>
+<span class="font-mono text-[11px]">node_b92c • Postgres Master (PG-15)</span>
+</div>
+</div>
+<!-- Metric Deltas Pill Cluster -->
+<div class="grid grid-cols-2 gap-2 pt-1">
+<div class="bg-surface-warm p-2.5 rounded-lg notion-border flex flex-col justify-center gap-0.5">
+<span class="text-[10px] font-semibold uppercase tracking-wider text-body-secondary">Resident Memory</span>
+<div class="flex items-baseline gap-1">
+<span class="text-[14px] font-bold text-accent-red">91.4%</span>
+<span class="text-[11px] font-normal text-body-secondary">(+48.2%)</span>
+</div>
+</div>
+<div class="bg-surface-warm p-2.5 rounded-lg notion-border flex flex-col justify-center gap-0.5">
+<span class="text-[10px] font-semibold uppercase tracking-wider text-body-secondary">P99 Latency</span>
+<div class="flex items-baseline gap-1">
+<span class="text-[14px] font-bold text-accent-red">182ms</span>
+<span class="text-[11px] font-normal text-body-secondary">(was 14ms)</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1 text-[12px]">
+<div class="flex items-center gap-1.5 text-primary font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span>Auto-Mitigating in Progress</span>
+</div>
+<span class="material-symbols-outlined text-[16px] text-body-secondary group-hover:text-ink transition-transform group-hover:translate-x-0.5">arrow_forward</span>
+</div>
+</div></div>
+<!-- Incident 2: Resolved -->
+<div class="group incident-card cursor-pointer bg-white rounded-xl p-4 notion-border hover:bg-card-subtle/50 transition-all duration-150 relative border-l-4 border-l-emerald-500 opacity-90 hover:opacity-100" id="card-inc-2" onclick="selectIncident(2)"><div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wide">
+  Resolved
+</span>
+<span class="text-[11px] font-mono text-body-secondary">INC-8938</span>
+</div>
+<span class="text-[11px] font-mono text-body-secondary">42 mins ago</span>
+</div>
+<div>
+<h2 class="text-[14px] font-semibold text-ink group-hover:text-primary transition-colors tracking-tight leading-snug">
+  API Gateway Ephemeral Port Depletion
+</h2>
+<div class="flex items-center gap-1.5 mt-0.5 text-[12px] text-body-secondary">
+<span class="material-symbols-outlined text-[14px]">router</span>
+<span class="font-mono text-[11px]">node_c73d • Kong API Gateway</span>
+</div>
+</div>
+<p class="text-[13px] text-body-secondary line-clamp-2 leading-relaxed">
+  Triggered dynamic connection recycle and priority-egress shedding. Socket pool normalized within 3m 12s.
+</p>
+<div class="flex items-center justify-between pt-1 text-[12px]">
+<div class="flex items-center gap-1 text-emerald-700 font-medium">
+<span class="material-symbols-outlined text-[15px]">task_alt</span>
+<span>Auto-Resolved</span>
+</div>
+<span class="material-symbols-outlined text-[16px] text-body-secondary group-hover:text-ink transition-transform group-hover:translate-x-0.5">arrow_forward</span>
+</div>
+</div></div>
+<!-- Incident 3: Investigating -->
+<div class="group incident-card cursor-pointer bg-white rounded-xl p-4 notion-border hover:bg-card-subtle/50 transition-all duration-150 relative border-l-4 border-l-accent-amber" id="card-inc-3" onclick="selectIncident(3)"><div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-50 text-accent-amber-deep border border-amber-200 uppercase tracking-wide">
+  Investigating
+</span>
+<span class="text-[11px] font-mono text-body-secondary">INC-8935</span>
+</div>
+<span class="text-[11px] font-mono text-body-secondary">1h 14m ago</span>
+</div>
+<div>
+<h2 class="text-[14px] font-semibold text-ink group-hover:text-primary transition-colors tracking-tight leading-snug">
+  Asynchronous Job Queue Backpressure (Celery)
+</h2>
+<div class="flex items-center gap-1.5 mt-0.5 text-[12px] text-body-secondary">
+<span class="material-symbols-outlined text-[14px]">hub</span>
+<span class="font-mono text-[11px]">worker_pool_04 • Redis Queue</span>
+</div>
+</div>
+<p class="text-[13px] text-body-secondary line-clamp-2 leading-relaxed">
+  Worker prefetch saturation detected during bulk vector embeddings sync. Autoscaler evaluating horizontal replica dispatch.
+</p>
+<div class="flex items-center justify-between pt-1 text-[12px]">
+<div class="flex items-center gap-1 text-accent-amber-deep font-medium">
+<span class="material-symbols-outlined text-[15px]">neurology</span>
+<span>Evaluating Queue Lag</span>
+</div>
+<span class="material-symbols-outlined text-[16px] text-body-secondary group-hover:text-ink transition-transform group-hover:translate-x-0.5">arrow_forward</span>
+</div>
+</div></div>
+<!-- Privacy Callout Footnote -->
+<div class="bg-surface-warm p-3 rounded-lg notion-border flex items-start gap-2.5">
+<span class="material-symbols-outlined text-body-secondary text-[18px] mt-0.5">lock</span>
+<p class="text-[12px] text-body-secondary leading-relaxed">
+<strong class="text-ink font-semibold">Zero-Leakage Mesh:</strong> Headers, SQL parameters, and PII are redacted on-node before telemetry ingestion.
+    </p>
+</div>
+</div>
+<!-- Right Column: Interactive AI Diagnostic Deep-Dive (Notion Document Container) -->
+<div class="xl:col-span-7 flex flex-col gap-4">
+<div class="bg-white rounded-xl p-6 notion-border flex flex-col gap-6 shadow-xs">
+<!-- Detail Header & Meta -->
+<div class="flex flex-col gap-3 pb-5 border-b notion-divider">
+<div class="flex flex-wrap items-center justify-between gap-3">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-red-50 text-accent-red border border-red-200 uppercase tracking-wide">
+            Severity 1
+          </span>
+<span class="text-[12px] font-mono text-body-secondary">Trace ID: 7f81a-cc9041b</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-2.5 py-1 rounded-md bg-surface-warm hover:bg-black/5 transition-colors text-ink text-[12px] font-medium notion-border flex items-center gap-1" onclick="copyDiagnostics()">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+<span id="copy-btn-text">Copy Logs</span>
+</button>
+<button class="px-2.5 py-1 rounded-md bg-primary hover:bg-[#0066c0] transition-colors text-white text-[12px] font-medium flex items-center gap-1 shadow-xs">
+<span class="material-symbols-outlined text-[14px]">terminal</span>
+<span>SSH Enclave</span>
+</button>
+</div>
+</div>
+<h2 class="text-[22px] font-bold text-ink tracking-tight" id="detail-title">
+        Database Memory Exhaustion &amp; Query Latency Surge
+      </h2>
+<!-- Node Meta Properties Row -->
+<div class="flex flex-wrap items-center gap-4 text-[12px] font-mono text-body-secondary pt-1">
+<span class="flex items-center gap-1">Node: <strong class="text-ink font-semibold">node_b92c</strong></span>
+<span class="text-black/20">•</span>
+<span class="flex items-center gap-1">Role: <strong class="text-ink font-semibold">Postgres PG-15 Master</strong></span>
+<span class="text-black/20">•</span>
+<span class="flex items-center gap-1">Zone: <strong class="text-ink font-semibold">us-east-1a</strong></span>
+</div>
+</div>
+<!-- Forensic Analysis Block (Notion Callout Style) -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-primary text-[12px] font-semibold tracking-wide uppercase">
+<span class="material-symbols-outlined text-[17px]">neurology</span>
+<span>Autonomous Forensic Diagnostic</span>
+</div>
+<span class="text-[11px] font-mono text-body-secondary">Model: DeepTelemetry-v4.2 (98.4% Confidence)</span>
+</div>
+<div class="p-4 bg-surface-warm rounded-lg notion-border flex flex-col gap-2.5"><p class="text-[14px] text-ink leading-relaxed" id="detail-ai-summary">
+  SentinelOps isolated an abnormal <strong class="text-accent-red font-semibold">4.8x slope</strong> in resident memory growth within <code class="text-[12px] font-mono px-1.5 py-0.5 rounded bg-white notion-border text-ink">node_b92c</code>, closely correlating with an API ingress surge. Forensics identified 3 unbounded <code class="text-[12px] font-mono px-1.5 py-0.5 rounded bg-white notion-border text-ink">SELECT</code> queries lacking pagination keys. Automated connection pool throttling dispatched immediately.
+</p>
+<div class="flex items-start gap-2 pt-2.5 border-t notion-divider text-[12px] text-body-secondary leading-relaxed">
+<span class="material-symbols-outlined text-primary text-[16px] mt-0.5 shrink-0">lightbulb</span>
+<span><strong class="text-ink font-semibold">Inferred Root Cause:</strong> Table lock contention during sequential scans on table <code class="font-mono text-ink text-[11px] bg-white px-1.5 py-0.5 rounded notion-border">customer_events</code> without composite user index.</span>
+</div></div>
+</div>
+<!-- Divergence Vector Graph -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-semibold uppercase tracking-wider text-body-secondary">Correlation Telemetry Vector (T-15m)</span>
+<div class="flex items-center gap-3 text-[11px] font-mono">
+<span class="flex items-center gap-1 text-accent-red"><span class="w-2 h-0.5 bg-accent-red inline-block"></span> Memory %</span>
+<span class="flex items-center gap-1 text-primary"><span class="w-2 h-0.5 bg-primary inline-block"></span> Latency (ms)</span>
+</div>
+</div>
+<div class="w-full bg-card-subtle p-3 rounded-lg notion-border">
+<svg class="w-full h-36 overflow-visible" preserveAspectRatio="none" viewBox="0 0 700 200">
+<!-- Subtle clean gridlines -->
+<line stroke="#E8E8E8" stroke-dasharray="3,3" stroke-width="1" x1="0" x2="700" y1="30" y2="30"></line>
+<line stroke="#E8E8E8" stroke-dasharray="3,3" stroke-width="1" x1="0" x2="700" y1="80" y2="80"></line>
+<line stroke="#E8E8E8" stroke-dasharray="3,3" stroke-width="1" x1="0" x2="700" y1="130" y2="130"></line>
+<line stroke="#E8E8E8" stroke-width="1" x1="0" x2="700" y1="180" y2="180"></line>
+<!-- Divergence Trigger Marker -->
+<line stroke="#E32D14" stroke-dasharray="2,2" stroke-width="1" x1="380" x2="380" y1="10" y2="185"></line>
+<rect fill="#FEE4E2" height="18" rx="4" stroke="#FDA29B" stroke-width="0.5" width="115" x="385" y="12"></rect>
+<text fill="#B42318" font-family="Inter, sans-serif" font-size="9" font-weight="600" x="390" y="24">DIVERGENCE TRIGGER</text>
+<!-- Latency Line (Notion Blue #0075DE) -->
+<path d="M 0 160 Q 120 162, 240 158 T 360 155 C 400 145, 440 75, 520 40 T 700 35" fill="none" stroke="#0075DE" stroke-width="2"></path>
+<!-- Memory Line (Accent Red #E32D14) -->
+<path d="M 0 150 Q 140 152, 280 148 T 370 142 C 410 120, 470 55, 560 30 T 700 22" fill="none" stroke="#E32D14" stroke-width="2"></path>
+<!-- Divergence point on memory -->
+<circle cx="380" cy="140" fill="#E32D14" r="3"></circle>
+<circle cx="700" cy="35" fill="#0075DE" r="3"></circle>
+<circle cx="700" cy="22" fill="#E32D14" r="3"></circle>
+</svg>
+<div class="flex justify-between items-center pt-2 text-[10px] font-mono text-body-secondary">
+<span>14:35:00</span>
+<span>14:40:00</span>
+<span class="text-accent-red font-semibold">14:46:00 (Surge Event)</span>
+<span>14:48:00</span>
+<span class="text-ink font-semibold">14:50:00 (Now)</span>
+</div>
+</div>
+</div>
+<!-- Remediation Protocol (Checklist in Notion style) -->
+<div class="flex flex-col gap-2.5"><span class="text-[11px] font-semibold uppercase tracking-wider text-body-secondary">Remediation Protocol</span>
+<!-- Completed Item -->
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-surface-warm notion-border gap-3">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0">check_circle</span>
+<div class="flex flex-col min-w-0">
+<span class="text-[13px] text-body-secondary line-through font-medium leading-snug">Kill idle connection pool leak on node_b92c</span>
+<span class="text-[11px] font-mono text-body-secondary leading-normal">Executed automatically via FastAPI worker at 14:47:12</span>
+</div>
+</div>
+<span class="inline-flex items-center text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200 shrink-0">Completed</span>
+</div>
+<!-- Actionable Item -->
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-surface-warm notion-border gap-3">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">play_circle</span>
+<div class="flex flex-col min-w-0">
+<span class="text-[13px] text-ink font-medium leading-snug">Apply composite index on <code class="text-[11px] font-mono bg-white px-1.5 py-0.5 rounded notion-border text-ink">customer_events(user_id, created_at)</code></span>
+<span class="text-[11px] font-mono text-body-secondary leading-normal">Zero-downtime concurrent DDL ready</span>
+</div>
+</div>
+<span class="inline-flex items-center text-[10px] font-mono px-2 py-0.5 rounded bg-blue-50 text-primary font-semibold border border-blue-200 shrink-0">Recommended</span>
+</div>
+<!-- Execution Panel -->
+<div class="p-3.5 rounded-lg bg-primary-tint notion-border border-blue-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mt-1" id="remediation-box">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white shrink-0 shadow-xs">
+<span class="material-symbols-outlined text-[17px]">bolt</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[13px] font-semibold text-ink">Execute Autonomous Self-Healing</span>
+<span class="text-[11px] font-mono text-body-secondary">POST <code class="text-ink font-semibold">/simulate/remediate</code></span>
+</div>
+</div>
+<button class="w-full sm:w-auto px-3.5 py-1.5 rounded-lg bg-primary hover:bg-[#0066c0] text-white text-[12px] font-medium transition-colors shadow-xs flex items-center justify-center gap-1.5 shrink-0" id="remediate-btn" onclick="executeRemediation()" type="button">
+<span class="material-symbols-outlined text-[16px]">play_arrow</span>
+<span>Run Remediation</span>
+</button>
+</div></div>
+</div>
+</div>
+</div>
+<!-- Bottom Metric Matrix: 3 Cards in Notion style -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1"><div class="bg-card-subtle p-4 rounded-xl notion-border flex flex-col gap-2 justify-between">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-semibold uppercase tracking-wider text-body-secondary">Median Time to Mitigate</span>
+<span class="material-symbols-outlined text-body-secondary text-[16px]">timer</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-[26px] font-bold text-ink tracking-tight">1m 48s</span>
+<span class="inline-flex items-center gap-0.5 text-[11px] font-medium text-emerald-600 px-1.5 py-0.5 rounded bg-emerald-50 border border-emerald-200">
+<span class="material-symbols-outlined text-[13px]">arrow_downward</span>72% faster
+</span>
+</div>
+<span class="text-[12px] text-body-secondary leading-normal">Compared to manual engineer escalation</span>
+</div>
+<div class="bg-card-subtle p-4 rounded-xl notion-border flex flex-col gap-2 justify-between">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-semibold uppercase tracking-wider text-body-secondary">Correlation Noise Reduction</span>
+<span class="material-symbols-outlined text-body-secondary text-[16px]">filter_alt</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-[26px] font-bold text-ink tracking-tight">94.6%</span>
+<span class="text-[11px] font-mono text-body-secondary">528 alerts condensed</span>
+</div>
+<span class="text-[12px] text-body-secondary leading-normal">Aggregated into 2 actionable causality trees</span>
+</div>
+<div class="bg-card-subtle p-4 rounded-xl notion-border flex flex-col gap-2 justify-between">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-semibold uppercase tracking-wider text-body-secondary">PII Egress Exposure</span>
+<span class="material-symbols-outlined text-body-secondary text-[16px]">verified</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-[26px] font-bold text-ink tracking-tight">0 Bytes</span>
+<span class="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 px-1.5 py-0.5 rounded bg-emerald-50 border border-emerald-200">
+<span class="material-symbols-outlined text-[13px]">lock</span>Verified
+</span>
+</div>
+<span class="text-[12px] text-body-secondary leading-normal">Zero-knowledge local sanitization across 14.8M metrics</span>
+</div></div>
+</div>
+<!-- State & Interactive Script -->
+<script>
+  const incidentData = {
+    1: {
+      title: "Database Memory Exhaustion & Query Latency Surge",
+      node: "node_b92c",
+      role: "Database Server (Postgres PG-15)",
+      trace: "7f81a-cc9041b",
+      severity: "Active Severity 1",
+      summary: "SentinelOps isolated an abnormal 4.8x slope in resident memory growth within node_b92c, closely correlating with an API ingress surge. Forensics identified 3 unbounded SELECT queries lacking pagination keys. Automated connection pool throttling dispatched immediately.",
+      hypothesis: "High contention lock during unindexed sequential table scan on customer_events table"
+    },
+    2: {
+      title: "API Gateway Ephemeral Port Depletion",
+      node: "node_c73d",
+      role: "Kong API Gateway",
+      trace: "5a22d-bb8019e",
+      severity: "Resolved",
+      summary: "Autonomous policy triggered dynamic connection recycling and priority-egress shedding of 1,200 non-vital calls. The socket exhaustion was neutralized in 3 minutes 12 seconds with zero 502 errors presented to end users.",
+      hypothesis: "Upstream microservice webhook connection lingering due to TCP keepalive mismatch"
+    },
+    3: {
+      title: "Asynchronous Job Queue Backpressure (Celery)",
+      node: "worker_pool_04",
+      role: "Redis Queue Broker",
+      trace: "8e991-ff1098c",
+      severity: "Investigating",
+      summary: "Worker prefetch saturation detected during bulk vector embeddings sync. Autoscaler evaluating horizontal replica dispatch (+4 nodes). Message lag rate currently plateauing within permissible headroom.",
+      hypothesis: "Sudden spike in high-dimensional text indexing requests during customer batch ingestion"
+    }
+  };
+
+  function selectIncident(id) {
+    document.querySelectorAll('.incident-card').forEach(card => {
+      card.classList.remove('bg-card-subtle/80', 'ring-1', 'ring-black/20');
+    });
+
+    const selected = document.getElementById('card-inc-' + id);
+    if (selected) {
+      selected.classList.add('bg-card-subtle/80', 'ring-1', 'ring-black/20');
+    }
+
+    const item = incidentData[id];
+    if (item) {
+      document.getElementById('detail-title').innerText = item.title;
+      document.getElementById('detail-ai-summary').innerText = item.summary;
+    }
+  }
+
+  function executeRemediation() {
+    const btn = document.getElementById('remediate-btn');
+    const box = document.getElementById('remediation-box');
+    btn.disabled = true;
+    btn.innerHTML = `<span class="material-symbols-outlined text-[16px] animate-spin">refresh</span><span>Transmitting...</span>`;
+    
+    setTimeout(() => {
+      btn.innerHTML = `<span class="material-symbols-outlined text-[16px]">done_all</span><span>Dispatched</span>`;
+      btn.classList.remove('bg-primary', 'hover:bg-[#0066c0]');
+      btn.classList.add('bg-emerald-600');
+      box.classList.remove('bg-primary-tint', 'border-blue-200');
+      box.classList.add('bg-emerald-50', 'border-emerald-200');
+    }, 1000);
+  }
+
+  function copyDiagnostics() {
+    const txt = document.getElementById('copy-btn-text');
+    txt.innerText = 'Copied!';
+    setTimeout(() => {
+      txt.innerText = 'Copy Logs';
+    }, 1500);
+  }
+
+  // Filter pill styling
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterButtons.forEach(b => {
+        b.classList.remove('bg-primary-tint', 'text-primary', 'notion-border');
+        b.classList.add('text-body-secondary');
+      });
+      btn.classList.add('bg-primary-tint', 'text-primary', 'notion-border');
+      btn.classList.remove('text-body-secondary');
+    });
+  });
+</script>
+</div></main></div>
+
+</body></html>
