@@ -67,7 +67,7 @@ Thumbs.db
 *.sln
 *.sw?
 
-# Pytest
+# Pytest & Coverage
 .pytest_cache/
 .coverage
 htmlcov/
