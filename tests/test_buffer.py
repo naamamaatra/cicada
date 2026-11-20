@@ -77,3 +77,4 @@ def test_egress_audit_logger():
     stats = audit.get_summary_stats()
     assert stats["total_egress_audits"] == 1
     assert stats["buffered_count"] == 1
+

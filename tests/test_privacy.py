@@ -95,3 +95,4 @@ def test_process_raw_telemetry():
     assert cleaned["source_id"] == "node_a81f"
     assert "[REDACTED_PASSWORD]" in cleaned["raw_logs"]
     assert "Confidential123" not in cleaned["raw_logs"]
+

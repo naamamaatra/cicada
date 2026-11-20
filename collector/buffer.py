@@ -132,3 +132,4 @@ class OfflineBuffer:
         with self._lock:
             self._queue.clear()
             self._items_by_id.clear()
+

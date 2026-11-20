@@ -174,3 +174,4 @@ def test_collector_demo_phase1_flow():
     assert demo_res["failure_result"]["alerts_generated"] >= 1
     assert demo_res["latest_audit"] is not None
     assert demo_res["latest_audit"]["policy_verdict"] == "PASS"
+

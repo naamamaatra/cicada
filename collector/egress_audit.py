@@ -167,3 +167,4 @@ class EgressAuditLogger:
         with self._lock:
             self._records.clear()
             self._records_by_payload_id.clear()
+

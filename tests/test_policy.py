@@ -110,3 +110,4 @@ def test_policy_rejects_empty_ids():
     assert res.allowed is False
     assert any("payload_id" in v for v in res.violations)
     assert any("source_id" in v for v in res.violations)
+

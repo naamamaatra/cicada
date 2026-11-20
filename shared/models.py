@@ -105,3 +105,4 @@ class BasicAlert(BaseModel):
         default_factory=lambda: datetime.now(timezone.utc).isoformat(),
         description="Timestamp when the alert was triggered",
     )
+

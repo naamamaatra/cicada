@@ -92,3 +92,4 @@ ALLOWED_TELEMETRY_FIELDS = {
     "collector_status",
     "event_category",
 }
+

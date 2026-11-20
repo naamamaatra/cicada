@@ -184,3 +184,4 @@ class AllowListPolicy:
             violations=violations,
             summary=summary,
         )
+

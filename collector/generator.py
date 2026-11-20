@@ -260,3 +260,4 @@ class TelemetryGenerator:
         raw_event["user_email"] = "dev-oncall@internal.corp"
 
         return raw_event
+

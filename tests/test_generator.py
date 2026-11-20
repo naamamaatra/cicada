@@ -76,3 +76,4 @@ def test_generator_raw_event_with_secrets():
     assert "hostname" in raw
     assert "internal_ip" in raw
     assert "SuperSecretPass123!" in raw["db_password"]
+
