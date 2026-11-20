@@ -1,6 +1,6 @@
 """
 SentinelOps AI - Main FastAPI Application.
-Phase 1 Backend Foundation for Member 4: Backend & Integration.
+SaaS Foundation with Multi-Tenancy, JWT Authentication, and Collector Management.
 """
 
 from contextlib import asynccontextmanager
@@ -9,17 +9,23 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 
+from backend.db.session import init_db
 from backend.routes.telemetry import router as telemetry_router
 from backend.routes.alerts import router as alerts_router
 from backend.routes.health import router as health_router
+from backend.routes.auth import router as auth_router
+from backend.routes.orgs import router as orgs_router
+from backend.routes.collectors import router as collectors_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifecycle events for FastAPI application."""
     print("=" * 60)
-    print("🚀 SentinelOps AI Backend starting...")
-    print("📦 Phase 1: In-Memory Storage & Threshold Alert Engine ready.")
+    print("🚀 SentinelOps AI SaaS Backend starting...")
+    print("🗄️ Initializing database tables...")
+    init_db()
+    print("📦 Multi-Tenant SaaS Foundation & Collector Auth ready.")
     print("🔌 CORS configured for local Streamlit dashboard integration.")
     print("=" * 60)
     yield
@@ -27,11 +33,11 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="SentinelOps AI - Backend API",
-    version="1.0.0",
+    title="SentinelOps AI - SaaS Platform API",
+    version="2.0.0",
     description=(
-        "Privacy-First AI Infrastructure Monitoring & Incident Intelligence Platform. "
-        "Phase 1 Ingestion, Validation, In-Memory Storage, and Alerting Engine."
+        "Privacy-First AI Infrastructure Monitoring & Autonomous Incident Intelligence Platform. "
+        "Multi-Tenant SaaS Foundation, Collector Authentication, and Telemetry Engine."
     ),
     lifespan=lifespan,
 )
@@ -52,7 +58,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -74,7 +80,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         status_code=422,
         content={
             "success": False,
-            "message": "Telemetry validation failed. Payload rejected.",
+            "message": "Validation failed. Payload rejected.",
             "errors": errors,
         },
     )
@@ -84,6 +90,9 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 # Route Registration
 # -----------------------------------------------------------------------------
 app.include_router(health_router)
+app.include_router(auth_router)
+app.include_router(orgs_router)
+app.include_router(collectors_router)
 app.include_router(telemetry_router)
 app.include_router(alerts_router)
 

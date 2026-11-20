@@ -79,3 +79,11 @@ def init_db(target_engine: Engine = engine) -> None:
     Initialize and create all database tables defined in Base metadata.
     """
     Base.metadata.create_all(bind=target_engine)
+
+
+# Auto-initialize default tables on load for zero-config startup & tests
+try:
+    init_db(engine)
+except Exception:
+    pass
+

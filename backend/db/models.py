@@ -242,3 +242,4 @@ class AuditLog(Base):
 
     def __repr__(self) -> str:
         return f"<AuditLog {self.action} on {self.resource_type}:{self.resource_id}>"
+
