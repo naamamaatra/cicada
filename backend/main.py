@@ -12,6 +12,7 @@ from fastapi.exceptions import RequestValidationError
 from backend.routes.telemetry import router as telemetry_router
 from backend.routes.alerts import router as alerts_router
 from backend.routes.health import router as health_router
+from backend.routes.audit import router as audit_router
 
 
 @asynccontextmanager
@@ -86,6 +87,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 app.include_router(health_router)
 app.include_router(telemetry_router)
 app.include_router(alerts_router)
+app.include_router(audit_router)
 
 
 if __name__ == "__main__":

@@ -1,30 +1,39 @@
 """
-Telemetry Data Service for SentinelOps AI Dashboard.
-Synchronized with Member 4's FastAPI Backend:
-- Submits failure-injected telemetry to POST /api/v1/telemetry
-- Polls latest metrics from GET /api/v1/metrics
-- Polls alerts from GET /api/v1/alerts
-- Seamlessly falls back to local simulation if backend is offline.
+Telemetry & Privacy Data Service for SentinelOps AI Dashboard (Phase 1 & Phase 2).
+Synchronized with Member 1's Collector & Privacy Engine and Member 4's FastAPI Backend:
+- Handles Multi-Server Infrastructure Monitoring (Phase 1)
+- Drives Privacy Redaction & Egress Audit Testing (Phase 2)
+- Integrates with LocalCollector and REST APIs
 """
 import random
 import time
 from datetime import datetime, timezone, timedelta
+from typing import Dict, Any, List, Tuple
 import pandas as pd
 import requests
 
 from shared.models import TelemetryPayload, BasicAlert
 from shared.constants import DEFAULT_SERVERS
 from dashboard.components.cards import calculate_overall_health, evaluate_metric_health
+from collector.collector import LocalCollector
+from collector.egress_audit import EgressAuditLogger, EgressAuditRecord
 
 
 class TelemetryDataService:
     def __init__(self, backend_url: str = "http://127.0.0.1:8000"):
         self.backend_url = backend_url
         self.active_scenario = "normal"
-        self.history = []  # sliding window of telemetry records
-        self.alerts = []
+        self.history: List[Dict[str, Any]] = []
+        self.alerts: List[Dict[str, Any]] = []
         self.backend_connected = False
+
+        # Phase 2 Collector & Privacy Engine instance
+        self.collector = LocalCollector(api_url=f"{self.backend_url}/api/v1/telemetry")
+        self.last_privacy_demo_result: Dict[str, Any] = {}
+
         self._init_mock_history()
+        # Seed an initial privacy demo record so Phase 2 tab immediately shows proof
+        self._init_privacy_baseline()
 
     def _init_mock_history(self):
         """Populates initial 20 points of healthy history for the 3 servers."""
@@ -34,6 +43,13 @@ class TelemetryDataService:
             for s in DEFAULT_SERVERS:
                 item = self._generate_healthy_point(s["source_id"], ts)
                 self.history.append(item)
+
+    def _init_privacy_baseline(self):
+        """Runs an initial privacy redaction demo to prime the audit state."""
+        try:
+            self.last_privacy_demo_result = self.collector.run_privacy_demo()
+        except Exception:
+            pass
 
     def _generate_healthy_point(self, source_id: str, ts: str = None) -> dict:
         if ts is None:
@@ -55,13 +71,7 @@ class TelemetryDataService:
         }
 
     def set_scenario(self, scenario_name: str):
-        """
-        Switches current simulation scenario:
-        - 'normal': All 3 servers healthy
-        - 'spike_node_a': Severe CPU & RAM spike on node_a81f
-        - 'network_degrade_node_c': High latency and packet loss on node_c73d
-        - 'db_overload_node_b': DB overload and disk pressure on node_b92c
-        """
+        """Switches current simulation scenario for Phase 1 demo."""
         self.active_scenario = scenario_name
 
     def _generate_current_payloads(self) -> dict[str, dict]:
@@ -133,8 +143,6 @@ class TelemetryDataService:
         1. Submits scenario telemetry via POST /api/v1/telemetry
         2. Retrieves stored metrics from GET /api/v1/metrics
         3. Retrieves active alerts from GET /api/v1/alerts
-        If Backend is offline:
-        Smoothly runs in standalone engine mode.
         """
         generated = self._generate_current_payloads()
 
@@ -168,7 +176,6 @@ class TelemetryDataService:
                     if a_resp.status_code == 200:
                         a_body = a_resp.json()
                         backend_alerts = a_body.get("data", []) if isinstance(a_body, dict) else a_body
-                        # Map backend alert fields
                         formatted_alerts = []
                         for ba in backend_alerts:
                             formatted_alerts.append({
@@ -184,7 +191,6 @@ class TelemetryDataService:
                     self._trim_history()
                     return latest_by_node, self.alerts
             except Exception:
-                # In case of partial backend failure, fall through to local fallback
                 pass
 
         # Standalone Engine Fallback Mode
@@ -195,6 +201,34 @@ class TelemetryDataService:
         self._check_alerts(latest_by_node)
         self._trim_history()
         return latest_by_node, self.alerts
+
+    # --- PHASE 2: PRIVACY & EGRESS AUDIT METHODS ---
+
+    def run_privacy_test(self, scenario: str = "cpu_spike") -> Dict[str, Any]:
+        """
+        Executes a real-time Privacy Engine & Allow-List Policy test:
+        1. Generates a raw un-redacted event containing passwords, API keys, and real internal hostnames.
+        2. Pipes it through the PrivacyEngine and AllowListPolicy.
+        3. Captures the safe payload and logs an EgressAuditRecord.
+        """
+        raw_event = self.collector.generator.generate_raw_event_with_secrets(
+            server_index=random.choice([0, 1, 2]),
+            scenario=scenario
+        )
+        res = self.collector.process_and_send(raw_event)
+        latest_audit = self.collector.audit_logger.get_latest()
+
+        self.last_privacy_demo_result = {
+            "original_raw_event": raw_event,
+            "pipeline_result": res,
+            "egress_audit_proof": latest_audit.model_dump() if latest_audit else None,
+        }
+        return self.last_privacy_demo_result
+
+    def get_egress_audit_records(self, limit: int = 25) -> List[Dict[str, Any]]:
+        """Returns recent egress audit records for the Phase 2 audit trail table."""
+        records = self.collector.audit_logger.get_all(limit=limit)
+        return [r.model_dump() for r in records]
 
     def _trim_history(self):
         if len(self.history) > 120:
