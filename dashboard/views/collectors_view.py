@@ -91,17 +91,19 @@ def render_collectors_view(client: SaaSClient):
                     if cstatus != "revoked":
                         if col_actions_2.button("📡 Send Test Pulse", key=f"pulse_{cid}"):
                             payload = {
-                                "source_id": cname.lower().replace(" ", "-"),
                                 "payload_id": f"pulse-{uuid.uuid4().hex[:8]}",
+                                "tenant_id": org_id,
+                                "source_id": cname.lower().replace(" ", "-"),
                                 "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-                                "metrics": {
-                                    "cpu_percent": 34.2,
-                                    "memory_percent": 58.1,
-                                    "disk_percent": 45.0,
-                                    "network_latency_ms": 14.2,
-                                    "packet_loss_percent": 0.0,
-                                },
-                                "privacy": {"sanitized": True, "filter_version": "1.0.0"},
+                                "cpu": 34.2,
+                                "memory": 58.1,
+                                "disk": 45.0,
+                                "latency_ms": 14.2,
+                                "packet_loss_pct": 0.0,
+                                "error_count": 0,
+                                "failed_logins": 0,
+                                "collector_status": "online",
+                                "event_category": "heartbeat_pulse",
                             }
                             # Send pulse with collector token if registered in session state
                             token = st.session_state.get(f"token_{cid}")
