@@ -15,6 +15,13 @@ Responsibilities:
 4. Embed realistic raw events with fake sensitive data (passwords, tokens) to prove Privacy Engine.
 """
 
+import sys
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
 import uuid
 import random
 from datetime import datetime, timezone
