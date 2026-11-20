@@ -893,62 +893,63 @@ elif st.session_state["active_view"] == "privacy_lab":
         ]
     }
 
-    current_breakdown = REDACTION_REASONS.get(privacy_scenario, REDACTION_REASONS["cascade_failure"])
+    if is_tested:
+        current_breakdown = REDACTION_REASONS.get(privacy_scenario, REDACTION_REASONS["cascade_failure"])
 
-    st.markdown("<div class='kpi-label'>🔍 Data Transformation & Redaction Process Breakdown (What is Redacted & Why)</div>", unsafe_allow_html=True)
-    table_rows = "".join([
-        f"""
-        <tr>
-            <td style='padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.06);'>
-                <strong style='color: #F0F3F8;'>{field}</strong><br/>
-                <span style='color: #F87171; text-decoration: line-through; font-size: 0.72rem;'>{raw}</span>
-            </td>
-            <td style='padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.06);'>
-                <span style='background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35); padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;'>
-                    {action}
+        st.markdown("<div class='kpi-label'>🔍 Data Transformation & Redaction Process Breakdown (What is Redacted & Why)</div>", unsafe_allow_html=True)
+        table_rows = "".join([
+            f"""
+            <tr>
+                <td style='padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.06);'>
+                    <strong style='color: #F0F3F8;'>{field}</strong><br/>
+                    <span style='color: #F87171; text-decoration: line-through; font-size: 0.72rem;'>{raw}</span>
+                </td>
+                <td style='padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.06);'>
+                    <span style='background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35); padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;'>
+                        {action}
+                    </span>
+                </td>
+                <td style='padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.06); color: #94A3B8; font-size: 0.78rem;'>
+                    {cause}
+                </td>
+                <td style='padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.06); color: #34D399; font-size: 0.76rem;'>
+                    {transform}
+                </td>
+            </tr>
+            """
+            for field, raw, action, cause, transform in current_breakdown
+        ])
+
+        st.markdown(f"""
+        <div class='taste-card'>
+            <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;'>
+                <span style='color: #38BDF8; font-weight: 700; font-size: 0.88rem;'>
+                    🛡️ Zero-Knowledge Transformation Rulebook ({len(current_breakdown)} Sensitive Tokens Intercepted)
                 </span>
-            </td>
-            <td style='padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.06); color: #94A3B8; font-size: 0.78rem;'>
-                {cause}
-            </td>
-            <td style='padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.06); color: #34D399; font-size: 0.76rem;'>
-                {transform}
-            </td>
-        </tr>
-        """
-        for field, raw, action, cause, transform in current_breakdown
-    ])
-
-    st.markdown(f"""
-    <div class='taste-card'>
-        <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;'>
-            <span style='color: #38BDF8; font-weight: 700; font-size: 0.88rem;'>
-                🛡️ Zero-Knowledge Transformation Rulebook ({len(current_breakdown)} Sensitive Tokens Intercepted)
-            </span>
-            <span class='status-pill status-pill-poor'>ZERO SECRETS LEAKED</span>
+                <span class='status-pill status-pill-poor'>ZERO SECRETS LEAKED</span>
+            </div>
+            <p style='color: #8B949E; font-size: 0.8rem; margin: 0 0 12px 0;'>
+                Detailed security explanation of why volatile tokens captured in Tier 1 Customer VPC are blocked from egressing to Tier 2 SaaS Ingest:
+            </p>
+            <div style='overflow-x: auto;'>
+                <table class='sla-table'>
+                    <thead>
+                        <tr>
+                            <th>Volatile Field (Tier 1)</th>
+                            <th>Action</th>
+                            <th>Sanitization Cause & Compliance Rule</th>
+                            <th>Tier 2 Transformation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {table_rows}
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <p style='color: #8B949E; font-size: 0.8rem; margin: 0 0 12px 0;'>
-            Detailed security explanation of why volatile tokens captured in Tier 1 Customer VPC are blocked from egressing to Tier 2 SaaS Ingest:
-        </p>
-        <div style='overflow-x: auto;'>
-            <table class='sla-table'>
-                <thead>
-                    <tr>
-                        <th>Volatile Field (Tier 1)</th>
-                        <th>Action</th>
-                        <th>Sanitization Cause & Compliance Rule</th>
-                        <th>Tier 2 Transformation</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {table_rows}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
-    st.markdown("<div style='height: 16px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height: 16px;'></div>", unsafe_allow_html=True)
 
     # Allow-List Policy Gate Inspector
     st.markdown("<div class='kpi-label'>🛡️ Allow-List Policy Gate Inspection (Strict 13-Field Allow-List)</div>", unsafe_allow_html=True)

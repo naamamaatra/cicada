@@ -1065,8 +1065,8 @@
 
           </div>
 
-          <!-- Redacted Data & Sanitization Process Deep-Dive -->
-          <div class="mt-2 p-5 rounded-xl bg-surface-container-low border border-black/5 flex flex-col gap-4">
+          <!-- Redacted Data & Sanitization Process Deep-Dive (Displayed after clicking Test button only) -->
+          <div id="redaction-breakdown-card" class="mt-2 p-5 rounded-xl bg-surface-container-low border border-black/5 flex flex-col gap-4 hidden">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-black/5">
               <div class="flex items-center gap-2">
                 <span class="material-symbols-outlined text-primary text-[20px]">security_update_good</span>
@@ -2117,8 +2117,11 @@
         footerStatus.innerHTML = '<span class="material-symbols-outlined text-[15px]">lock</span><span>EGRESS BLOCKED (0 B TRANSMITTED)</span>';
       }
 
-      // 3. Render the dynamic Redaction Breakdown Table showing what is redacted and why
-      renderRedactionBreakdown(currentPrivacyScenarioKey);
+      // 3. Keep Data Sanitization & Redaction Process Breakdown hidden until test button is clicked
+      const breakdownCard = document.getElementById('redaction-breakdown-card');
+      if (breakdownCard) {
+        breakdownCard.classList.add('hidden');
+      }
     }
 
     function triggerScrubAnimation() {
@@ -2127,6 +2130,13 @@
       const badgeEl = document.getElementById('tier2-badge');
       const footerStatus = document.getElementById('tier2-footer-status');
       const flash = document.getElementById('scrub-flash');
+
+      // 1. Reveal Data Sanitization & Redaction Process Breakdown table when test button is clicked
+      const breakdownCard = document.getElementById('redaction-breakdown-card');
+      if (breakdownCard) {
+        breakdownCard.classList.remove('hidden');
+        renderRedactionBreakdown(currentPrivacyScenarioKey);
+      }
 
       // 1. Trigger visual scrub flash
       if (flash) {
