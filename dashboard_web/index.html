@@ -1416,14 +1416,14 @@
             </div>
             <div>
               <div class="flex items-center gap-2.5 flex-wrap">
-                <h1 class="text-[22px] font-extrabold text-ink tracking-tight font-sans" id="saas-org-title">Acme Corporation</h1>
+                <h1 class="text-[22px] font-extrabold text-ink tracking-tight font-sans" id="saas-org-title">Workspace</h1>
                 <span id="saas-role-badge" class="px-2.5 py-0.5 rounded-full bg-primary-tint text-primary font-mono text-[11px] font-bold">OWNER</span>
-                <span id="saas-auth-status" class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono text-[11px] font-bold">AUTHENTICATED (JWT)</span>
+                <span id="saas-auth-status" class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono text-[11px] font-bold">AUTHENTICATING</span>
               </div>
               <div class="text-[12px] text-body-secondary font-mono mt-1 flex items-center gap-3 flex-wrap">
-                <span>Tenant: <code id="saas-org-id" class="text-ink font-semibold">org_demo_default</code></span>
+                <span>Tenant: <code id="saas-org-id" class="text-ink font-semibold">Connecting...</code></span>
                 <span>•</span>
-                <span>Operator: <span id="saas-user-email" class="text-ink font-semibold">admin@sentinelops.ai</span></span>
+                <span>Operator: <span id="saas-user-email" class="text-ink font-semibold">Resolving identity...</span></span>
               </div>
             </div>
           </div>
@@ -2898,6 +2898,12 @@
       authMode: 'login'
     };
 
+    // Sanitize any stale dummy tenant IDs from previous sessions
+    if (saasState.activeOrg && (saasState.activeOrg.id === 'org_1' || saasState.activeOrg.id === 'org_demo')) {
+      saasState.activeOrg = null;
+      localStorage.removeItem('sentinelops_org');
+    }
+
     function saasSwitchTab(tabName) {
       const tabs = ['collectors', 'overview', 'incidents', 'auth'];
       tabs.forEach(t => {
@@ -2986,20 +2992,48 @@
     }
 
     async function saasInitView() {
-      if (!saasState.token) {
-        // Try to auto-login demo admin for seamless judge presentation
-        await saasQuickDemoAuth(true);
-      } else {
-        updateSaasUIHeader();
-        saasFetchCollectors();
-        saasFetchOverview();
+      // If we have a token, verify and refresh organizations from /api/v1/auth/me
+      if (saasState.token) {
+        try {
+          const meRes = await fetch('/api/v1/auth/me', {
+            headers: { 'Authorization': `Bearer ${saasState.token}` }
+          });
+          if (meRes.ok) {
+            const meData = await meRes.json();
+            saasState.user = meData.user;
+            if (meData.organizations && meData.organizations.length > 0) {
+              const found = meData.organizations.find(o => saasState.activeOrg && o.id === saasState.activeOrg.id);
+              saasState.activeOrg = found || meData.organizations[0];
+            } else {
+              saasState.activeOrg = null;
+            }
+            localStorage.setItem('sentinelops_user', JSON.stringify(saasState.user));
+            if (saasState.activeOrg) {
+              localStorage.setItem('sentinelops_org', JSON.stringify(saasState.activeOrg));
+            } else {
+              localStorage.removeItem('sentinelops_org');
+            }
+            updateSaasUIHeader();
+            saasFetchCollectors();
+            saasFetchOverview();
+            return;
+          } else {
+            // Token expired or invalid
+            saasLogout(true);
+          }
+        } catch (e) {
+          // Network offline
+        }
       }
+
+      // Auto-login demo admin if not authenticated
+      await saasQuickDemoAuth(true);
     }
 
     async function saasQuickDemoAuth(silent = false) {
       const demoEmail = 'admin@sentinelops.ai';
       const demoPass = 'password123';
-      const demoOrg = 'Acme Systems Corp';
+      const demoOrg = 'Acme Corporation';
 
       try {
         // 1. Try login
@@ -3027,7 +3061,21 @@
           const data = await res.json();
           saasState.token = data.access_token;
           saasState.user = data.user;
-          saasState.activeOrg = data.organizations && data.organizations[0] ? data.organizations[0] : { id: 'org_demo', name: demoOrg, role: 'owner' };
+
+          // Fetch real organization via /api/v1/auth/me
+          try {
+            const meRes = await fetch('/api/v1/auth/me', {
+              headers: { 'Authorization': `Bearer ${saasState.token}` }
+            });
+            if (meRes.ok) {
+              const meData = await meRes.json();
+              saasState.activeOrg = (meData.organizations && meData.organizations.find(o => o.id === data.active_organization_id)) || (meData.organizations && meData.organizations[0]) || { id: data.active_organization_id, name: demoOrg, role: 'owner' };
+            } else {
+              saasState.activeOrg = { id: data.active_organization_id, name: demoOrg, role: 'owner' };
+            }
+          } catch (e) {
+            saasState.activeOrg = { id: data.active_organization_id, name: demoOrg, role: 'owner' };
+          }
 
           localStorage.setItem('sentinelops_jwt', saasState.token);
           localStorage.setItem('sentinelops_user', JSON.stringify(saasState.user));
@@ -3082,7 +3130,21 @@
           const data = await res.json();
           saasState.token = data.access_token;
           saasState.user = data.user;
-          saasState.activeOrg = data.organizations && data.organizations[0] ? data.organizations[0] : { id: 'org_1', name: 'My Organization', role: 'owner' };
+
+          // Fetch real organization via /api/v1/auth/me
+          try {
+            const meRes = await fetch('/api/v1/auth/me', {
+              headers: { 'Authorization': `Bearer ${saasState.token}` }
+            });
+            if (meRes.ok) {
+              const meData = await meRes.json();
+              saasState.activeOrg = (meData.organizations && meData.organizations.find(o => o.id === data.active_organization_id)) || (meData.organizations && meData.organizations[0]) || { id: data.active_organization_id, name: 'My Workspace', role: 'owner' };
+            } else {
+              saasState.activeOrg = { id: data.active_organization_id, name: 'My Workspace', role: 'owner' };
+            }
+          } catch (e) {
+            saasState.activeOrg = { id: data.active_organization_id, name: 'My Workspace', role: 'owner' };
+          }
 
           localStorage.setItem('sentinelops_jwt', saasState.token);
           localStorage.setItem('sentinelops_user', JSON.stringify(saasState.user));
@@ -3090,6 +3152,8 @@
 
           updateSaasUIHeader();
           saasSwitchTab('collectors');
+          saasFetchCollectors();
+          saasFetchOverview();
           notify(`Welcome back, ${saasState.user.email}!`, 'verified_user');
         } else {
           const errData = await res.json().catch(() => ({}));
@@ -3100,7 +3164,7 @@
       }
     }
 
-    function saasLogout() {
+    function saasLogout(silent = false) {
       saasState.token = null;
       saasState.user = null;
       saasState.activeOrg = null;
@@ -3109,11 +3173,11 @@
       localStorage.removeItem('sentinelops_org');
       updateSaasUIHeader();
       saasSwitchTab('auth');
-      notify('Signed out of SaaS Cloud.', 'logout');
+      if (!silent) notify('Signed out of SaaS Cloud.', 'logout');
     }
 
     async function saasEnrollCollector() {
-      if (!saasState.token || !saasState.activeOrg) {
+      if (!saasState.token || !saasState.activeOrg || !saasState.activeOrg.id) {
         notify('Please sign in to enroll collectors.', 'lock');
         saasSwitchTab('auth');
         return;
@@ -3142,8 +3206,9 @@
           const tokenText = document.getElementById('saas-generated-token-text');
           const cmdSnippet = document.getElementById('saas-cmd-snippet');
 
-          tokenText.innerText = data.token;
-          cmdSnippet.innerText = `export SENTINELOPS_COLLECTOR_TOKEN="${data.token}" && python -m collector.agent`;
+          const rawToken = data.raw_token || data.token;
+          tokenText.innerText = rawToken;
+          cmdSnippet.innerText = `export SENTINELOPS_COLLECTOR_TOKEN="${rawToken}" && python -m collector.agent`;
           tokenBox.classList.remove('hidden');
 
           notify(`Collector agent '${data.name}' enrolled successfully!`, 'key');
@@ -3283,6 +3348,7 @@
     runRedactorScenario('cascade');
     pollBackend();
     setInterval(pollBackend, 4000);
+    saasInitView();
   </script>
 </body>
 </html>
