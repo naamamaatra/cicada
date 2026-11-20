@@ -149,3 +149,4 @@ def render_saas_platform():
         render_collectors_view(client)
     elif selected_page == "⚙️ Settings":
         render_settings_view(client)
+
