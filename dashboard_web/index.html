@@ -1065,6 +1065,42 @@
 
           </div>
 
+          <!-- Redacted Data & Sanitization Process Deep-Dive -->
+          <div class="mt-2 p-5 rounded-xl bg-surface-container-low border border-black/5 flex flex-col gap-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-black/5">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-[20px]">security_update_good</span>
+                <h4 class="text-[13px] font-bold text-ink uppercase tracking-wider font-mono">
+                  Data Sanitization &amp; Redaction Process Breakdown
+                </h4>
+              </div>
+              <span id="redaction-count-badge" class="px-2.5 py-0.5 rounded-full bg-error-container text-accent-coral font-mono text-[10px] font-bold">
+                5 SENSITIVE ITEMS REDACTED
+              </span>
+            </div>
+            
+            <p class="text-[12px] text-body-secondary leading-relaxed">
+              Real-time audit comparing volatile tokens captured inside Tier 1 VPC versus the security policies and zero-knowledge rules that prevent them from egressing to SaaS Ingest.
+            </p>
+
+            <!-- Table of Redacted Fields & Causes -->
+            <div class="overflow-x-auto">
+              <table class="w-full text-left font-mono text-[11px] border-collapse">
+                <thead>
+                  <tr class="border-b border-black/10 text-muted uppercase text-[10px] tracking-wider">
+                    <th class="py-2.5 px-3">Volatile Field (Tier 1)</th>
+                    <th class="py-2.5 px-3">Interception Action</th>
+                    <th class="py-2.5 px-3">Sanitization Cause &amp; Compliance Rule</th>
+                    <th class="py-2.5 px-3">Tier 2 Transformation</th>
+                  </tr>
+                </thead>
+                <tbody id="redaction-breakdown-tbody" class="divide-y divide-black/5">
+                  <!-- Dynamically populated per scenario -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
           <!-- Allow-Listed 13 Fields Grid -->
           <div class="pt-4 border-t border-black/5 flex flex-col gap-3">
             <span class="text-[11px] uppercase font-bold tracking-wider text-muted">VERIFIED 13 ALLOW-LISTED METADATA FIELDS</span>
@@ -1859,8 +1895,184 @@
       }
     };
 
+    // Data Transformation & Redaction Process Breakdown Details (What is redacted and why)
+    const REDACTION_BREAKDOWNS = {
+      'cascade': [
+        {
+          field: 'db_connection_uri',
+          rawSnippet: 'postgresql://pg_admin:Sup3rSecr3tP@ssw0rd!...',
+          action: 'STRIPPED',
+          actionClass: 'bg-error-container text-accent-coral',
+          cause: 'Hardcoded database credentials & plaintext master password (CWE-259). Strict zero-knowledge egress policy prohibits connection strings from crossing the VPC perimeter.',
+          transformation: 'Dropped completely (0 bytes transmitted)'
+        },
+        {
+          field: 'customer_pii.user_email',
+          rawSnippet: 'sarah.connor@cyberdyne-enterprises.com',
+          action: 'STRIPPED (PII)',
+          actionClass: 'bg-error-container text-accent-coral',
+          cause: 'Direct Personal Identifiable Information (PII) violates GDPR Art. 4(1) and DPDP 2023 regulations. Telemetry must never contain identity-linked customer emails.',
+          transformation: 'Dropped completely from payload'
+        },
+        {
+          field: 'customer_pii.session_auth_token',
+          rawSnippet: 'Bearer dummy_demo_secret_token...',
+          action: 'STRIPPED',
+          actionClass: 'bg-error-container text-accent-coral',
+          cause: 'Active session Bearer JWT grants administrative API privileges. Ingestion into SaaS risks token leakage and replay attacks.',
+          transformation: 'Scrubbed by AST secret filter'
+        },
+        {
+          field: 'real_hostname & internal_ip',
+          rawSnippet: 'prod-ingress-gw-01.internal.corp (10.0.4.12:5432)',
+          action: 'PSEUDONYMIZED',
+          actionClass: 'bg-amber-100 text-amber-800',
+          cause: 'RFC-1918 private IPs and internal cluster DNS reveal VPC subnet topology. Exposing internal addresses facilitates reconnaissance.',
+          transformation: 'Masked to deterministic tenant node ID: "node_b92c"'
+        },
+        {
+          field: 'stack_trace',
+          rawSnippet: 'FATAL: too many connections for role "pg_admin"...',
+          action: 'DROPPED',
+          actionClass: 'bg-error-container text-accent-coral',
+          cause: 'Database error strings leak internal role names and system implementation details. Aggregated into scalar metric error_count = 20.',
+          transformation: 'Transformed into scalar error_count: 20'
+        }
+      ],
+      'token': [
+        {
+          field: 'http_headers.Authorization',
+          rawSnippet: 'Bearer dummy_demo_secret_token...',
+          action: 'STRIPPED',
+          actionClass: 'bg-error-container text-accent-coral',
+          cause: 'Bearer authentication tokens permit unauthorized API access. Scrubbed by AST regex parser before message serialization.',
+          transformation: 'Dropped completely (0 bytes transmitted)'
+        },
+        {
+          field: 'http_headers.X-Api-Key',
+          rawSnippet: 'key_prod_a9f81bc39194e41',
+          action: 'STRIPPED',
+          actionClass: 'bg-error-container text-accent-coral',
+          cause: 'Production API access key provides unmetered external access to billing and customer microservices.',
+          transformation: 'Scrubbed by Tier-1 allow-list gate'
+        },
+        {
+          field: 'http_headers.Cookie',
+          rawSnippet: 'session_id=s%3A8f9b92...; user_id=usr_49102',
+          action: 'STRIPPED',
+          actionClass: 'bg-error-container text-accent-coral',
+          cause: 'HTTP session cookies enable session hijacking and identity spoofing across cloud boundaries.',
+          transformation: 'Dropped completely'
+        },
+        {
+          field: 'request_uri',
+          rawSnippet: '/v1/customers/billing/cards/tok_visa_4242',
+          action: 'STRIPPED',
+          actionClass: 'bg-error-container text-accent-coral',
+          cause: 'Payment token and credit card routing parameter in URI breaches PCI-DSS standard Section 3.2.',
+          transformation: 'Dropped from operational metadata'
+        },
+        {
+          field: 'real_hostname & internal_ip',
+          rawSnippet: 'api-gateway-edge-prod.us-east-1.internal (172.16.89.201)',
+          action: 'PSEUDONYMIZED',
+          actionClass: 'bg-amber-100 text-amber-800',
+          cause: 'Internal gateway IP and AWS VPC private DNS hidden from public SaaS view.',
+          transformation: 'Masked to deterministic node ID: "node_a81f"'
+        }
+      ],
+      'auth': [
+        {
+          field: 'cleartext_passwords_captured',
+          rawSnippet: '["123456", "admin123", "P@ssw0rd2026"]',
+          action: 'STRIPPED',
+          actionClass: 'bg-error-container text-accent-coral',
+          cause: 'Captured intrusion passwords collected by Honeypot/SSH daemon. Egressing plain credentials to central SaaS violates Zero-Knowledge tenets.',
+          transformation: 'Dropped completely (0 bytes transmitted)'
+        },
+        {
+          field: 'attempted_usernames',
+          rawSnippet: '["root", "admin", "postgres", "deploy"]',
+          action: 'DROPPED',
+          actionClass: 'bg-error-container text-accent-coral',
+          cause: 'Username dictionary leak. Telemetry policy restricts payload to pre-approved Section 14 numeric scalars.',
+          transformation: 'Dropped by Allow-List Policy Gate'
+        },
+        {
+          field: 'attacker_ip',
+          rawSnippet: '203.0.113.195',
+          action: 'AGGREGATED',
+          actionClass: 'bg-blue-100 text-blue-800',
+          cause: 'Raw IP addresses are blocked by the 13-field whitelist. Converted into an anonymous numeric metric counter.',
+          transformation: 'Aggregated to scalar metric: failed_logins = 28'
+        },
+        {
+          field: 'real_hostname',
+          rawSnippet: 'bastion-ssh-edge.internal.corp',
+          action: 'PSEUDONYMIZED',
+          actionClass: 'bg-amber-100 text-amber-800',
+          cause: 'Protects the perimeter identity and location of the SSH bastion host.',
+          transformation: 'Masked to deterministic node ID: "node_c73d"'
+        }
+      ],
+      'health': [
+        {
+          field: 'system.kernel',
+          rawSnippet: 'Linux 6.8.0-generic',
+          action: 'DROPPED',
+          actionClass: 'bg-error-container text-accent-coral',
+          cause: 'OS kernel release details enable OS fingerprinting and CVE exploit targeting against unpatched node vulnerabilities.',
+          transformation: 'Dropped from outbound schema'
+        },
+        {
+          field: 'node_uuid',
+          rawSnippet: '4fa9b021-93c4-4b9e-b912-40192a83f120',
+          action: 'DROPPED',
+          actionClass: 'bg-error-container text-accent-coral',
+          cause: 'Raw bare-metal/VM hardware GUID is internal infrastructure state, replaced by tenant-scoped logical ID.',
+          transformation: 'Replaced by tenant logical ID: "node_a81f"'
+        },
+        {
+          field: 'real_hostname',
+          rawSnippet: 'k8s-worker-node-03.internal',
+          action: 'PSEUDONYMIZED',
+          actionClass: 'bg-amber-100 text-amber-800',
+          cause: 'Kubernetes worker node internal naming convention masked to prevent pod scheduling discovery.',
+          transformation: 'Masked to deterministic node ID: "node_a81f"'
+        }
+      ]
+    };
+
     let currentPrivacyScenarioKey = 'cascade';
     let typingInterval = null;
+
+    function renderRedactionBreakdown(key) {
+      const items = REDACTION_BREAKDOWNS[key] || REDACTION_BREAKDOWNS['cascade'];
+      const tbody = document.getElementById('redaction-breakdown-tbody');
+      const badge = document.getElementById('redaction-count-badge');
+      if (badge) {
+        badge.innerText = `${items.length} SENSITIVE ITEMS REDACTED`;
+      }
+      if (tbody) {
+        tbody.innerHTML = items.map(item => `
+          <tr class="hover:bg-black/5 transition-colors">
+            <td class="py-2.5 px-3">
+              <strong class="text-ink">${escapeHtml(item.field)}</strong>
+              <div class="text-[10px] text-accent-coral line-through mt-0.5 opacity-80">${escapeHtml(item.rawSnippet)}</div>
+            </td>
+            <td class="py-2.5 px-3">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.actionClass}">${item.action}</span>
+            </td>
+            <td class="py-2.5 px-3 text-body-secondary text-[11px] leading-relaxed max-w-md">
+              ${escapeHtml(item.cause)}
+            </td>
+            <td class="py-2.5 px-3">
+              <span class="text-success font-semibold">${escapeHtml(item.transformation)}</span>
+            </td>
+          </tr>
+        `).join('');
+      }
+    }
 
     function runRedactorScenario(val) {
       currentPrivacyScenarioKey = val || 'cascade';
@@ -1904,6 +2116,9 @@
         footerStatus.className = 'text-muted font-bold uppercase tracking-wider flex items-center gap-1';
         footerStatus.innerHTML = '<span class="material-symbols-outlined text-[15px]">lock</span><span>EGRESS BLOCKED (0 B TRANSMITTED)</span>';
       }
+
+      // 3. Render the dynamic Redaction Breakdown Table showing what is redacted and why
+      renderRedactionBreakdown(currentPrivacyScenarioKey);
     }
 
     function triggerScrubAnimation() {
@@ -1929,7 +2144,7 @@
         badgeEl.innerText = '⚡ SCRUBBING SECRETS...';
       }
 
-      // 3. Text Revealing Animation (Typewriter stream line-by-line)
+      // 3. Text Revealing Animation (Slower and Smoother: 95ms per line with auto-scroll)
       if (typingInterval) clearInterval(typingInterval);
 
       const fullSanitizedText = data.sanitized;
@@ -1963,7 +2178,7 @@
             }
             notify(`Privacy Engine verified: 0 secrets leaked, 13 scalar fields egressed for [${currentPrivacyScenarioKey}].`, 'verified_user');
           }
-        }, 35); // Snappy, clean streaming reveal (approx 650ms total)
+        }, 95); // 95ms per line: smooth, leisurely, cinematic ~2.1 seconds total
       }
     }
 

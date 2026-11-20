@@ -866,6 +866,90 @@ elif st.session_state["active_view"] == "privacy_lab":
 
     st.markdown("<div style='height: 16px;'></div>", unsafe_allow_html=True)
 
+    # Redacted Data & Sanitization Process Breakdown (What was scrubbed and why)
+    REDACTION_REASONS = {
+        "cascade_failure": [
+            ("db_connection_uri", "postgresql://pg_admin:Sup3rSecr3tP@ssw0rd!...", "STRIPPED", "Hardcoded DB credentials & plaintext master password (CWE-259). Strict zero-knowledge egress policy prohibits connection URIs from crossing the VPC perimeter.", "Dropped completely (0 bytes transmitted)"),
+            ("customer_pii.user_email", "sarah.connor@cyberdyne-enterprises.com", "STRIPPED (PII)", "Direct Personal Identifiable Information (PII) violates GDPR Art. 4(1) and DPDP 2023 regulations. Customer emails must never egress to external APMs.", "Dropped from telemetry payload"),
+            ("customer_pii.session_auth_token", "Bearer dummy_demo_secret_token...", "STRIPPED", "Live session Bearer JWT grants administrative API privileges. Ingestion into SaaS risks token leakage and replay attacks.", "Scrubbed by AST secret filter"),
+            ("real_hostname & internal_ip", "prod-ingress-gw-01.internal.corp (10.0.4.12)", "PSEUDONYMIZED", "RFC-1918 private IPs and internal cluster DNS reveal VPC subnet topology. Exposing internal addresses facilitates lateral reconnaissance.", "Masked to deterministic node ID: 'node_b92c'"),
+            ("stack_trace", "FATAL: too many connections for role 'pg_admin'...", "DROPPED", "Database error strings leak internal role names and system implementation details.", "Transformed into scalar error_count = 20"),
+        ],
+        "cpu_spike": [
+            ("cli_command", "python run_worker.py --pwd=P@ssw0rd9912 --token=tok_live_81a", "STRIPPED", "Plaintext passwords and live API tokens passed via process command-line arguments. Scrubbed before transmission.", "Dropped completely (0 bytes transmitted)"),
+            ("real_hostname", "app-srv-01.us-east-1.internal", "PSEUDONYMIZED", "Internal AWS private DNS naming reveals internal topology.", "Masked to deterministic node ID: 'node_a81f'"),
+            ("internal_ip", "10.0.1.45:8080", "DROPPED", "Internal socket address dropped by 13-field Allow-List policy.", "Dropped by Allow-List Gate"),
+        ],
+        "auth_attack": [
+            ("cleartext_passwords_captured", "['123456', 'admin123', 'P@ssw0rd2026']", "STRIPPED", "Captured credential dictionary collected by Honeypot/SSH daemon. Egressing plain credentials violates Zero-Knowledge tenets.", "Dropped completely (0 bytes transmitted)"),
+            ("attempted_usernames", "['root', 'admin', 'postgres', 'deploy']", "DROPPED", "System user enumeration list. Telemetry policy restricts payload to pre-approved numeric scalars.", "Dropped by Allow-List Gate"),
+            ("attacker_ip", "203.0.113.195", "AGGREGATED", "Raw attacker IP is dropped to prevent raw log ingestion, aggregated into anonymous security metric.", "Aggregated to scalar metric: failed_logins = 28"),
+            ("real_hostname", "bastion-ssh-edge.internal.corp", "PSEUDONYMIZED", "Protects identity and DNS location of the SSH bastion host.", "Masked to deterministic node ID: 'node_c73d'"),
+        ],
+        "memory_leak": [
+            ("system.kernel", "Linux 6.8.0-generic", "DROPPED", "OS kernel release details enable OS fingerprinting and CVE exploit targeting against unpatched vulnerabilities.", "Dropped from outbound schema"),
+            ("node_uuid", "4fa9b021-93c4-4b9e-b912-40192a83f120", "DROPPED", "Bare-metal hardware GUID replaced by tenant-scoped logical ID.", "Replaced by tenant logical ID: 'node_a81f'"),
+            ("real_hostname", "k8s-worker-node-03.internal", "PSEUDONYMIZED", "Kubernetes worker node internal naming convention masked to prevent pod scheduling discovery.", "Masked to deterministic node ID: 'node_a81f'"),
+        ]
+    }
+
+    current_breakdown = REDACTION_REASONS.get(privacy_scenario, REDACTION_REASONS["cascade_failure"])
+
+    st.markdown("<div class='kpi-label'>🔍 Data Transformation & Redaction Process Breakdown (What is Redacted & Why)</div>", unsafe_allow_html=True)
+    table_rows = "".join([
+        f"""
+        <tr>
+            <td style='padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.06);'>
+                <strong style='color: #F0F3F8;'>{field}</strong><br/>
+                <span style='color: #F87171; text-decoration: line-through; font-size: 0.72rem;'>{raw}</span>
+            </td>
+            <td style='padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.06);'>
+                <span style='background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35); padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;'>
+                    {action}
+                </span>
+            </td>
+            <td style='padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.06); color: #94A3B8; font-size: 0.78rem;'>
+                {cause}
+            </td>
+            <td style='padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.06); color: #34D399; font-size: 0.76rem;'>
+                {transform}
+            </td>
+        </tr>
+        """
+        for field, raw, action, cause, transform in current_breakdown
+    ])
+
+    st.markdown(f"""
+    <div class='taste-card'>
+        <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;'>
+            <span style='color: #38BDF8; font-weight: 700; font-size: 0.88rem;'>
+                🛡️ Zero-Knowledge Transformation Rulebook ({len(current_breakdown)} Sensitive Tokens Intercepted)
+            </span>
+            <span class='status-pill status-pill-poor'>ZERO SECRETS LEAKED</span>
+        </div>
+        <p style='color: #8B949E; font-size: 0.8rem; margin: 0 0 12px 0;'>
+            Detailed security explanation of why volatile tokens captured in Tier 1 Customer VPC are blocked from egressing to Tier 2 SaaS Ingest:
+        </p>
+        <div style='overflow-x: auto;'>
+            <table class='sla-table'>
+                <thead>
+                    <tr>
+                        <th>Volatile Field (Tier 1)</th>
+                        <th>Action</th>
+                        <th>Sanitization Cause & Compliance Rule</th>
+                        <th>Tier 2 Transformation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {table_rows}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<div style='height: 16px;'></div>", unsafe_allow_html=True)
+
     # Allow-List Policy Gate Inspector
     st.markdown("<div class='kpi-label'>🛡️ Allow-List Policy Gate Inspection (Strict 13-Field Allow-List)</div>", unsafe_allow_html=True)
     allowed_list = audit_proof.get("allowed_fields", [
