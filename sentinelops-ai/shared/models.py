@@ -99,3 +99,24 @@ class Incident(BaseModel):
     status: str = Field(default=INCIDENT_STATUS_OPEN, description="OPEN | INVESTIGATING | RESOLVED")
     created_at: str = Field(..., description="Timestamp incident opened (UTC)")
     updated_at: str = Field(..., description="Timestamp of latest correlated alert (UTC)")
+
+
+class BasicAlert(BaseModel):
+    """
+    Alert record triggered when an abnormal threshold or rule is breached.
+    """
+    alert_id: str = Field(..., description="Unique alert ID (e.g. alt_xxxx)")
+    source_id: str = Field(..., description="Affected infrastructure source / node")
+    metric: str = Field(default="threshold", description="Metric that triggered the alert")
+    current_value: float = Field(default=0.0, description="Observed metric value")
+    threshold: float = Field(..., description="Threshold exceeded")
+    severity: str = Field(..., description="Alert severity: WARNING, CRITICAL")
+    message: str = Field(..., description="Human-readable explanation of the alert")
+    timestamp_utc: str = Field(
+        default_factory=lambda: datetime.now(timezone.utc).isoformat(),
+        description="Timestamp when the alert was triggered",
+    )
+    payload_id: Optional[str] = Field(default=None, description="Associated telemetry payload ID")
+    alert_type: Optional[str] = Field(default=None, description="Type of alert (e.g. HIGH_CPU)")
+    metric_value: Optional[float] = Field(default=None, description="Observed metric value alias")
+
