@@ -11,7 +11,12 @@ from sqlalchemy.orm import Session
 from backend.db.session import get_db
 from backend.db.models import User, Organization, Membership, Collector, Incident, AuditLog
 from backend.core.dependencies import get_current_user, get_tenant_membership
-from backend.schemas_saas import OrganizationCreateRequest, OrganizationResponse
+from backend.schemas_saas import (
+    OrganizationCreateRequest,
+    OrganizationResponse,
+    MemberItemResponse,
+    AuditLogItemResponse,
+)
 from backend.routes.auth import generate_slug
 
 router = APIRouter(prefix="/api/v1/orgs", tags=["Organizations"])
@@ -154,4 +159,69 @@ def get_organization(
         collector_count=collector_count,
         incident_count=incident_count,
     )
+
+
+@router.get(
+    "/{org_id}/members",
+    response_model=List[MemberItemResponse],
+    summary="List Organization Members",
+    description="Retrieve all members of the organization. Strictly scoped by tenant membership.",
+)
+def get_organization_members(
+    org_id: str,
+    membership: Membership = Depends(get_tenant_membership),
+    db: Session = Depends(get_db),
+) -> List[MemberItemResponse]:
+    rows = db.execute(
+        select(Membership, User)
+        .join(User, Membership.user_id == User.id)
+        .where(Membership.organization_id == org_id)
+        .order_by(Membership.created_at.asc())
+    ).all()
+
+    return [
+        MemberItemResponse(
+            id=mem.id,
+            user_id=usr.id,
+            email=usr.email,
+            full_name=usr.full_name,
+            role=mem.role,
+            created_at=mem.created_at,
+        )
+        for mem, usr in rows
+    ]
+
+
+@router.get(
+    "/{org_id}/audit-logs",
+    response_model=List[AuditLogItemResponse],
+    summary="List Organization Audit Logs",
+    description="Retrieve recent audit log entries for the organization. Strictly scoped by tenant membership.",
+)
+def get_organization_audit_logs(
+    org_id: str,
+    membership: Membership = Depends(get_tenant_membership),
+    db: Session = Depends(get_db),
+    limit: int = 50,
+) -> List[AuditLogItemResponse]:
+    logs = db.execute(
+        select(AuditLog)
+        .where(AuditLog.organization_id == org_id)
+        .order_by(AuditLog.timestamp.desc())
+        .limit(limit)
+    ).scalars().all()
+
+    return [
+        AuditLogItemResponse(
+            id=log.id,
+            action=log.action,
+            resource_type=log.resource_type,
+            resource_id=log.resource_id,
+            actor_user_id=log.actor_user_id,
+            timestamp=log.timestamp,
+            safe_metadata=log.safe_metadata or {},
+        )
+        for log in logs
+    ]
+
 

@@ -142,3 +142,4 @@ class BackendAIService:
 
 # Global AI Service Singleton
 ai_service = BackendAIService()
+

@@ -150,3 +150,4 @@ def get_tenant_metrics_summary(
         message="Tenant metrics summary calculated successfully",
         data=summary_data,
     )
+

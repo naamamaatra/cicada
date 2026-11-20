@@ -149,3 +149,25 @@ class CollectorResponse(BaseModel):
     last_seen: Optional[datetime] = None
     created_at: datetime
     revoked_at: Optional[datetime] = None
+
+
+class MemberItemResponse(BaseModel):
+    """Membership information for organization members."""
+    id: str
+    user_id: str
+    email: str
+    full_name: str
+    role: str
+    created_at: datetime
+
+
+class AuditLogItemResponse(BaseModel):
+    """Audit log entry for organization activities."""
+    id: str
+    action: str
+    resource_type: str
+    resource_id: Optional[str] = None
+    actor_user_id: Optional[str] = None
+    timestamp: datetime
+    safe_metadata: Dict[str, Any] = {}
+

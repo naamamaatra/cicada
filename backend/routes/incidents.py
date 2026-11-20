@@ -195,3 +195,4 @@ def update_incident_status(
         last_updated_at=inc.last_updated_at,
         resolved_at=inc.resolved_at,
     )
+
