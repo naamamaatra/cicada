@@ -158,57 +158,50 @@
   <div class="toast-container" id="toast-shelf"></div>
 
   <!-- Enterprise Header / Top Navigation -->
-  <header class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md notion-hairline-b h-16">
-    <div class="h-16 max-w-[1400px] mx-auto px-6 flex items-center justify-between gap-4">
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md notion-hairline-b h-14">
+    <div class="h-14 max-w-[1400px] mx-auto px-4 sm:px-6 flex items-center justify-between gap-3">
       
       <!-- Brand & Status -->
-      <div class="flex items-center gap-6">
-        <div class="flex items-center gap-2.5 select-none cursor-pointer" onclick="navigateTo('landing')">
-          <div class="w-9 h-9 rounded-[9px] bg-primary-tint flex items-center justify-center border border-primary/20 shadow-xs">
-            <span class="material-symbols-outlined text-primary text-[22px]">shield_lock</span>
+      <div class="flex items-center gap-3 shrink-0">
+        <div class="flex items-center gap-2 select-none cursor-pointer" onclick="navigateTo('landing')">
+          <div class="w-8 h-8 rounded-lg bg-primary-tint flex items-center justify-center border border-primary/20 shadow-xs">
+            <span class="material-symbols-outlined text-primary text-[20px]">shield_lock</span>
           </div>
-          <div class="flex flex-col">
-            <div class="flex items-center gap-2">
-              <span class="font-extrabold text-[16px] tracking-tight text-ink font-sans">SentinelOps AI</span>
-              <span class="px-2 py-0.5 rounded-full bg-primary-tint text-primary font-mono text-[10px] font-bold tracking-wider">TIER-2 SAAS</span>
-            </div>
-            <span class="text-[11px] text-body-secondary">Zero-Knowledge Autonomous Observability</span>
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-[15px] tracking-tight text-ink font-sans">SentinelOps AI</span>
+            <span class="px-1.5 py-0.5 rounded font-mono text-[9px] font-bold bg-primary-tint text-primary tracking-wider uppercase">SaaS</span>
           </div>
         </div>
 
-        <!-- Live FastAPI Badge -->
-        <div id="header-conn-status" class="hidden xl:flex items-center gap-2 px-2.5 py-1 rounded-full bg-success-tint/60 text-[#0f5c22] text-[12px] font-mono border border-success/20">
-          <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
-          <span>FastAPI 8000: Synchronized</span>
+        <!-- Live FastAPI Badge (Compact) -->
+        <div id="header-conn-status" class="hidden 2xl:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success-tint/60 text-[#0f5c22] text-[11px] font-mono border border-success/20">
+          <span class="w-1.5 h-1.5 rounded-full bg-success animate-pulse"></span>
+          <span>FastAPI 8000</span>
         </div>
       </div>
 
-      <!-- Nav Menu -->
-      <nav class="hidden md:flex items-center gap-6 text-[13px] font-medium text-body-secondary">
-        <button onclick="navigateTo('landing')" id="nav-btn-landing" class="hover:text-ink transition-colors nav-link-active">Product</button>
-        <button onclick="navigateTo('fleet')" id="nav-btn-fleet" class="hover:text-ink transition-colors">Fleet Mission Control</button>
-        <button onclick="navigateTo('privacy')" id="nav-btn-privacy" class="hover:text-ink transition-colors">Privacy &amp; Egress Proof</button>
-        <button onclick="navigateTo('incidents')" id="nav-btn-incidents" class="hover:text-ink transition-colors">Incidents &amp; AI</button>
-        <button onclick="navigateTo('architecture')" id="nav-btn-architecture" class="hover:text-ink transition-colors">Two-Tier Architecture</button>
-        <button onclick="navigateTo('saas')" id="nav-btn-saas" class="hover:text-primary transition-colors flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-tint/60 text-primary font-semibold border border-primary/20">
+      <!-- Nav Menu (Clean, compact, non-overflowing) -->
+      <nav class="hidden md:flex items-center gap-1 lg:gap-1.5 text-[13px] font-medium text-body-secondary shrink-0">
+        <button onclick="navigateTo('landing')" id="nav-btn-landing" class="px-2.5 py-1 rounded-md hover:text-ink hover:bg-black/5 transition-all nav-link-active">Product</button>
+        <button onclick="navigateTo('fleet')" id="nav-btn-fleet" class="px-2.5 py-1 rounded-md hover:text-ink hover:bg-black/5 transition-all">Mission Control</button>
+        <button onclick="navigateTo('privacy')" id="nav-btn-privacy" class="px-2.5 py-1 rounded-md hover:text-ink hover:bg-black/5 transition-all">Privacy Lab</button>
+        <button onclick="navigateTo('incidents')" id="nav-btn-incidents" class="px-2.5 py-1 rounded-md hover:text-ink hover:bg-black/5 transition-all">Incidents &amp; AI</button>
+        <button onclick="navigateTo('architecture')" id="nav-btn-architecture" class="px-2.5 py-1 rounded-md hover:text-ink hover:bg-black/5 transition-all">Architecture</button>
+        <button onclick="navigateTo('saas')" id="nav-btn-saas" class="px-3 py-1 rounded-lg hover:text-primary transition-all flex items-center gap-1.5 bg-primary-tint/60 text-primary font-semibold border border-primary/20">
           <span class="material-symbols-outlined text-[15px]">cloud</span>
           <span>SaaS Cloud</span>
         </button>
       </nav>
 
       <!-- Action Buttons -->
-      <div class="flex items-center gap-3">
-        <button onclick="navigateTo('saas')" id="header-saas-pill" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary/30 bg-primary-tint text-primary text-[12px] font-semibold hover:bg-primary/20 transition-all cursor-pointer">
-          <span class="material-symbols-outlined text-[16px]">domain</span>
-          <span id="header-saas-user-label">SaaS Portal</span>
-        </button>
-        <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-card-subtle font-mono text-[12px] text-body-secondary border border-black/5">
-          <span class="material-symbols-outlined text-[15px] text-muted">schedule</span>
+      <div class="flex items-center gap-2.5 shrink-0">
+        <div class="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-card-subtle font-mono text-[11px] text-body-secondary border border-black/5">
+          <span class="material-symbols-outlined text-[13px] text-muted">schedule</span>
           <span id="system-telemetry-clock">00:00:00 UTC</span>
         </div>
-        <button onclick="navigateTo('fleet')" class="flex items-center gap-2 px-4 py-2 rounded-[8px] bg-primary hover:bg-primary-pressed text-white text-[13px] font-medium shadow-xs transition-colors cursor-pointer">
-          <span class="material-symbols-outlined text-[17px]">terminal</span>
-          <span>Launch Mission Control</span>
+        <button onclick="navigateTo('saas')" id="header-saas-pill" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary/25 bg-primary-tint/40 text-primary text-[12px] font-semibold hover:bg-primary-tint transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[15px]">domain</span>
+          <span id="header-saas-user-label" class="max-w-[140px] truncate">My Organization</span>
         </button>
       </div>
 
@@ -216,7 +209,7 @@
   </header>
 
   <!-- MAIN VIEWPORT CONTAINER -->
-  <main class="w-full pt-16 min-h-screen bg-white">
+  <main class="w-full pt-14 min-h-screen bg-white">
 
     <!-- ========================================================================= -->
     <!-- 1. LANDING PAGE: PROFESSIONAL ENTERPRISE COMPANY OVERVIEW                 -->
