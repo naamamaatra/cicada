@@ -4,7 +4,7 @@ Strictly defines the Phase 1 shared contracts.
 """
 
 from datetime import datetime, timezone
-from typing import Optional, List, Any
+from typing import Optional, List, Any, Dict
 from pydantic import BaseModel, Field, field_validator
 
 
@@ -134,6 +134,7 @@ class HealthResponse(BaseModel):
 class MetricsSummary(BaseModel):
     """
     Overview summary of fleet status for dashboard and monitoring.
+    Supports both 3-state operational summary and Section 4 four-state product health.
     """
     total_sources: int = 0
     total_telemetry_events: int = 0
@@ -141,6 +142,10 @@ class MetricsSummary(BaseModel):
     warning_sources: int = 0
     critical_sources: int = 0
     active_alert_count: int = 0
+    four_state_breakdown: Optional[Dict[str, int]] = Field(
+        default=None,
+        description="Section 4 Four-State Health: EXCELLENT, GOOD, FAIR, POOR counts"
+    )
 
 
 class ApiResponse(BaseModel):

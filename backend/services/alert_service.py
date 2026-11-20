@@ -151,6 +151,48 @@ def evaluate_telemetry_alerts(payload: TelemetryPayload) -> List[Alert]:
     return alerts
 
 
+def classify_four_state_health(payload: TelemetryPayload) -> str:
+    """
+    Hackathon Section 4 Four-State Health Classification:
+    - POOR: critical degradation, severe breach (CPU>90, MEM>90, DISK>95, LAT>250, LOSS>5, failed logins>=5, errors>=20)
+    - FAIR: elevated metrics / warnings (CPU>70, MEM>75, DISK>85, LAT>100, LOSS>1)
+    - GOOD: normal operational deviations (CPU>50, MEM>60, DISK>70, LAT>50)
+    - EXCELLENT: healthy baselines
+    """
+    # Check POOR (Critical) conditions
+    if (
+        payload.cpu > THRESHOLDS["cpu_critical"]
+        or payload.memory > THRESHOLDS["memory_critical"]
+        or payload.disk > 95.0
+        or payload.latency_ms > THRESHOLDS["latency_critical_ms"]
+        or payload.packet_loss_pct > THRESHOLDS["packet_loss_critical_pct"]
+        or payload.failed_logins >= THRESHOLDS["failed_logins_spike"]
+        or payload.error_count >= THRESHOLDS["error_count_spike"]
+    ):
+        return "POOR"
+
+    # Check FAIR (Warning) conditions
+    if (
+        payload.cpu > 70.0
+        or payload.memory > 75.0
+        or payload.disk > 85.0
+        or payload.latency_ms > 100.0
+        or payload.packet_loss_pct > 1.0
+    ):
+        return "FAIR"
+
+    # Check GOOD conditions
+    if (
+        payload.cpu > 50.0
+        or payload.memory > 60.0
+        or payload.disk > 70.0
+        or payload.latency_ms > 50.0
+    ):
+        return "GOOD"
+
+    return "EXCELLENT"
+
+
 def classify_health(payload: TelemetryPayload) -> str:
     """
     Classify the health state of a node based on its telemetry:
@@ -186,6 +228,7 @@ def classify_health(payload: TelemetryPayload) -> str:
 def calculate_metrics_summary(storage: InMemoryStorage) -> MetricsSummary:
     """
     Calculate high-level health and metric counters across all monitored sources.
+    Includes both 3-state operational summary and Section 4 four-state breakdown.
     """
     latest_per_source = storage.get_latest_per_source()
     total_sources = len(latest_per_source)
@@ -196,6 +239,8 @@ def calculate_metrics_summary(storage: InMemoryStorage) -> MetricsSummary:
     warning_count = 0
     critical_count = 0
 
+    four_state_counts = {"EXCELLENT": 0, "GOOD": 0, "FAIR": 0, "POOR": 0}
+
     for source_id, payload in latest_per_source.items():
         state = classify_health(payload)
         if state == "CRITICAL":
@@ -205,6 +250,9 @@ def calculate_metrics_summary(storage: InMemoryStorage) -> MetricsSummary:
         else:
             healthy_count += 1
 
+        four_state = classify_four_state_health(payload)
+        four_state_counts[four_state] = four_state_counts.get(four_state, 0) + 1
+
     return MetricsSummary(
         total_sources=total_sources,
         total_telemetry_events=total_events,
@@ -212,5 +260,6 @@ def calculate_metrics_summary(storage: InMemoryStorage) -> MetricsSummary:
         warning_sources=warning_count,
         critical_sources=critical_count,
         active_alert_count=active_alerts,
+        four_state_breakdown=four_state_counts,
     )
 

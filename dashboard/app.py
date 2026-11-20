@@ -101,6 +101,10 @@ if "data_service" not in st.session_state:
 data_service: TelemetryDataService = st.session_state["data_service"]
 
 
+# --- FETCH DATA ---
+latest_by_node, active_alerts = data_service.fetch_latest_metrics()
+history_df = data_service.get_history_df()
+
 # --- SIDEBAR CONTROLS ---
 with st.sidebar:
     st.image("https://img.icons8.com/fluency/96/shield.png", width=64)
@@ -131,12 +135,10 @@ with st.sidebar:
 
     st.markdown("---")
     st.caption("Backend API Status:")
-    st.info("📡 Ingestion API: Auto-Polling (Fallback: Integrated Telemetry Engine)")
-
-
-# --- FETCH DATA ---
-latest_by_node, active_alerts = data_service.fetch_latest_metrics()
-history_df = data_service.get_history_df()
+    if data_service.backend_connected:
+        st.success("🟢 FastAPI Backend: **Connected** (http://127.0.0.1:8000)")
+    else:
+        st.warning("🟡 FastAPI Backend: **Offline** (Autonomous fallback active)")
 
 # Calculate Overall Cluster Health
 overall_states = [calculate_overall_health(node) for node in latest_by_node.values()]

@@ -1,6 +1,10 @@
 """
 Telemetry Data Service for SentinelOps AI Dashboard.
-Supports live simulation, scenario injection (Phase 1 demo flow), and FastAPI backend polling.
+Synchronized with Member 4's FastAPI Backend:
+- Submits failure-injected telemetry to POST /api/v1/telemetry
+- Polls latest metrics from GET /api/v1/metrics
+- Polls alerts from GET /api/v1/alerts
+- Seamlessly falls back to local simulation if backend is offline.
 """
 import random
 import time
@@ -19,6 +23,7 @@ class TelemetryDataService:
         self.active_scenario = "normal"
         self.history = []  # sliding window of telemetry records
         self.alerts = []
+        self.backend_connected = False
         self._init_mock_history()
 
     def _init_mock_history(self):
@@ -59,31 +64,10 @@ class TelemetryDataService:
         """
         self.active_scenario = scenario_name
 
-    def fetch_latest_metrics(self) -> tuple[dict[str, dict], list[dict]]:
-        """
-        Fetches or simulates the latest metrics for all servers.
-        Returns (latest_by_node, active_alerts)
-        """
-        # Try fetching from FastAPI backend first
-        try:
-            resp = requests.get(f"{self.backend_url}/api/v1/metrics", timeout=0.8)
-            if resp.status_code == 200:
-                remote_data = resp.json()
-                if remote_data and isinstance(remote_data, list):
-                    # Backend reachable and returning data
-                    latest_by_node = {}
-                    for item in remote_data:
-                        latest_by_node[item["source_id"]] = item
-                        self.history.append(item)
-                    self._check_alerts(latest_by_node)
-                    return latest_by_node, self.alerts
-        except Exception:
-            # Backend not reachable yet; fall back smoothly to simulated generator
-            pass
-
-        # Generate tick data based on active scenario
-        latest_by_node = {}
+    def _generate_current_payloads(self) -> dict[str, dict]:
+        """Generates current telemetry for all servers based on active scenario."""
         now_ts = datetime.now(timezone.utc).isoformat()
+        current = {}
 
         for s in DEFAULT_SERVERS:
             src = s["source_id"]
@@ -138,21 +122,88 @@ class TelemetryDataService:
             else:
                 item = self._generate_healthy_point(src, now_ts)
 
-            latest_by_node[src] = item
-            self.history.append(item)
+            current[src] = item
 
-        # Keep history capped at 120 items
+        return current
+
+    def fetch_latest_metrics(self) -> tuple[dict[str, dict], list[dict]]:
+        """
+        Fetches latest metrics.
+        If FastAPI Backend is reachable:
+        1. Submits scenario telemetry via POST /api/v1/telemetry
+        2. Retrieves stored metrics from GET /api/v1/metrics
+        3. Retrieves active alerts from GET /api/v1/alerts
+        If Backend is offline:
+        Smoothly runs in standalone engine mode.
+        """
+        generated = self._generate_current_payloads()
+
+        # Check if backend is reachable
+        backend_healthy = False
+        try:
+            h_resp = requests.get(f"{self.backend_url}/api/v1/health", timeout=0.6)
+            backend_healthy = (h_resp.status_code == 200)
+        except Exception:
+            backend_healthy = False
+
+        if backend_healthy:
+            self.backend_connected = True
+            try:
+                # 1. Forward scenario data to backend API
+                for payload in generated.values():
+                    requests.post(f"{self.backend_url}/api/v1/telemetry", json=payload, timeout=0.5)
+
+                # 2. Retrieve latest metrics from backend
+                m_resp = requests.get(f"{self.backend_url}/api/v1/metrics", timeout=0.6)
+                if m_resp.status_code == 200:
+                    body = m_resp.json()
+                    records = body.get("data", []) if isinstance(body, dict) else body
+                    latest_by_node = {}
+                    for rec in records:
+                        latest_by_node[rec["source_id"]] = rec
+                        self.history.append(rec)
+
+                    # 3. Retrieve backend-generated alerts
+                    a_resp = requests.get(f"{self.backend_url}/api/v1/alerts", timeout=0.6)
+                    if a_resp.status_code == 200:
+                        a_body = a_resp.json()
+                        backend_alerts = a_body.get("data", []) if isinstance(a_body, dict) else a_body
+                        # Map backend alert fields
+                        formatted_alerts = []
+                        for ba in backend_alerts:
+                            formatted_alerts.append({
+                                "alert_id": ba.get("alert_id", "alt_0"),
+                                "source_id": ba.get("source_id", "node"),
+                                "metric": ba.get("alert_type", "METRIC"),
+                                "value": f"{ba.get('metric_value', '')}",
+                                "severity": ba.get("severity", "WARNING"),
+                                "message": ba.get("message", "Alert triggered")
+                            })
+                        self.alerts = formatted_alerts
+
+                    self._trim_history()
+                    return latest_by_node, self.alerts
+            except Exception:
+                # In case of partial backend failure, fall through to local fallback
+                pass
+
+        # Standalone Engine Fallback Mode
+        self.backend_connected = False
+        latest_by_node = generated
+        for item in generated.values():
+            self.history.append(item)
+        self._check_alerts(latest_by_node)
+        self._trim_history()
+        return latest_by_node, self.alerts
+
+    def _trim_history(self):
         if len(self.history) > 120:
             self.history = self.history[-120:]
 
-        self._check_alerts(latest_by_node)
-        return latest_by_node, self.alerts
-
     def _check_alerts(self, latest_by_node: dict[str, dict]):
-        """Evaluates thresholds to generate basic alerts for Phase 1."""
+        """Local threshold alert evaluator for fallback mode."""
         new_alerts = []
         for src, data in latest_by_node.items():
-            # CPU check
             if data["cpu"] > 90.0:
                 new_alerts.append({
                     "alert_id": f"alt_cpu_{src}_{int(time.time())}",
@@ -172,7 +223,6 @@ class TelemetryDataService:
                     "message": f"Elevated CPU usage ({data['cpu']}%)"
                 })
 
-            # Memory check
             if data["memory"] > 90.0:
                 new_alerts.append({
                     "alert_id": f"alt_mem_{src}_{int(time.time())}",
@@ -183,7 +233,6 @@ class TelemetryDataService:
                     "message": f"Memory exhaustion risk ({data['memory']}%) exceeding 90% threshold"
                 })
 
-            # Latency check
             if data["latency_ms"] > 250.0:
                 new_alerts.append({
                     "alert_id": f"alt_lat_{src}_{int(time.time())}",
@@ -194,7 +243,6 @@ class TelemetryDataService:
                     "message": f"High response latency ({data['latency_ms']} ms) exceeding 250ms threshold"
                 })
 
-            # Packet loss check
             if data["packet_loss_pct"] > 5.0:
                 new_alerts.append({
                     "alert_id": f"alt_pkt_{src}_{int(time.time())}",
@@ -205,7 +253,6 @@ class TelemetryDataService:
                     "message": f"Severe packet loss ({data['packet_loss_pct']}%) exceeding 5% threshold"
                 })
 
-            # Failed logins check
             if data.get("failed_logins", 0) >= 5:
                 new_alerts.append({
                     "alert_id": f"alt_sec_{src}_{int(time.time())}",
@@ -222,4 +269,3 @@ class TelemetryDataService:
         if not self.history:
             return pd.DataFrame()
         return pd.DataFrame(self.history)
-
