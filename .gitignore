@@ -66,3 +66,8 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
