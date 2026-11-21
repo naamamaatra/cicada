@@ -350,16 +350,38 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="SentinelOps AI - Local Collector & Privacy Engine")
-    parser.add_argument("--mode", choices=["normal", "failure", "demo-phase1", "demo-privacy", "flush"], default="demo-phase1")
+    parser.add_argument("--mode", choices=["normal", "failure", "demo-phase1", "demo-privacy", "flush", "stream"], default="demo-phase1")
     parser.add_argument("--source", default="node_a81f", help="Target source node ID")
     parser.add_argument("--scenario", default="cpu_spike", choices=["cpu_spike", "memory_leak", "network_degradation", "auth_attack", "app_crash", "cascade_failure"])
     parser.add_argument("--api-url", default="http://127.0.0.1:8000/api/v1/telemetry", help="Backend API endpoint URL")
+    parser.add_argument("--stream", action="store_true", help="Consume raw organiser telemetry stream from standard input")
+    parser.add_argument("--stream-file", type=str, default=None, help="Consume raw organiser telemetry stream from a JSON Lines file")
 
     args = parser.parse_args()
 
     collector = LocalCollector(api_url=args.api_url)
 
-    if args.mode == "demo-phase1":
+    if args.stream or args.stream_file or args.mode == "stream":
+        print(f"\n[Collector Stream Mode] Ingesting organiser telemetry stream...")
+        stream_source = open(args.stream_file, "r", encoding="utf-8") if args.stream_file else sys.stdin
+        count = 0
+        try:
+            for line in stream_source:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                try:
+                    raw_event = json.loads(line)
+                    res = collector.process_and_send(raw_event)
+                    count += 1
+                    print(f"[{count:04d}] Ingested -> Node: {res.get('source_id', 'unknown')} | Status: {res.get('status')} | Alerts: {res.get('alerts_generated', 0)} | Proof ID: {res.get('audit_id')}")
+                except json.JSONDecodeError:
+                    print(f"[STREAM WARN] Skipped invalid JSON line: {line[:50]}...")
+        finally:
+            if args.stream_file and stream_source:
+                stream_source.close()
+        print(f"[Collector Stream Mode] Completed stream ingestion: {count} events processed.\n")
+    elif args.mode == "demo-phase1":
         collector.run_phase1_demo()
     elif args.mode == "demo-privacy":
         res = collector.run_privacy_demo()

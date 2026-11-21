@@ -1951,8 +1951,24 @@
       document.getElementById('ws-val-latency').innerText = Number(fleetLatAvg).toFixed(1);
       document.getElementById('ws-val-alerts').innerText = alertsList.length;
       document.getElementById('ws-val-crit-alerts').innerText = '(' + alertsList.length + ' Critical)';
-      document.getElementById('ws-val-health').innerText = alertsList.length > 0 ? (alertsList.length > 2 ? 'POOR' : 'DEGRADED') : 'EXCELLENT';
-      document.getElementById('ws-val-health').className = 'text-[26px] font-extrabold tracking-tight font-sans ' + (alertsList.length > 0 ? 'text-accent-coral' : 'text-success');
+      // Compute Section 14 Four-State Health Classification: EXCELLENT / GOOD / FAIR / POOR
+      let healthState = 'EXCELLENT';
+      let healthColor = 'text-success';
+      if (alertsList.length > 1 || targetCpu > 90 || targetLat > 250 || targetLoss > 5) {
+        healthState = 'POOR';
+        healthColor = 'text-accent-coral';
+      } else if (alertsList.length === 1 || targetCpu > 70 || targetMem > 75 || targetLat > 100 || targetLoss > 1) {
+        healthState = 'FAIR';
+        healthColor = 'text-accent-amber-deep';
+      } else if (targetCpu > 50 || targetMem > 60 || targetLat > 50) {
+        healthState = 'GOOD';
+        healthColor = 'text-primary';
+      } else {
+        healthState = 'EXCELLENT';
+        healthColor = 'text-success';
+      }
+      document.getElementById('ws-val-health').innerText = healthState;
+      document.getElementById('ws-val-health').className = 'text-[26px] font-extrabold tracking-tight font-sans ' + healthColor;
 
       // Update Scenario Alerts list
       const alertContainer = document.getElementById('scenario-alerts-container');
