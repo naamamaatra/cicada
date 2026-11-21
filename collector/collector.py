@@ -81,7 +81,10 @@ class LocalCollector:
         # -------------------------------------------------------------
         # STEP 1 & 2: Privacy Engine (Pseudonymize & Redact Secrets)
         # -------------------------------------------------------------
-        sanitized_event, detected_secrets = self.privacy_engine.process_raw_telemetry(raw_event)
+        sanitized_event, detected_secrets = self.privacy_engine.process_raw_telemetry(
+            raw_event,
+            default_tenant_id=self.tenant_id,
+        )
 
         # -------------------------------------------------------------
         # STEP 3: Allow-List Policy Gate
@@ -109,6 +112,8 @@ class LocalCollector:
             return {
                 "success": False,
                 "status": "BLOCKED",
+                "source_id": source_id,
+                "payload_id": payload_id,
                 "message": policy_result.summary,
                 "audit_id": audit_record.audit_id,
                 "violations": policy_result.violations,

@@ -242,24 +242,72 @@ class PrivacyEngine:
         """Pseudonymize a server hostname or IP."""
         return self.pseudonymizer.pseudonymize(host_identifier)
 
-    def process_raw_telemetry(self, raw_event: Dict[str, Any]) -> Tuple[Dict[str, Any], List[str]]:
+    def process_raw_telemetry(
+        self,
+        raw_event: Dict[str, Any],
+        default_tenant_id: str = "tenant_demo",
+    ) -> Tuple[Dict[str, Any], List[str]]:
         """
         Run initial privacy pass:
         1. Pseudonymize hostname/source_id if real name provided.
         2. Redact any sensitive text or keys.
+        3. Normalize external organiser stream field aliases.
         Returns (privacy_cleaned_dict, detected_sensitive_items).
         """
         cleaned = dict(raw_event)
         detected_items: List[str] = []
 
-        # 1. Pseudonymize host identifier
-        if "hostname" in cleaned:
-            real_host = cleaned["hostname"]
-            cleaned["source_id"] = self.pseudonymize_host(real_host)
-        elif "source_id" in cleaned:
-            cleaned["source_id"] = self.pseudonymize_host(cleaned["source_id"])
+        # 1. Pseudonymize host identifier (support common stream aliases)
+        real_host = None
+        for host_candidate in ["hostname", "real_hostname", "host", "node", "server", "source_id"]:
+            if host_candidate in cleaned and cleaned[host_candidate]:
+                real_host = str(cleaned[host_candidate])
+                break
 
-        # 2. Sanitize all fields
+        if real_host:
+            cleaned["source_id"] = self.pseudonymize_host(real_host)
+        elif "source_id" not in cleaned:
+            cleaned["source_id"] = self.pseudonymize_host("unknown-host")
+
+        # 2. Normalize timestamp aliases
+        for ts_candidate in ["timestamp", "time", "ts", "datetime"]:
+            if ts_candidate in cleaned and "timestamp_utc" not in cleaned:
+                cleaned["timestamp_utc"] = str(cleaned[ts_candidate])
+                break
+        if "timestamp_utc" not in cleaned:
+            from datetime import datetime, timezone
+            cleaned["timestamp_utc"] = datetime.now(timezone.utc).isoformat()
+
+        # 3. Normalize metric aliases
+        alias_map = {
+            "cpu_percent": "cpu",
+            "cpu_pct": "cpu",
+            "memory_percent": "memory",
+            "memory_pct": "memory",
+            "mem": "memory",
+            "disk_percent": "disk",
+            "disk_pct": "disk",
+            "latency": "latency_ms",
+            "packet_loss": "packet_loss_pct",
+            "errors": "error_count",
+            "status": "collector_status",
+        }
+        for alias_k, target_k in alias_map.items():
+            if alias_k in cleaned and target_k not in cleaned:
+                cleaned[target_k] = cleaned[alias_k]
+
+        # 4. Default required fields if missing
+        if "tenant_id" not in cleaned or not cleaned["tenant_id"]:
+            cleaned["tenant_id"] = default_tenant_id
+
+        if "collector_status" not in cleaned or not cleaned["collector_status"]:
+            cleaned["collector_status"] = "online"
+
+        if "payload_id" not in cleaned or not cleaned["payload_id"]:
+            import uuid
+            cleaned["payload_id"] = f"evt_{uuid.uuid4().hex[:8]}"
+
+        # 5. Sanitize all fields (redact credentials & sensitive tokens)
         sanitized_dict, detected = self.sanitize_dictionary(cleaned)
         detected_items.extend(detected)
 
