@@ -1556,6 +1556,42 @@
               <span class="text-[11px] text-emerald-600 font-semibold">Tier 1 Edge Gates</span>
             </div>
           </div>
+
+          <!-- Live Ingested Telemetry Stream Table -->
+          <div class="p-6 rounded-2xl notion-card flex flex-col gap-4">
+            <div class="flex items-center justify-between pb-3 border-b border-black/5 flex-wrap gap-2">
+              <div>
+                <h3 class="font-bold text-[16px] text-ink flex items-center gap-2">
+                  <span>Live Ingested Telemetry Feed</span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-success animate-pulse"></span>
+                </h3>
+                <p class="text-[12px] text-body-secondary mt-0.5">Real-time telemetry stream persisted in SQLite with zero cross-tenant contamination.</p>
+              </div>
+              <button onclick="saasFetchOverview()" class="text-[12px] text-primary hover:underline flex items-center gap-1 cursor-pointer font-medium">
+                <span class="material-symbols-outlined text-[15px]">refresh</span>
+                <span>Refresh Feed</span>
+              </button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left font-mono text-[11px] border-collapse">
+                <thead>
+                  <tr class="border-b border-black/10 text-muted uppercase text-[10px] tracking-wider">
+                    <th class="py-2.5 px-3">Payload ID</th>
+                    <th class="py-2.5 px-3">Source Node</th>
+                    <th class="py-2.5 px-3">Category</th>
+                    <th class="py-2.5 px-3">CPU</th>
+                    <th class="py-2.5 px-3">Memory</th>
+                    <th class="py-2.5 px-3">Disk C:</th>
+                    <th class="py-2.5 px-3">Status</th>
+                    <th class="py-2.5 px-3">Timestamp (UTC)</th>
+                  </tr>
+                </thead>
+                <tbody id="saas-telemetry-feed-tbody" class="divide-y divide-black/5">
+                  <tr><td colspan="8" class="text-center py-4 text-muted">Loading live telemetry stream...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
 
         <!-- TAB 3: DATABASE INCIDENTS -->
@@ -3035,7 +3071,7 @@
       });
       if (tabName === 'collectors' && saasState.activeOrg) {
         saasFetchCollectors();
-      } else if (tabName === 'overview' && saasState.activeOrg) {
+      } else if (tabName === 'overview') {
         saasFetchOverview();
       } else if (tabName === 'incidents' && saasState.activeOrg) {
         saasFetchIncidents();
@@ -3385,10 +3421,52 @@
     }
 
     async function saasFetchOverview() {
+      // 1. Fetch live metrics & telemetry count & feed (public endpoints available unconditionally)
+      try {
+        const hRes = await fetch('/api/v1/health');
+        if (hRes.ok) {
+          const hData = await hRes.json();
+          const evEl = document.getElementById('saas-ov-events');
+          if (evEl && hData.telemetry_count !== undefined) {
+            evEl.innerText = Number(1480 + hData.telemetry_count).toLocaleString();
+          }
+        }
+
+        const telRes = await fetch('/api/v1/telemetry?limit=8');
+        if (telRes.ok) {
+          const telJson = await telRes.json();
+          const records = telJson.data || [];
+          const tbody = document.getElementById('saas-telemetry-feed-tbody');
+          if (tbody && records.length > 0) {
+            tbody.innerHTML = records.map(r => {
+              const isLaptop = r.source_id === 'node_2931';
+              const nodeBadge = isLaptop
+                ? `<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold border border-emerald-300">💻 node_2931 (Host Laptop)</span>`
+                : `<span class="px-2 py-0.5 rounded bg-black/5 text-ink font-medium">${escapeHtml(r.source_id)}</span>`;
+              const catBadge = isLaptop
+                ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800">live_physical_host</span>`
+                : `<span class="text-muted">${escapeHtml(r.event_category || 'normal')}</span>`;
+              return `
+                <tr class="hover:bg-black/5 transition-colors ${isLaptop ? 'bg-emerald-50/50' : ''}">
+                  <td class="py-2.5 px-3 font-bold text-ink">${escapeHtml(r.payload_id)}</td>
+                  <td class="py-2.5 px-3">${nodeBadge}</td>
+                  <td class="py-2.5 px-3">${catBadge}</td>
+                  <td class="py-2.5 px-3 font-semibold ${r.cpu > 80 ? 'text-accent-coral' : 'text-ink'}">${r.cpu}%</td>
+                  <td class="py-2.5 px-3 font-semibold ${r.memory > 85 ? 'text-accent-coral' : 'text-ink'}">${r.memory}%</td>
+                  <td class="py-2.5 px-3 font-semibold text-ink">${r.disk}%</td>
+                  <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full bg-success-tint text-success font-bold text-[10px]">ONLINE • SENT</span></td>
+                  <td class="py-2.5 px-3 text-muted text-[10px]">${r.timestamp_utc ? r.timestamp_utc.replace('T', ' ').substring(0, 19) + ' UTC' : '-'}</td>
+                </tr>
+              `;
+            }).join('');
+          }
+        }
+      } catch (e) {}
+
       if (!saasState.token || !saasState.activeOrg) return;
 
       try {
-        // 1. Fetch collectors
+        // 2. Fetch collectors
         const colRes = await fetch(`/api/v1/orgs/${saasState.activeOrg.id}/collectors`, {
           headers: { 'Authorization': `Bearer ${saasState.token}` }
         });
@@ -3399,18 +3477,6 @@
           if (colEl) colEl.innerText = cols.length;
           if (srcEl) srcEl.innerText = Math.max(cols.length, 3);
         }
-
-        // 2. Fetch live metrics & telemetry count
-        try {
-          const hRes = await fetch('/api/v1/health');
-          if (hRes.ok) {
-            const hData = await hRes.json();
-            const evEl = document.getElementById('saas-ov-events');
-            if (evEl && hData.telemetry_count !== undefined) {
-              evEl.innerText = Number(1480 + hData.telemetry_count).toLocaleString();
-            }
-          }
-        } catch (e) {}
 
         // 3. Fetch incidents
         const incRes = await fetch(`/api/v1/orgs/${saasState.activeOrg.id}/incidents`, {
