@@ -999,7 +999,8 @@
             </div>
             <div class="flex items-center gap-3">
               <select id="diff-scenario-selector" onchange="runRedactorScenario(this.value)" class="py-2 pl-3 pr-8 rounded-lg bg-surface-warm border border-black/10 text-[12px] font-medium appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary">
-                <option value="cascade">Cascade Outage with DB Secrets &amp; PII</option>
+                <option value="laptop">💻 Physical Device: Nagaraj_Hegde (node_2931)</option>
+                <option value="cascade" selected>Cascade Outage with DB Secrets &amp; PII</option>
                 <option value="token">API Bearer Token Leak</option>
                 <option value="auth">Active SSH Bruteforce &amp; IP Breach Log</option>
                 <option value="health">Nominal Telemetry &amp; System Health Tick</option>
@@ -2046,6 +2047,44 @@
 
     // Phase 2 Privacy Engine Tester Data
     const PRIVACY_SCENARIOS = {
+      'laptop': {
+        raw: `{
+  "timestamp": "2026-11-21T05:25:50.717Z",
+  "real_hostname": "Nagaraj_Hegde",
+  "internal_ip": "192.168.137.26",
+  "os_platform": "Windows-11-AMD64 (Physical Laptop)",
+  "session_token": "Bearer local_win_live_token_719482914",
+  "raw_system_metrics": {
+    "cpu_load_percent": 23.0,
+    "memory_load_percent": 76.0,
+    "disk_used_percent": 79.4,
+    "total_physical_ram_gb": 16.0,
+    "hardware_thread_count": 8,
+    "active_nic": "Wi-Fi (192.168.137.26)"
+  },
+  "user_profile": {
+    "logged_in_user": "Nagaraj_Hegde",
+    "home_directory": "C:\\\\Users\\\\Nagaraj.Nagaraj_Hegde",
+    "auth_domain": "WORKGROUP"
+  }
+}`,
+        sanitized: `{
+  "timestamp_utc": "2026-11-21T05:25:50.717Z",
+  "source_id": "node_2931",
+  "tenant_id": "tenant_demo",
+  "event_category": "live_physical_host",
+  "collector_status": "online",
+  "cpu": 23.0,
+  "memory": 76.0,
+  "disk": 79.4,
+  "latency_ms": 12.0,
+  "packet_loss_pct": 0.0,
+  "error_count": 0,
+  "failed_logins": 0,
+  "payload_id": "evt_live_803802a7",
+  "audit_signature": "sha256:2931c0e86b0a1a5b81a95b8712df88a31e84a27546738914ba08169e061807c4"
+}`
+      },
       'cascade': {
         raw: `{
   "timestamp": "2026-11-20T23:59:14.281Z",
@@ -2185,6 +2224,48 @@
 
     // Data Transformation & Redaction Process Breakdown Details (What is redacted and why)
     const REDACTION_BREAKDOWNS = {
+      'laptop': [
+        {
+          field: 'real_hostname',
+          rawSnippet: 'Nagaraj_Hegde',
+          action: 'PSEUDONYMIZED',
+          actionClass: 'bg-amber-100 text-amber-800',
+          cause: 'Physical workstation name leaks corporate developer identity and machine naming topology. SHA-256 deterministic hash maps it to anonymized node ID.',
+          transformation: 'Masked to deterministic SHA-256 node ID: "node_2931"'
+        },
+        {
+          field: 'internal_ip',
+          rawSnippet: '192.168.137.26 (Local WLAN adapter)',
+          action: 'STRIPPED',
+          actionClass: 'bg-error-container text-accent-coral',
+          cause: 'Private RFC-1918 LAN IP reveals local subnet topology. Dropped by Tier-1 AST network filter.',
+          transformation: 'Dropped completely (0 bytes transmitted)'
+        },
+        {
+          field: 'user_profile',
+          rawSnippet: 'C:\\Users\\Nagaraj.Nagaraj_Hegde, WORKGROUP',
+          action: 'STRIPPED (PII)',
+          actionClass: 'bg-error-container text-accent-coral',
+          cause: 'Windows user account and local directory structure reveal personal workstation details. Violates zero-trust isolation.',
+          transformation: 'Scrubbed completely from telemetry payload'
+        },
+        {
+          field: 'session_token',
+          rawSnippet: 'Bearer local_win_live_token_719482914',
+          action: 'STRIPPED',
+          actionClass: 'bg-error-container text-accent-coral',
+          cause: 'Volatile bearer authentication token intercepted by Tier-1 regex quarantine.',
+          transformation: 'Quarantined and removed before network egress'
+        },
+        {
+          field: 'raw_system_metrics',
+          rawSnippet: 'Windows 11 AMD64, 8 threads, 16.0 GB RAM',
+          action: 'NORMALIZED',
+          actionClass: 'bg-blue-100 text-blue-800',
+          cause: 'Free-form hardware descriptors violate the strict 13-field scalar invariant schema.',
+          transformation: 'Normalized into strict float scalars: cpu=23.0, memory=76.0, disk=79.4'
+        }
+      ],
       'cascade': [
         {
           field: 'db_connection_uri',
