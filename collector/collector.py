@@ -396,6 +396,7 @@ class LocalCollector:
 
         return {
             "payload_id": f"evt_live_{uuid.uuid4().hex[:8]}",
+            "tenant_id": self.tenant_id,
             "real_hostname": real_hostname,
             "host_ip": real_ip,
             "os_platform": platform.platform(),

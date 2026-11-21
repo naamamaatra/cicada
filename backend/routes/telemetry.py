@@ -74,6 +74,15 @@ async def ingest_telemetry(
         except Exception:
             target_org_id = None
 
+    if not target_org_id:
+        try:
+            # Fallback to active organization in database so live/CLI telemetry is always tracked in SQLite
+            active_org = db.execute(select(Organization).order_by(Organization.created_at.desc())).scalars().first()
+            if active_org:
+                target_org_id = active_org.id
+        except Exception:
+            target_org_id = None
+
     # 3. Persist to SQLite/PostgreSQL database if organization was identified
     if target_org_id:
         try:
