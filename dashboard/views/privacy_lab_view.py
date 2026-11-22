@@ -6,6 +6,7 @@ Visualizes the 8-step privacy lifecycle and side-by-side field transformation.
 
 import streamlit as st
 import json
+import pandas as pd
 from dashboard.api_client import SaaSClient
 
 DEFAULT_TEST_SAMPLE = {

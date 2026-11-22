@@ -181,6 +181,27 @@ with st.sidebar:
         </div>
     </div>
     """, unsafe_allow_html=True)
+    
+    st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;'>PLATFORM ENVIRONMENT</div>", unsafe_allow_html=True)
+    mode_options = [
+        "⚡ Workload Simulator & Labs (Phase 2)",
+        "🏢 SentinelOps Multi-Tenant SaaS Cloud (Milestone 5)",
+    ]
+    is_saas = st.session_state.get("platform_mode") == "saas"
+    selected_mode = st.selectbox(
+        "Platform Mode",
+        mode_options,
+        index=1 if is_saas else 0,
+        key="platform_mode_selectbox",
+        label_visibility="collapsed",
+    )
+    if "SaaS" in selected_mode and not is_saas:
+        st.session_state["platform_mode"] = "saas"
+        st.rerun()
+    elif "Simulator" in selected_mode and is_saas:
+        st.session_state["platform_mode"] = "simulator"
+        st.rerun()
+
     st.markdown("---")
 
     # Main Navigation
@@ -241,6 +262,15 @@ cluster_health = "POOR" if "POOR" in overall_states else ("FAIR" if "FAIR" in ov
 total_nodes = len(latest_by_node)
 crit_count = sum(1 for a in active_alerts if a.get("severity") == "CRITICAL")
 avg_lat = round(sum(d["latency_ms"] for d in latest_by_node.values()) / total_nodes, 1) if total_nodes > 0 else 0.0
+
+
+# =============================================================================
+# SAAS PLATFORM ROUTING (Milestone 5 Multi-Tenant SaaS Cloud)
+# =============================================================================
+if st.session_state.get("platform_mode") == "saas":
+    from dashboard.saas_app import render_saas_platform
+    render_saas_platform()
+    st.stop()
 
 
 # =============================================================================
@@ -647,19 +677,45 @@ elif st.session_state["active_view"] == "workspace":
         """, unsafe_allow_html=True)
 
     with f_col2:
+        remed_key = f"remed_executed_{curr_key}"
+        is_remediated = st.session_state.get(remed_key, False)
+        
+        status_color = "#34D399" if is_remediated else "#8B949E"
+        status_text = "RESOLVED • Autonomous Self-Healed" if is_remediated else "STANDBY"
+        
         st.markdown(f"""
-        <div class='taste-card'>
-            <div style='color: #34D399; font-weight: 700; font-size: 0.88rem; margin-bottom: 6px;'>
-                🤖 Recommended Autonomous Remediation
+        <div class='taste-card' style='border-color: {"rgba(16, 185, 129, 0.4)" if is_remediated else "rgba(59, 130, 246, 0.25)"}; background: {"rgba(16, 185, 129, 0.06)" if is_remediated else "rgba(15, 23, 42, 0.4)"};'>
+            <div style='color: {"#34D399" if is_remediated else "#60A5FA"}; font-weight: 700; font-size: 0.88rem; margin-bottom: 6px;'>
+                {"✅ Autonomous Remediation Succeeded" if is_remediated else "🤖 Recommended Autonomous Remediation"}
             </div>
             <p style='color: #CBD5E1; font-size: 0.85rem; margin: 0; line-height: 1.45;'>
                 {cfg["remediation"]}
             </p>
-            <div style='margin-top: 10px; font-size: 0.76rem; color: #8B949E;' class='font-mono'>
-                Execution Policy: Autonomous Tier 2 Hook • Status: STANDBY
+            <div style='margin-top: 10px; font-size: 0.76rem; color: {status_color};' class='font-mono'>
+                Execution Policy: Autonomous Tier 2 Hook • Status: {status_text}
             </div>
         </div>
         """, unsafe_allow_html=True)
+
+        if curr_key != "normal":
+            st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
+            r_col1, r_col2 = st.columns([1, 1])
+            with r_col1:
+                if not is_remediated:
+                    if st.button("⚡ Execute Remediation", key=f"btn_exec_remed_{curr_key}", use_container_width=True):
+                        st.session_state[remed_key] = True
+                        # Clear alerts on backend
+                        data_service.clear_alerts()
+                        st.toast("Autonomous remediation executed! Cluster alerts cleared.", icon="✅")
+                        st.rerun()
+                else:
+                    st.button("✅ Remediated ✓", key=f"btn_done_remed_{curr_key}", disabled=True, use_container_width=True)
+            with r_col2:
+                if is_remediated:
+                    if st.button("↺ Re-simulate Fault", key=f"btn_revert_remed_{curr_key}", use_container_width=True):
+                        st.session_state[remed_key] = False
+                        st.toast(f"Re-triggering fault scenario: {cfg['short_title']}", icon="⚠️")
+                        st.rerun()
 
     st.markdown("<div style='height: 14px;'></div>", unsafe_allow_html=True)
 

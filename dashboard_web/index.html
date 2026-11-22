@@ -158,49 +158,50 @@
   <div class="toast-container" id="toast-shelf"></div>
 
   <!-- Enterprise Header / Top Navigation -->
-  <header class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md notion-hairline-b h-16">
-    <div class="h-16 max-w-[1400px] mx-auto px-6 flex items-center justify-between gap-4">
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md notion-hairline-b h-14">
+    <div class="h-14 max-w-[1400px] mx-auto px-4 sm:px-6 flex items-center justify-between gap-3">
       
       <!-- Brand & Status -->
-      <div class="flex items-center gap-6">
-        <div class="flex items-center gap-2.5 select-none cursor-pointer" onclick="navigateTo('landing')">
-          <div class="w-9 h-9 rounded-[9px] bg-primary-tint flex items-center justify-center border border-primary/20 shadow-xs">
-            <span class="material-symbols-outlined text-primary text-[22px]">shield_lock</span>
+      <div class="flex items-center gap-3 shrink-0">
+        <div class="flex items-center gap-2 select-none cursor-pointer" onclick="navigateTo('landing')">
+          <div class="w-8 h-8 rounded-lg bg-primary-tint flex items-center justify-center border border-primary/20 shadow-xs">
+            <span class="material-symbols-outlined text-primary text-[20px]">shield_lock</span>
           </div>
-          <div class="flex flex-col">
-            <div class="flex items-center gap-2">
-              <span class="font-extrabold text-[16px] tracking-tight text-ink font-sans">SentinelOps AI</span>
-              <span class="px-2 py-0.5 rounded-full bg-primary-tint text-primary font-mono text-[10px] font-bold tracking-wider">TIER-2 SAAS</span>
-            </div>
-            <span class="text-[11px] text-body-secondary">Zero-Knowledge Autonomous Observability</span>
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-[15px] tracking-tight text-ink font-sans">SentinelOps AI</span>
+            <span class="px-1.5 py-0.5 rounded font-mono text-[9px] font-bold bg-primary-tint text-primary tracking-wider uppercase">SaaS</span>
           </div>
         </div>
 
-        <!-- Live FastAPI Badge -->
-        <div id="header-conn-status" class="hidden xl:flex items-center gap-2 px-2.5 py-1 rounded-full bg-success-tint/60 text-[#0f5c22] text-[12px] font-mono border border-success/20">
-          <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
-          <span>FastAPI 8000: Synchronized</span>
+        <!-- Live FastAPI Badge (Compact) -->
+        <div id="header-conn-status" class="hidden 2xl:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success-tint/60 text-[#0f5c22] text-[11px] font-mono border border-success/20">
+          <span class="w-1.5 h-1.5 rounded-full bg-success animate-pulse"></span>
+          <span>FastAPI 8000</span>
         </div>
       </div>
 
-      <!-- Nav Menu -->
-      <nav class="hidden md:flex items-center gap-7 text-[13px] font-medium text-body-secondary">
-        <button onclick="navigateTo('landing')" id="nav-btn-landing" class="hover:text-ink transition-colors nav-link-active">Product</button>
-        <button onclick="navigateTo('fleet')" id="nav-btn-fleet" class="hover:text-ink transition-colors">Fleet Mission Control</button>
-        <button onclick="navigateTo('privacy')" id="nav-btn-privacy" class="hover:text-ink transition-colors">Privacy &amp; Egress Proof</button>
-        <button onclick="navigateTo('incidents')" id="nav-btn-incidents" class="hover:text-ink transition-colors">Incidents &amp; AI</button>
-        <button onclick="navigateTo('architecture')" id="nav-btn-architecture" class="hover:text-ink transition-colors">Two-Tier Architecture</button>
+      <!-- Nav Menu (Clean, compact, non-overflowing) -->
+      <nav class="hidden md:flex items-center gap-1 lg:gap-1.5 text-[13px] font-medium text-body-secondary shrink-0">
+        <button onclick="navigateTo('landing')" id="nav-btn-landing" class="px-2.5 py-1 rounded-md hover:text-ink hover:bg-black/5 transition-all nav-link-active">Product</button>
+        <button onclick="navigateTo('fleet')" id="nav-btn-fleet" class="px-2.5 py-1 rounded-md hover:text-ink hover:bg-black/5 transition-all">Mission Control</button>
+        <button onclick="navigateTo('privacy')" id="nav-btn-privacy" class="px-2.5 py-1 rounded-md hover:text-ink hover:bg-black/5 transition-all">Privacy Lab</button>
+        <button onclick="navigateTo('incidents')" id="nav-btn-incidents" class="px-2.5 py-1 rounded-md hover:text-ink hover:bg-black/5 transition-all">Incidents &amp; AI</button>
+        <button onclick="navigateTo('architecture')" id="nav-btn-architecture" class="px-2.5 py-1 rounded-md hover:text-ink hover:bg-black/5 transition-all">Architecture</button>
+        <button onclick="navigateTo('saas')" id="nav-btn-saas" class="px-3 py-1 rounded-lg hover:text-primary transition-all flex items-center gap-1.5 bg-primary-tint/60 text-primary font-semibold border border-primary/20">
+          <span class="material-symbols-outlined text-[15px]">cloud</span>
+          <span>SaaS Cloud</span>
+        </button>
       </nav>
 
       <!-- Action Buttons -->
-      <div class="flex items-center gap-3">
-        <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-card-subtle font-mono text-[12px] text-body-secondary border border-black/5">
-          <span class="material-symbols-outlined text-[15px] text-muted">schedule</span>
+      <div class="flex items-center gap-2.5 shrink-0">
+        <div class="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-card-subtle font-mono text-[11px] text-body-secondary border border-black/5">
+          <span class="material-symbols-outlined text-[13px] text-muted">schedule</span>
           <span id="system-telemetry-clock">00:00:00 UTC</span>
         </div>
-        <button onclick="navigateTo('fleet')" class="flex items-center gap-2 px-4 py-2 rounded-[8px] bg-primary hover:bg-primary-pressed text-white text-[13px] font-medium shadow-xs transition-colors cursor-pointer">
-          <span class="material-symbols-outlined text-[17px]">terminal</span>
-          <span>Launch Mission Control</span>
+        <button onclick="navigateTo('saas')" id="header-saas-pill" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary/25 bg-primary-tint/40 text-primary text-[12px] font-semibold hover:bg-primary-tint transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[15px]">domain</span>
+          <span id="header-saas-user-label" class="max-w-[140px] truncate">My Organization</span>
         </button>
       </div>
 
@@ -208,7 +209,7 @@
   </header>
 
   <!-- MAIN VIEWPORT CONTAINER -->
-  <main class="w-full pt-16 min-h-screen bg-white">
+  <main class="w-full pt-14 min-h-screen bg-white">
 
     <!-- ========================================================================= -->
     <!-- 1. LANDING PAGE: PROFESSIONAL ENTERPRISE COMPANY OVERVIEW                 -->
@@ -973,7 +974,7 @@
               <span class="text-[24px] font-extrabold text-accent-indigo font-mono">SHA-256</span>
               <span class="px-2 py-0.5 rounded-full bg-chip-lavender text-accent-indigo font-mono text-[10px] font-bold">HMAC</span>
             </div>
-            <span class="text-[11px] text-muted truncate font-mono text-[10px]" id="stat-zk-hash">Continuous cryptographic audit proof.</span>
+            <span class="text-[11px] text-primary truncate font-mono text-[10px] font-bold" id="stat-zk-hash">Proof ID: aud_2e4018b4 • Verified</span>
           </div>
           <div class="p-5 rounded-xl notion-card flex flex-col justify-between gap-3">
             <span class="text-[11px] uppercase font-bold tracking-wider text-muted">COMPLIANT STANDARDS</span>
@@ -998,7 +999,8 @@
             </div>
             <div class="flex items-center gap-3">
               <select id="diff-scenario-selector" onchange="runRedactorScenario(this.value)" class="py-2 pl-3 pr-8 rounded-lg bg-surface-warm border border-black/10 text-[12px] font-medium appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary">
-                <option value="cascade">Cascade Outage with DB Secrets &amp; PII</option>
+                <option value="laptop">💻 Physical Device: Nagaraj_Hegde (node_2931)</option>
+                <option value="cascade" selected>Cascade Outage with DB Secrets &amp; PII</option>
                 <option value="token">API Bearer Token Leak</option>
                 <option value="auth">Active SSH Bruteforce &amp; IP Breach Log</option>
                 <option value="health">Nominal Telemetry &amp; System Health Tick</option>
@@ -1150,10 +1152,10 @@
             <span class="text-[11px] font-bold uppercase tracking-wider text-muted">CORRELATED INCIDENT STREAM</span>
             
             <!-- Inc 1 -->
-            <div id="inc-card-1" onclick="selectIncidentItem(1)" class="p-4 rounded-xl notion-card border-l-4 border-l-accent-coral cursor-pointer hover:shadow-md transition-all">
+            <div id="inc-card-1" onclick="selectIncidentItem(1)" class="p-4 rounded-xl notion-card border-l-4 border-l-accent-coral cursor-pointer hover:shadow-md transition-all ring-1 ring-primary/20">
               <div class="flex items-center justify-between text-[11px] font-mono">
-                <span class="px-2 py-0.5 rounded bg-error-container text-accent-coral font-bold">CRITICAL • INC-8941</span>
-                <span class="text-accent-coral font-semibold">4 mins ago</span>
+                <span id="inc-badge-1" class="px-2 py-0.5 rounded bg-error-container text-accent-coral font-bold">CRITICAL • INC-8941</span>
+                <span id="inc-time-1" class="text-accent-coral font-semibold">4 mins ago</span>
               </div>
               <h3 class="text-[15px] font-bold text-ink mt-2 leading-snug">Database Memory Exhaustion &amp; Query Latency Surge</h3>
               <div class="text-[12px] text-body-secondary font-mono mt-1">node_b92c • Postgres Master (PG-15)</div>
@@ -1162,8 +1164,8 @@
             <!-- Inc 2 -->
             <div id="inc-card-2" onclick="selectIncidentItem(2)" class="p-4 rounded-xl notion-card border-l-4 border-l-success cursor-pointer hover:shadow-md transition-all">
               <div class="flex items-center justify-between text-[11px] font-mono">
-                <span class="px-2 py-0.5 rounded bg-success-tint text-success font-bold">RESOLVED • INC-8938</span>
-                <span class="text-muted">18 mins ago</span>
+                <span id="inc-badge-2" class="px-2 py-0.5 rounded bg-success-tint text-success font-bold">RESOLVED • INC-8938</span>
+                <span id="inc-time-2" class="text-muted">18 mins ago</span>
               </div>
               <h3 class="text-[15px] font-bold text-ink mt-2 leading-snug">API Gateway Ephemeral Port Depletion</h3>
               <div class="text-[12px] text-body-secondary font-mono mt-1">node_c73d • Edge Ingress Gateway</div>
@@ -1172,8 +1174,8 @@
             <!-- Inc 3 -->
             <div id="inc-card-3" onclick="selectIncidentItem(3)" class="p-4 rounded-xl notion-card border-l-4 border-l-accent-amber cursor-pointer hover:shadow-md transition-all">
               <div class="flex items-center justify-between text-[11px] font-mono">
-                <span class="px-2 py-0.5 rounded bg-accent-amber/20 text-[#854d0e] font-bold">INVESTIGATING • INC-8924</span>
-                <span class="text-muted">32 mins ago</span>
+                <span id="inc-badge-3" class="px-2 py-0.5 rounded bg-accent-amber/20 text-[#854d0e] font-bold">INVESTIGATING • INC-8924</span>
+                <span id="inc-time-3" class="text-muted">32 mins ago</span>
               </div>
               <h3 class="text-[15px] font-bold text-ink mt-2 leading-snug">Asynchronous Job Queue Backpressure (Celery)</h3>
               <div class="text-[12px] text-body-secondary font-mono mt-1">node_a81f • App Worker Services</div>
@@ -1194,7 +1196,7 @@
                   Trace ID: 7f81a-cc9041b • node_b92c
                 </div>
               </div>
-              <span class="px-3 py-1 rounded-full bg-error-container text-accent-coral font-mono text-[11px] font-bold" id="ai-inc-badge">
+              <span class="px-3 py-1 rounded-full bg-error-container text-accent-coral font-mono text-[11px] font-bold transition-all" id="ai-inc-badge">
                 Active Severity 1
               </span>
             </div>
@@ -1203,10 +1205,10 @@
             <div>
               <div class="flex justify-between text-[12px] font-mono mb-1.5">
                 <span class="text-body-secondary font-medium">Bayesian Anomaly Confidence</span>
-                <strong class="text-primary font-bold" id="ai-inc-conf">94.2% Primary Hypothesis</strong>
+                <strong class="text-primary font-bold transition-all" id="ai-inc-conf">94.2% Primary Hypothesis</strong>
               </div>
               <div class="w-full h-2 rounded-full bg-surface-warm overflow-hidden">
-                <div class="h-full bg-primary rounded-full" style="width: 94.2%;"></div>
+                <div id="ai-inc-conf-bar" class="h-full bg-primary rounded-full transition-all duration-500" style="width: 94.2%;"></div>
               </div>
             </div>
 
@@ -1220,36 +1222,59 @@
 
             <!-- Divergent Signals Grid -->
             <div>
-              <span class="text-[11px] font-bold uppercase tracking-wider text-muted block mb-2">DIVERGENT METRIC SIGNALS</span>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-muted">DIVERGENT METRIC SIGNALS</span>
+                <span id="ai-signals-status-label" class="text-[11px] font-mono font-semibold text-accent-coral">SLA BREACH ACTIVE</span>
+              </div>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-[12px] font-mono">
-                <div class="p-3 rounded-lg bg-card-subtle border border-black/5">
-                  <span class="text-muted block text-[10px]">RESIDENT MEMORY</span>
-                  <strong class="text-accent-coral text-[14px]">91.4% (+48%)</strong>
+                <div id="ai-sigcard-1" class="p-3 rounded-lg bg-card-subtle border border-black/5 transition-all">
+                  <span id="ai-sig-lbl-1" class="text-muted block text-[10px]">RESIDENT MEMORY</span>
+                  <strong id="ai-sig-val-1" class="text-accent-coral text-[14px] transition-all">91.4% (+48%)</strong>
                 </div>
-                <div class="p-3 rounded-lg bg-card-subtle border border-black/5">
-                  <span class="text-muted block text-[10px]">QUERY LATENCY</span>
-                  <strong class="text-accent-coral text-[14px]">182.0 ms</strong>
+                <div id="ai-sigcard-2" class="p-3 rounded-lg bg-card-subtle border border-black/5 transition-all">
+                  <span id="ai-sig-lbl-2" class="text-muted block text-[10px]">QUERY LATENCY</span>
+                  <strong id="ai-sig-val-2" class="text-accent-coral text-[14px] transition-all">182.0 ms</strong>
                 </div>
-                <div class="p-3 rounded-lg bg-card-subtle border border-black/5">
-                  <span class="text-muted block text-[10px]">DISK SATURATION</span>
-                  <strong class="text-accent-coral text-[14px]">98.0%</strong>
+                <div id="ai-sigcard-3" class="p-3 rounded-lg bg-card-subtle border border-black/5 transition-all">
+                  <span id="ai-sig-lbl-3" class="text-muted block text-[10px]">DISK SATURATION</span>
+                  <strong id="ai-sig-val-3" class="text-accent-coral text-[14px] transition-all">98.0%</strong>
                 </div>
-                <div class="p-3 rounded-lg bg-card-subtle border border-black/5">
-                  <span class="text-muted block text-[10px]">DB ERROR RATE</span>
-                  <strong class="text-accent-coral text-[14px]">0.089 / req</strong>
+                <div id="ai-sigcard-4" class="p-3 rounded-lg bg-card-subtle border border-black/5 transition-all">
+                  <span id="ai-sig-lbl-4" class="text-muted block text-[10px]">DB ERROR RATE</span>
+                  <strong id="ai-sig-val-4" class="text-accent-coral text-[14px] transition-all">0.089 / req</strong>
                 </div>
               </div>
             </div>
 
             <!-- Remediation Box -->
-            <div id="remediation-action-box" class="p-4 rounded-xl bg-primary-tint border border-primary/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div>
-                <strong class="text-primary-pressed block text-[13px]">Recommended Autonomous Action:</strong>
-                <span class="text-[12px] text-body-secondary">Cap connection pool at 250, terminate idle trans-locks, reroute read-replicas.</span>
+            <div id="remediation-action-box" class="p-4 rounded-xl bg-primary-tint border border-primary/20 flex flex-col gap-4 transition-all">
+              <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                  <strong id="ai-remed-title" class="text-primary-pressed block text-[13px]">Recommended Autonomous Action:</strong>
+                  <span id="ai-remed-desc" class="text-[12px] text-body-secondary">Cap connection pool at 250, terminate idle trans-locks, reroute read-replicas.</span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                  <button id="btn-reset-remediation" onclick="resetCurrentIncident()" class="hidden px-3 py-2 rounded-lg border border-black/15 bg-white hover:bg-black/5 text-ink text-[12px] font-semibold transition-all cursor-pointer shadow-xs">
+                    ↺ Re-simulate Fault
+                  </button>
+                  <button id="btn-exec-remediation" onclick="dispatchRemediationAction()" class="px-4 py-2 rounded-lg bg-primary hover:bg-primary-pressed text-white text-[12px] font-semibold transition-all shrink-0 cursor-pointer shadow-xs flex items-center gap-1.5">
+                    <span id="remed-btn-icon" class="material-symbols-outlined text-[16px]">bolt</span>
+                    <span id="remed-btn-text">Execute Remediation</span>
+                  </button>
+                </div>
               </div>
-              <button id="btn-exec-remediation" onclick="dispatchRemediationAction()" class="px-4 py-2 rounded-lg bg-primary hover:bg-primary-pressed text-white text-[12px] font-semibold transition-all shrink-0 cursor-pointer shadow-xs">
-                Execute Remediation
-              </button>
+
+              <!-- Live Execution Stepper / Console -->
+              <div id="remediation-live-console" class="hidden p-3.5 rounded-lg bg-[#0d1117] text-[#c9d1d9] font-mono text-[11px] leading-relaxed border border-white/10 shadow-inner">
+                <div class="flex items-center justify-between text-[#8b949e] border-b border-white/10 pb-1.5 mb-2">
+                  <div class="flex items-center gap-2">
+                    <span id="remed-console-indicator" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="font-bold text-[#e6edf3]">AUTONOMOUS SELF-HEALING DISPATCH TRACE</span>
+                  </div>
+                  <span id="remed-execution-timer" class="text-[10px] text-emerald-400 font-semibold">0.0s elapsed</span>
+                </div>
+                <div id="remed-execution-steps" class="flex flex-col gap-1.5"></div>
+              </div>
             </div>
 
           </div>
@@ -1371,6 +1396,286 @@
       </div>
     </section>
 
+    <!-- ========================================================================= -->
+    <!-- 7. SAAS MULTI-TENANT ENTERPRISE CLOUD PORTAL                              -->
+    <!-- ========================================================================= -->
+    <section id="page-saas" class="page-view hidden">
+      <div class="max-w-[1340px] mx-auto px-6 lg:px-10 py-8 flex flex-col gap-6">
+
+        <!-- SaaS Header Bar -->
+        <div class="p-6 rounded-2xl bg-card-subtle border border-black/8 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white shadow-xs shrink-0">
+              <span class="material-symbols-outlined text-[26px]">domain</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-2.5 flex-wrap">
+                <h1 class="text-[22px] font-extrabold text-ink tracking-tight font-sans" id="saas-org-title">Workspace</h1>
+                <span id="saas-role-badge" class="px-2.5 py-0.5 rounded-full bg-primary-tint text-primary font-mono text-[11px] font-bold">OWNER</span>
+                <span id="saas-auth-status" class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono text-[11px] font-bold">AUTHENTICATING</span>
+              </div>
+              <div class="text-[12px] text-body-secondary font-mono mt-1 flex items-center gap-3 flex-wrap">
+                <span>Tenant: <code id="saas-org-id" class="text-ink font-semibold">Connecting...</code></span>
+                <span>•</span>
+                <span>Operator: <span id="saas-user-email" class="text-ink font-semibold">Resolving identity...</span></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="saasQuickDemoAuth()" class="px-3.5 py-2 rounded-lg bg-white border border-black/10 hover:bg-black/5 text-ink text-[12px] font-semibold shadow-xs flex items-center gap-1.5 cursor-pointer">
+              <span class="material-symbols-outlined text-[16px] text-primary">bolt</span>
+              <span>1-Click Demo Login</span>
+            </button>
+            <button onclick="saasLogout()" id="saas-signout-btn" class="px-3.5 py-2 rounded-lg bg-surface hover:bg-black/5 text-body-secondary text-[12px] font-medium border border-black/10 transition-colors cursor-pointer">
+              Sign Out
+            </button>
+          </div>
+        </div>
+
+        <!-- SaaS Sub-Navigation Tabs -->
+        <div class="flex items-center gap-2 border-b border-black/8 pb-2 text-[13px] font-medium overflow-x-auto">
+          <button onclick="saasSwitchTab('collectors')" id="saas-tab-btn-collectors" class="px-4 py-2 rounded-lg bg-primary-tint text-primary font-bold transition-all flex items-center gap-1.5 shrink-0">
+            <span class="material-symbols-outlined text-[17px]">sensors</span>
+            <span>Collector Fleet &amp; Token Generator</span>
+          </button>
+          <button onclick="saasSwitchTab('overview')" id="saas-tab-btn-overview" class="px-4 py-2 rounded-lg text-body-secondary hover:text-ink transition-all flex items-center gap-1.5 shrink-0">
+            <span class="material-symbols-outlined text-[17px]">bar_chart</span>
+            <span>Cluster Metrics Summary</span>
+          </button>
+          <button onclick="saasSwitchTab('incidents')" id="saas-tab-btn-incidents" class="px-4 py-2 rounded-lg text-body-secondary hover:text-ink transition-all flex items-center gap-1.5 shrink-0">
+            <span class="material-symbols-outlined text-[17px]">crisis_alert</span>
+            <span>Database Incidents &amp; Lifecycle</span>
+          </button>
+          <button onclick="saasSwitchTab('auth')" id="saas-tab-btn-auth" class="px-4 py-2 rounded-lg text-body-secondary hover:text-ink transition-all flex items-center gap-1.5 shrink-0">
+            <span class="material-symbols-outlined text-[17px]">lock_reset</span>
+            <span>Switch Account / Register</span>
+          </button>
+        </div>
+
+        <!-- TAB 1: COLLECTOR FLEET & TOKEN GENERATOR -->
+        <div id="saas-tab-collectors" class="saas-tab-pane block space-y-6">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Left: Enroll New Agent (5 cols) -->
+            <div class="lg:col-span-5 p-6 rounded-2xl notion-card flex flex-col gap-4">
+              <div class="flex items-center gap-2 pb-3 border-b border-black/5">
+                <span class="material-symbols-outlined text-primary text-[20px]">add_circle</span>
+                <h3 class="font-bold text-[16px] text-ink">Enroll New Telemetry Agent</h3>
+              </div>
+              <p class="text-[12px] text-body-secondary leading-relaxed">
+                Register a new edge node inside your customer VPC. SentinelOps generates a cryptographically hashed token (<code class="text-ink font-mono font-bold">sc_live_...</code>).
+              </p>
+
+              <div>
+                <label class="block text-[11px] font-bold text-muted uppercase tracking-wider mb-1">Agent Name</label>
+                <input id="saas-input-collector-name" type="text" placeholder="e.g. prod-aws-us-east-1a" class="w-full px-3.5 py-2 rounded-lg border border-black/15 text-[13px] font-mono focus:border-primary focus:ring-1 focus:ring-primary outline-none" value="prod-web-gateway-01" />
+              </div>
+
+              <button onclick="saasEnrollCollector()" class="w-full py-2.5 rounded-lg bg-primary hover:bg-primary-pressed text-white text-[13px] font-semibold transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer">
+                <span class="material-symbols-outlined text-[18px]">key</span>
+                <span>Generate Agent Token</span>
+              </button>
+
+              <!-- Token Display Box -->
+              <div id="saas-token-result-box" class="hidden p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex flex-col gap-2 transition-all">
+                <div class="flex items-center justify-between text-[11px] font-mono">
+                  <span class="text-emerald-800 font-bold">GENERATED AGENT TOKEN</span>
+                  <span class="text-emerald-700">Save Securely</span>
+                </div>
+                <div class="p-2.5 rounded bg-white border border-emerald-300 font-mono text-[12px] text-ink select-all break-all" id="saas-generated-token-text">
+                  sc_live_...
+                </div>
+                <div class="text-[11px] text-emerald-800 font-mono mt-1">
+                  Agent Shell Command:
+                  <pre class="p-2 bg-emerald-100/60 rounded text-[10px] mt-1 select-all overflow-x-auto" id="saas-cmd-snippet">export SENTINELOPS_COLLECTOR_TOKEN="..." &amp;&amp; python -m collector.agent</pre>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Enrolled Collectors Table (7 cols) -->
+            <div class="lg:col-span-7 p-6 rounded-2xl notion-card flex flex-col gap-4">
+              <div class="flex items-center justify-between pb-3 border-b border-black/5">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-primary text-[20px]">hub</span>
+                  <h3 class="font-bold text-[16px] text-ink">Active Registered Collectors</h3>
+                </div>
+                <button onclick="saasFetchCollectors()" class="text-[12px] text-primary hover:underline flex items-center gap-1 cursor-pointer">
+                  <span class="material-symbols-outlined text-[15px]">refresh</span>
+                  <span>Refresh</span>
+                </button>
+              </div>
+
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-[12px] font-mono">
+                  <thead>
+                    <tr class="text-muted border-b border-black/5 text-[10px] uppercase font-bold tracking-wider">
+                      <th class="py-2.5">Agent Name</th>
+                      <th class="py-2.5">Status</th>
+                      <th class="py-2.5">Token Prefix</th>
+                      <th class="py-2.5">Enrolled</th>
+                    </tr>
+                  </thead>
+                  <tbody id="saas-collectors-tbody">
+                    <tr><td colspan="4" class="py-4 text-center text-muted">Loading registered collectors from database...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TAB 2: OVERVIEW & CLUSTER METRICS -->
+        <div id="saas-tab-overview" class="saas-tab-pane hidden space-y-6">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="p-4 rounded-xl notion-card">
+              <span class="text-[11px] text-muted font-mono uppercase font-bold">MONITORED SOURCES</span>
+              <div class="text-[24px] font-black text-ink mt-1" id="saas-ov-sources">3</div>
+              <span class="text-[11px] text-success font-semibold">Active in Tenant</span>
+            </div>
+            <div class="p-4 rounded-xl notion-card">
+              <span class="text-[11px] text-muted font-mono uppercase font-bold">INGESTED TELEMETRY</span>
+              <div class="text-[24px] font-black text-ink mt-1" id="saas-ov-events">1,480</div>
+              <span class="text-[11px] text-primary font-semibold">SQLite Persistent</span>
+            </div>
+            <div class="p-4 rounded-xl notion-card">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] text-muted font-mono uppercase font-bold">ORGANIZATION INCIDENTS</span>
+                <span id="saas-ov-incidents-badge" class="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-success-tint text-success">NOMINAL</span>
+              </div>
+              <div class="flex items-baseline gap-2 mt-1">
+                <div class="text-[24px] font-black text-ink" id="saas-ov-incidents">0</div>
+                <span class="text-[12px] text-muted font-mono" id="saas-ov-incidents-total">/ 0 Total</span>
+              </div>
+              <span class="text-[11px] text-muted font-mono" id="saas-ov-incidents-sub">0 Active • 0 Resolved/Dismissed</span>
+            </div>
+            <div class="p-4 rounded-xl notion-card">
+              <span class="text-[11px] text-muted font-mono uppercase font-bold">COLLECTORS ENROLLED</span>
+              <div class="text-[24px] font-black text-emerald-600 mt-1" id="saas-ov-collectors">3</div>
+              <span class="text-[11px] text-emerald-600 font-semibold">Tier 1 Edge Gates</span>
+            </div>
+          </div>
+
+          <!-- Live Ingested Telemetry Stream Table -->
+          <div class="p-6 rounded-2xl notion-card flex flex-col gap-4">
+            <div class="flex items-center justify-between pb-3 border-b border-black/5 flex-wrap gap-2">
+              <div>
+                <h3 class="font-bold text-[16px] text-ink flex items-center gap-2">
+                  <span>Live Ingested Telemetry Feed</span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-success animate-pulse"></span>
+                </h3>
+                <p class="text-[12px] text-body-secondary mt-0.5">Real-time telemetry stream persisted in SQLite with zero cross-tenant contamination.</p>
+              </div>
+              <button onclick="saasFetchOverview()" class="text-[12px] text-primary hover:underline flex items-center gap-1 cursor-pointer font-medium">
+                <span class="material-symbols-outlined text-[15px]">refresh</span>
+                <span>Refresh Feed</span>
+              </button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left font-mono text-[11px] border-collapse">
+                <thead>
+                  <tr class="border-b border-black/10 text-muted uppercase text-[10px] tracking-wider">
+                    <th class="py-2.5 px-3">Payload ID</th>
+                    <th class="py-2.5 px-3">Source Node</th>
+                    <th class="py-2.5 px-3">Category</th>
+                    <th class="py-2.5 px-3">CPU</th>
+                    <th class="py-2.5 px-3">Memory</th>
+                    <th class="py-2.5 px-3">Disk C:</th>
+                    <th class="py-2.5 px-3">Status</th>
+                    <th class="py-2.5 px-3">Timestamp (UTC)</th>
+                  </tr>
+                </thead>
+                <tbody id="saas-telemetry-feed-tbody" class="divide-y divide-black/5">
+                  <tr><td colspan="8" class="text-center py-4 text-muted">Loading live telemetry stream...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: DATABASE INCIDENTS -->
+        <div id="saas-tab-incidents" class="saas-tab-pane hidden space-y-6">
+          <div class="p-6 rounded-2xl notion-card flex flex-col gap-4">
+            <div class="flex items-center justify-between pb-3 border-b border-black/5 flex-wrap gap-2">
+              <div>
+                <h3 class="font-bold text-[16px] text-ink">Correlated Tenant Incidents (SQLite Backing)</h3>
+                <p class="text-[12px] text-body-secondary mt-0.5">Persistent incident records with state machine: Open → Investigating → Resolved → Dismissed.</p>
+              </div>
+              <div class="flex items-center gap-2.5">
+                <button onclick="saasSimulateIncident()" id="saas-btn-trigger-incident" class="px-3.5 py-1.5 rounded-lg bg-accent-coral/10 hover:bg-accent-coral/20 text-accent-coral text-[12px] font-bold border border-accent-coral/30 flex items-center gap-1.5 transition-all shadow-xs cursor-pointer">
+                  <span class="material-symbols-outlined text-[16px]">warning</span>
+                  <span>Simulate Fault Telemetry</span>
+                </button>
+                <button onclick="saasFetchIncidents()" class="text-[12px] text-primary hover:underline flex items-center gap-1 cursor-pointer">
+                  <span class="material-symbols-outlined text-[15px]">refresh</span>
+                  <span>Refresh</span>
+                </button>
+              </div>
+            </div>
+
+            <div id="saas-incidents-container" class="space-y-3">
+              <div class="p-4 rounded-xl border border-black/10 text-center text-muted font-mono text-[12px]">
+                Loading incidents from persistent tenant database...
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: AUTH & REGISTER MODAL / CARD -->
+        <div id="saas-tab-auth" class="saas-tab-pane hidden space-y-6">
+          <div class="max-w-[540px] mx-auto p-8 rounded-2xl notion-card flex flex-col gap-5">
+            <div class="text-center">
+              <span class="w-12 h-12 rounded-xl bg-primary-tint text-primary flex items-center justify-center mx-auto mb-3 shadow-xs">
+                <span class="material-symbols-outlined text-[26px]">vpn_key</span>
+              </span>
+              <h2 class="text-[20px] font-bold text-ink">Enterprise SaaS Authentication</h2>
+              <p class="text-[12px] text-body-secondary mt-1">Sign in with an existing account or register a new isolated organization.</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 p-1 bg-surface-warm rounded-lg text-center text-[12px] font-semibold">
+              <button onclick="saasSetAuthMode('login')" id="saas-auth-toggle-login" class="py-1.5 rounded-md bg-white text-ink shadow-xs transition-all cursor-pointer">Sign In</button>
+              <button onclick="saasSetAuthMode('register')" id="saas-auth-toggle-reg" class="py-1.5 rounded-md text-muted hover:text-ink transition-all cursor-pointer">Create Account</button>
+            </div>
+
+            <div id="saas-auth-form" class="space-y-3">
+              <div id="saas-field-fullname" class="hidden">
+                <label class="block text-[11px] font-bold text-muted uppercase tracking-wider mb-1">Full Name</label>
+                <input id="saas-in-fullname" type="text" placeholder="Nagaraj Hegde" class="w-full px-3.5 py-2 rounded-lg border border-black/15 text-[13px] outline-none" />
+              </div>
+              <div id="saas-field-orgname" class="hidden">
+                <label class="block text-[11px] font-bold text-muted uppercase tracking-wider mb-1">Organization Name</label>
+                <input id="saas-in-orgname" type="text" placeholder="Acme Systems Corp" class="w-full px-3.5 py-2 rounded-lg border border-black/15 text-[13px] outline-none" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-muted uppercase tracking-wider mb-1">Work Email</label>
+                <input id="saas-in-email" type="email" placeholder="admin@sentinelops.ai" class="w-full px-3.5 py-2 rounded-lg border border-black/15 text-[13px] outline-none" value="admin@sentinelops.ai" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-muted uppercase tracking-wider mb-1">Password</label>
+                <div class="relative flex items-center">
+                  <input id="saas-in-password" type="password" placeholder="Min. 8 characters" class="w-full pl-3.5 pr-11 py-2 rounded-lg border border-black/15 text-[13px] outline-none focus:border-primary transition-colors" value="password123" />
+                  <button type="button" onclick="saasTogglePasswordVisibility()" id="saas-pwd-toggle-btn" class="absolute right-2 px-1.5 py-1 text-muted hover:text-ink transition-colors flex items-center justify-center cursor-pointer rounded" title="Toggle password visibility" aria-label="Toggle password visibility">
+                    <span id="saas-pwd-toggle-icon" class="material-symbols-outlined text-[19px] select-none">visibility</span>
+                  </button>
+                </div>
+              </div>
+
+              <button onclick="saasSubmitAuth()" id="saas-auth-submit-btn" class="w-full py-2.5 rounded-lg bg-primary hover:bg-primary-pressed text-white text-[13px] font-semibold transition-all shadow-xs mt-2 cursor-pointer">
+                Sign In to Workspace
+              </button>
+
+              <button onclick="saasQuickDemoAuth()" class="w-full py-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[12px] font-semibold transition-all border border-emerald-200 cursor-pointer flex items-center justify-center gap-1.5">
+                <span class="material-symbols-outlined text-[16px]">bolt</span>
+                <span>Auto-Fill &amp; Login Demo Admin</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
   </main>
 
   <!-- CONTROLLER SCRIPT (SINGLE PAGE APP & LIVE FASTAPI INTEGRATION) -->
@@ -1416,7 +1721,7 @@
       }
 
       // Update Nav links
-      const navIds = ['landing', 'fleet', 'privacy', 'incidents', 'architecture'];
+      const navIds = ['landing', 'fleet', 'privacy', 'incidents', 'architecture', 'saas'];
       navIds.forEach(id => {
         const btn = document.getElementById('nav-btn-' + id);
         if (btn) {
@@ -1429,6 +1734,10 @@
           }
         }
       });
+
+      if (pageId === 'saas') {
+        saasInitView();
+      }
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -1679,8 +1988,24 @@
       document.getElementById('ws-val-latency').innerText = Number(fleetLatAvg).toFixed(1);
       document.getElementById('ws-val-alerts').innerText = alertsList.length;
       document.getElementById('ws-val-crit-alerts').innerText = '(' + alertsList.length + ' Critical)';
-      document.getElementById('ws-val-health').innerText = alertsList.length > 0 ? (alertsList.length > 2 ? 'POOR' : 'DEGRADED') : 'EXCELLENT';
-      document.getElementById('ws-val-health').className = 'text-[26px] font-extrabold tracking-tight font-sans ' + (alertsList.length > 0 ? 'text-accent-coral' : 'text-success');
+      // Compute Section 14 Four-State Health Classification: EXCELLENT / GOOD / FAIR / POOR
+      let healthState = 'EXCELLENT';
+      let healthColor = 'text-success';
+      if (alertsList.length > 1 || targetCpu > 90 || targetLat > 250 || targetLoss > 5) {
+        healthState = 'POOR';
+        healthColor = 'text-accent-coral';
+      } else if (alertsList.length === 1 || targetCpu > 70 || targetMem > 75 || targetLat > 100 || targetLoss > 1) {
+        healthState = 'FAIR';
+        healthColor = 'text-accent-amber-deep';
+      } else if (targetCpu > 50 || targetMem > 60 || targetLat > 50) {
+        healthState = 'GOOD';
+        healthColor = 'text-primary';
+      } else {
+        healthState = 'EXCELLENT';
+        healthColor = 'text-success';
+      }
+      document.getElementById('ws-val-health').innerText = healthState;
+      document.getElementById('ws-val-health').className = 'text-[26px] font-extrabold tracking-tight font-sans ' + healthColor;
 
       // Update Scenario Alerts list
       const alertContainer = document.getElementById('scenario-alerts-container');
@@ -1758,6 +2083,44 @@
 
     // Phase 2 Privacy Engine Tester Data
     const PRIVACY_SCENARIOS = {
+      'laptop': {
+        raw: `{
+  "timestamp": "2026-11-21T05:25:50.717Z",
+  "real_hostname": "Nagaraj_Hegde",
+  "internal_ip": "192.168.137.26",
+  "os_platform": "Windows-11-AMD64 (Physical Laptop)",
+  "session_token": "Bearer local_win_live_token_719482914",
+  "raw_system_metrics": {
+    "cpu_load_percent": 23.0,
+    "memory_load_percent": 76.0,
+    "disk_used_percent": 79.4,
+    "total_physical_ram_gb": 16.0,
+    "hardware_thread_count": 8,
+    "active_nic": "Wi-Fi (192.168.137.26)"
+  },
+  "user_profile": {
+    "logged_in_user": "Nagaraj_Hegde",
+    "home_directory": "C:\\\\Users\\\\Nagaraj.Nagaraj_Hegde",
+    "auth_domain": "WORKGROUP"
+  }
+}`,
+        sanitized: `{
+  "timestamp_utc": "2026-11-21T05:25:50.717Z",
+  "source_id": "node_2931",
+  "tenant_id": "tenant_demo",
+  "event_category": "live_physical_host",
+  "collector_status": "online",
+  "cpu": 23.0,
+  "memory": 76.0,
+  "disk": 79.4,
+  "latency_ms": 12.0,
+  "packet_loss_pct": 0.0,
+  "error_count": 0,
+  "failed_logins": 0,
+  "payload_id": "evt_live_803802a7",
+  "audit_signature": "sha256:2931c0e86b0a1a5b81a95b8712df88a31e84a27546738914ba08169e061807c4"
+}`
+      },
       'cascade': {
         raw: `{
   "timestamp": "2026-11-20T23:59:14.281Z",
@@ -1897,6 +2260,48 @@
 
     // Data Transformation & Redaction Process Breakdown Details (What is redacted and why)
     const REDACTION_BREAKDOWNS = {
+      'laptop': [
+        {
+          field: 'real_hostname',
+          rawSnippet: 'Nagaraj_Hegde',
+          action: 'PSEUDONYMIZED',
+          actionClass: 'bg-amber-100 text-amber-800',
+          cause: 'Physical workstation name leaks corporate developer identity and machine naming topology. SHA-256 deterministic hash maps it to anonymized node ID.',
+          transformation: 'Masked to deterministic SHA-256 node ID: "node_2931"'
+        },
+        {
+          field: 'internal_ip',
+          rawSnippet: '192.168.137.26 (Local WLAN adapter)',
+          action: 'STRIPPED',
+          actionClass: 'bg-error-container text-accent-coral',
+          cause: 'Private RFC-1918 LAN IP reveals local subnet topology. Dropped by Tier-1 AST network filter.',
+          transformation: 'Dropped completely (0 bytes transmitted)'
+        },
+        {
+          field: 'user_profile',
+          rawSnippet: 'C:\\Users\\Nagaraj.Nagaraj_Hegde, WORKGROUP',
+          action: 'STRIPPED (PII)',
+          actionClass: 'bg-error-container text-accent-coral',
+          cause: 'Windows user account and local directory structure reveal personal workstation details. Violates zero-trust isolation.',
+          transformation: 'Scrubbed completely from telemetry payload'
+        },
+        {
+          field: 'session_token',
+          rawSnippet: 'Bearer local_win_live_token_719482914',
+          action: 'STRIPPED',
+          actionClass: 'bg-error-container text-accent-coral',
+          cause: 'Volatile bearer authentication token intercepted by Tier-1 regex quarantine.',
+          transformation: 'Quarantined and removed before network egress'
+        },
+        {
+          field: 'raw_system_metrics',
+          rawSnippet: 'Windows 11 AMD64, 8 threads, 16.0 GB RAM',
+          action: 'NORMALIZED',
+          actionClass: 'bg-blue-100 text-blue-800',
+          cause: 'Free-form hardware descriptors violate the strict 13-field scalar invariant schema.',
+          transformation: 'Normalized into strict float scalars: cpu=23.0, memory=76.0, disk=79.4'
+        }
+      ],
       'cascade': [
         {
           field: 'db_connection_uri',
@@ -2209,51 +2614,356 @@
       }
     }
 
-    // Incidents selection
+    // Incidents selection and self-healing state
+    let activeIncidentId = 1;
     const INCIDENT_DETAILS = {
       1: {
+        id: 1,
+        code: "INC-8941",
         title: "Database Memory Exhaustion & Query Latency Surge",
         meta: "Trace ID: 7f81a-cc9041b • node_b92c",
+        node: "node_b92c",
         badge: "Active Severity 1",
+        isCritical: true,
         conf: "94.2% Primary Hypothesis",
-        hypothesis: "High contention lock during unindexed sequential table scan on customer_events table triggered by concurrent batch sync operations."
+        confPct: "94.2%",
+        hypothesis: "High contention lock during unindexed sequential table scan on customer_events table triggered by concurrent batch sync operations.",
+        actionTitle: "Recommended Autonomous Action:",
+        actionDesc: "Cap connection pool at 250, terminate idle trans-locks, reroute read-replicas.",
+        signals: [
+          { lbl: "RESIDENT MEMORY", val: "91.4% (+48%)", isBad: true },
+          { lbl: "QUERY LATENCY", val: "182.0 ms", isBad: true },
+          { lbl: "DISK SATURATION", val: "98.0%", isBad: true },
+          { lbl: "DB ERROR RATE", val: "0.089 / req", isBad: true }
+        ],
+        healedSignals: [
+          { lbl: "RESIDENT MEMORY", val: "38.2% (Nominal)", isBad: false },
+          { lbl: "QUERY LATENCY", val: "14.5 ms (SLA OK)", isBad: false },
+          { lbl: "DISK SATURATION", val: "62.0% (Stable)", isBad: false },
+          { lbl: "DB ERROR RATE", val: "0.000 / req", isBad: false }
+        ],
+        steps: [
+          "[0.00s] 🔐 Policy Verification: Zero-Trust egress pass, HMAC validated",
+          "[0.35s] ⚡ Contacting agent on node_b92c via Tier 2 autonomous channel",
+          "[0.72s] 🛠️ Executing: Capping connection pool (max=250), killing 14 idle lock backends",
+          "[1.05s] 📦 Triggered WAL buffer sync flush & rerouted read traffic to replica pool",
+          "[1.35s] 📊 Health check: Telemetry normalized to nominal baseline (<250ms SLA)",
+          "[1.42s] 🛡️ Incident INC-8941 marked RESOLVED. Cryptographic audit receipt committed."
+        ],
+        remediationSummary: "Target: node_b92c • 14 lock transactions terminated • Query latency dropped by 92% • Telemetry restored.",
+        remediated: false
       },
       2: {
+        id: 2,
+        code: "INC-8938",
         title: "API Gateway Ephemeral Port Depletion",
         meta: "Trace ID: 5a22d-bb8019e • node_c73d",
+        node: "node_c73d",
         badge: "Resolved",
+        isCritical: false,
         conf: "99.1% Confidence",
-        hypothesis: "Upstream microservice webhook connection lingering due to TCP keepalive mismatch. Neutralized in 3m 12s."
+        confPct: "99.1%",
+        hypothesis: "Upstream microservice webhook connection lingering due to TCP keepalive mismatch. Neutralized in 3m 12s.",
+        actionTitle: "Executed Self-Healing Protocol:",
+        actionDesc: "Purged dead TCP sockets, tuned net.ipv4.tcp_tw_reuse=1, refreshed Envoy connection pool.",
+        signals: [
+          { lbl: "IN-USE PORTS", val: "1,240 / 65,535", isBad: false },
+          { lbl: "ROUND-TRIP LAT", val: "18.2 ms (SLA OK)", isBad: false },
+          { lbl: "PACKET LOSS", val: "0.0% (Zero Loss)", isBad: false },
+          { lbl: "TCP RESET RATE", val: "0.000 / req", isBad: false }
+        ],
+        healedSignals: [
+          { lbl: "IN-USE PORTS", val: "1,240 / 65,535", isBad: false },
+          { lbl: "ROUND-TRIP LAT", val: "18.2 ms (SLA OK)", isBad: false },
+          { lbl: "PACKET LOSS", val: "0.0% (Zero Loss)", isBad: false },
+          { lbl: "TCP RESET RATE", val: "0.000 / req", isBad: false }
+        ],
+        steps: [
+          "[0.00s] 🔐 Policy Verification: RFC-1918 socket teardown approved",
+          "[0.30s] ⚡ Transmitting sysctl parameters to node_c73d",
+          "[0.65s] 🛠️ Applied net.ipv4.tcp_tw_reuse=1 & purged lingering TIME_WAIT sockets",
+          "[0.95s] 🔄 Graceful worker reload on Envoy ingress listener",
+          "[1.18s] 📊 Health check: Available ephemeral ports > 64,000, latency 18.2ms",
+          "[1.24s] 🛡️ Incident INC-8938 verified resolved."
+        ],
+        remediationSummary: "Target: node_c73d • 63,500 sockets recycled • Latency restored from 412ms to 18.2ms • Edge Nominal.",
+        remediated: true
       },
       3: {
+        id: 3,
+        code: "INC-8924",
         title: "Asynchronous Job Queue Backpressure (Celery)",
         meta: "Trace ID: 8e991-ff1098c • node_a81f",
+        node: "node_a81f",
         badge: "Investigating",
+        isCritical: false,
         conf: "82.4% Confidence",
-        hypothesis: "Sudden spike in high-dimensional text indexing requests during customer batch ingestion."
+        confPct: "82.4%",
+        hypothesis: "Sudden spike in high-dimensional text indexing requests during customer batch ingestion.",
+        actionTitle: "Recommended Autonomous Action:",
+        actionDesc: "Autoscale Celery worker pool from 4 to 12 workers, route indexing to GPU cluster, throttle background batch sync.",
+        signals: [
+          { lbl: "PENDING QUEUE", val: "14,890 tasks", isBad: true },
+          { lbl: "WORKER CPU", val: "88.6%", isBad: true },
+          { lbl: "TASK DELAY", val: "4.2s (Breached)", isBad: true },
+          { lbl: "DEAD LETTER RT", val: "0.034 / req", isBad: true }
+        ],
+        healedSignals: [
+          { lbl: "PENDING QUEUE", val: "114 tasks", isBad: false },
+          { lbl: "WORKER CPU", val: "34.2% (Nominal)", isBad: false },
+          { lbl: "TASK DELAY", val: "82 ms (SLA OK)", isBad: false },
+          { lbl: "DEAD LETTER RT", val: "0.000 / req", isBad: false }
+        ],
+        steps: [
+          "[0.00s] 🔐 Policy Verification: Autoscaler webhook authorization confirmed",
+          "[0.40s] ⚡ Dispatched scale event to orchestrator for node_a81f",
+          "[0.80s] 🛠️ Provisioned 8 auxiliary Celery worker containers (pool=12)",
+          "[1.15s] 🔀 Diverted text embedding tasks to dedicated high-memory queue",
+          "[1.45s] 📊 Queue drained from 14,890 to 114 tasks in 2.1s",
+          "[1.52s] 🛡️ Incident INC-8924 marked RESOLVED. Pipeline normalized."
+        ],
+        remediationSummary: "Target: node_a81f • 8 worker nodes added • Queue backpressure neutralized • Latency 82ms.",
+        remediated: false
       }
     };
 
-    function selectIncidentItem(id) {
-      const d = INCIDENT_DETAILS[id];
-      if (!d) return;
-      document.getElementById('ai-inc-title').innerText = d.title;
-      document.getElementById('ai-inc-meta').innerText = d.meta;
-      document.getElementById('ai-inc-badge').innerText = d.badge;
-      document.getElementById('ai-inc-conf').innerText = d.conf;
-      document.getElementById('ai-inc-hypothesis').innerText = d.hypothesis;
-      notify(`Loaded diagnosis for incident #${id}`, 'psychology');
+    function renderIncidentSignals(signalsList, isHealed) {
+      signalsList.forEach((sig, idx) => {
+        const i = idx + 1;
+        const lblEl = document.getElementById(`ai-sig-lbl-${i}`);
+        const valEl = document.getElementById(`ai-sig-val-${i}`);
+        const cardEl = document.getElementById(`ai-sigcard-${i}`);
+        if (lblEl && valEl) {
+          lblEl.innerText = sig.lbl;
+          valEl.innerText = sig.val;
+          if (sig.isBad) {
+            valEl.className = 'text-accent-coral text-[14px] font-bold transition-all';
+            if (cardEl) cardEl.className = 'p-3 rounded-lg bg-card-subtle border border-black/5 transition-all';
+          } else {
+            valEl.className = 'text-success text-[14px] font-bold transition-all';
+            if (cardEl) cardEl.className = 'p-3 rounded-lg bg-success-tint/40 border border-success/30 transition-all';
+          }
+        }
+      });
+      const statusLbl = document.getElementById('ai-signals-status-label');
+      if (statusLbl) {
+        if (isHealed) {
+          statusLbl.innerText = '✅ ALL SIGNALS NOMINAL';
+          statusLbl.className = 'text-[11px] font-mono font-bold text-success';
+        } else {
+          statusLbl.innerText = '⚠️ SLA BREACH ACTIVE';
+          statusLbl.className = 'text-[11px] font-mono font-bold text-accent-coral';
+        }
+      }
     }
 
-    function dispatchRemediationAction() {
-      const btn = document.getElementById('btn-exec-remediation');
-      if (!btn) return;
-      btn.innerText = 'Transmitting...';
-      setTimeout(() => {
-        btn.innerText = 'Remediation Dispatched ✓';
-        btn.className = 'px-4 py-2 rounded-lg bg-emerald-600 text-white text-[12px] font-semibold';
-        notify('Autonomous remediation packet executed on node_b92c. Connection pool throttled.', 'smart_toy');
-      }, 700);
+    function selectIncidentItem(id) {
+      activeIncidentId = id;
+      const d = INCIDENT_DETAILS[id];
+      if (!d) return;
+
+      // Update active ring on list cards
+      [1, 2, 3].forEach(cid => {
+        const card = document.getElementById(`inc-card-${cid}`);
+        if (card) {
+          if (cid === id) {
+            card.classList.add('ring-2', 'ring-primary/40', 'bg-primary-tint/20');
+          } else {
+            card.classList.remove('ring-2', 'ring-primary/40', 'bg-primary-tint/20');
+          }
+        }
+      });
+
+      // Populate Diagnostic Inspector
+      document.getElementById('ai-inc-title').innerText = d.title;
+      document.getElementById('ai-inc-meta').innerText = d.meta;
+      document.getElementById('ai-inc-hypothesis').innerText = d.hypothesis;
+      document.getElementById('ai-inc-conf').innerText = d.conf;
+      const confBar = document.getElementById('ai-inc-conf-bar');
+      if (confBar) confBar.style.width = d.confPct;
+
+      const badgeEl = document.getElementById('ai-inc-badge');
+      const remedBox = document.getElementById('remediation-action-box');
+      const remedTitle = document.getElementById('ai-remed-title');
+      const remedDesc = document.getElementById('ai-remed-desc');
+      const execBtn = document.getElementById('btn-exec-remediation');
+      const resetBtn = document.getElementById('btn-reset-remediation');
+      const consoleEl = document.getElementById('remediation-live-console');
+
+      if (d.remediated) {
+        // Render as Remediated
+        badgeEl.innerText = '✅ RESOLVED • Autonomous Self-Healed';
+        badgeEl.className = 'px-3 py-1 rounded-full bg-success-tint text-success font-mono text-[11px] font-bold';
+        renderIncidentSignals(d.healedSignals, true);
+
+        remedBox.className = 'p-4 rounded-xl bg-emerald-50 border border-emerald-300 flex flex-col gap-4 transition-all';
+        remedTitle.innerText = '✅ Autonomous Self-Healing Successful';
+        remedTitle.className = 'text-emerald-800 block text-[13px] font-bold';
+        remedDesc.innerText = d.remediationSummary;
+
+        execBtn.className = 'px-4 py-2 rounded-lg bg-emerald-600 text-white text-[12px] font-semibold transition-all shrink-0 cursor-default shadow-xs flex items-center gap-1.5 opacity-90';
+        document.getElementById('remed-btn-icon').innerText = 'check_circle';
+        document.getElementById('remed-btn-text').innerText = 'Remediated ✓';
+        execBtn.disabled = true;
+
+        if (resetBtn) resetBtn.classList.remove('hidden');
+        if (consoleEl) {
+          consoleEl.classList.remove('hidden');
+          const stepsContainer = document.getElementById('remed-execution-steps');
+          stepsContainer.innerHTML = d.steps.map(s => `<div class="text-emerald-300">${s}</div>`).join('');
+          document.getElementById('remed-execution-timer').innerText = '1.42s total';
+        }
+      } else {
+        // Render as Active / Breach
+        if (d.isCritical) {
+          badgeEl.innerText = 'Active Severity 1 (Critical)';
+          badgeEl.className = 'px-3 py-1 rounded-full bg-error-container text-accent-coral font-mono text-[11px] font-bold';
+        } else {
+          badgeEl.innerText = 'Investigating (Severity 2)';
+          badgeEl.className = 'px-3 py-1 rounded-full bg-accent-amber/20 text-[#854d0e] font-mono text-[11px] font-bold';
+        }
+        renderIncidentSignals(d.signals, false);
+
+        remedBox.className = 'p-4 rounded-xl bg-primary-tint border border-primary/20 flex flex-col gap-4 transition-all';
+        remedTitle.innerText = d.actionTitle;
+        remedTitle.className = 'text-primary-pressed block text-[13px] font-bold';
+        remedDesc.innerText = d.actionDesc;
+
+        execBtn.className = 'px-4 py-2 rounded-lg bg-primary hover:bg-primary-pressed text-white text-[12px] font-semibold transition-all shrink-0 cursor-pointer shadow-xs flex items-center gap-1.5';
+        document.getElementById('remed-btn-icon').innerText = 'bolt';
+        document.getElementById('remed-btn-text').innerText = 'Execute Remediation';
+        execBtn.disabled = false;
+
+        if (resetBtn) resetBtn.classList.add('hidden');
+        if (consoleEl) consoleEl.classList.add('hidden');
+      }
+
+      notify(`Loaded diagnosis for incident ${d.code}`, 'psychology');
+    }
+
+    async function dispatchRemediationAction() {
+      const d = INCIDENT_DETAILS[activeIncidentId];
+      if (!d || d.remediated) return;
+
+      const execBtn = document.getElementById('btn-exec-remediation');
+      const btnIcon = document.getElementById('remed-btn-icon');
+      const btnText = document.getElementById('remed-btn-text');
+      const consoleEl = document.getElementById('remediation-live-console');
+      const stepsContainer = document.getElementById('remed-execution-steps');
+      const timerEl = document.getElementById('remed-execution-timer');
+      const remedBox = document.getElementById('remediation-action-box');
+      const remedTitle = document.getElementById('ai-remed-title');
+      const remedDesc = document.getElementById('ai-remed-desc');
+      const badgeEl = document.getElementById('ai-inc-badge');
+      const resetBtn = document.getElementById('btn-reset-remediation');
+
+      // 1. Loading UI state
+      execBtn.disabled = true;
+      btnIcon.innerText = 'refresh';
+      btnIcon.className = 'material-symbols-outlined text-[16px] animate-spin';
+      btnText.innerText = 'Transmitting Autonomous Payload...';
+      execBtn.className = 'px-4 py-2 rounded-lg bg-primary/70 text-white text-[12px] font-semibold transition-all shrink-0 cursor-not-allowed shadow-xs flex items-center gap-1.5';
+
+      // 2. Reveal Console
+      consoleEl.classList.remove('hidden');
+      stepsContainer.innerHTML = '';
+      timerEl.innerText = '0.0s elapsed';
+
+      // 3. Stepwise execution animation
+      let stepIndex = 0;
+      const startTime = performance.now();
+      const stepTimer = setInterval(() => {
+        const elapsedSec = ((performance.now() - startTime) / 1000).toFixed(2);
+        timerEl.innerText = `${elapsedSec}s elapsed`;
+
+        if (stepIndex < d.steps.length) {
+          const row = document.createElement('div');
+          row.className = 'text-emerald-300 font-mono transition-opacity duration-300';
+          row.innerText = d.steps[stepIndex];
+          stepsContainer.appendChild(row);
+          stepIndex++;
+        } else {
+          clearInterval(stepTimer);
+
+          // Mark remediated
+          d.remediated = true;
+
+          // 4. Transform signals to green
+          renderIncidentSignals(d.healedSignals, true);
+
+          // 5. Update header badge
+          badgeEl.innerText = '✅ RESOLVED • Autonomous Self-Healed';
+          badgeEl.className = 'px-3 py-1 rounded-full bg-success-tint text-success font-mono text-[11px] font-bold';
+
+          // 6. Update left stream card
+          const listCard = document.getElementById(`inc-card-${d.id}`);
+          const listBadge = document.getElementById(`inc-badge-${d.id}`);
+          const listTime = document.getElementById(`inc-time-${d.id}`);
+          if (listCard) {
+            listCard.classList.remove('border-l-accent-coral', 'border-l-accent-amber');
+            listCard.classList.add('border-l-success');
+          }
+          if (listBadge) {
+            listBadge.className = 'px-2 py-0.5 rounded bg-success-tint text-success font-bold';
+            listBadge.innerText = `RESOLVED • ${d.code}`;
+          }
+          if (listTime) {
+            listTime.className = 'text-success font-semibold';
+            listTime.innerText = 'Just now (Self-Healed)';
+          }
+
+          // 7. Update Remediation Box
+          remedBox.className = 'p-4 rounded-xl bg-emerald-50 border border-emerald-300 flex flex-col gap-4 transition-all';
+          remedTitle.innerText = '✅ Autonomous Self-Healing Successful';
+          remedTitle.className = 'text-emerald-800 block text-[13px] font-bold';
+          remedDesc.innerText = d.remediationSummary;
+
+          // 8. Update Button
+          btnIcon.innerText = 'check_circle';
+          btnIcon.className = 'material-symbols-outlined text-[16px]';
+          btnText.innerText = 'Remediated ✓';
+          execBtn.className = 'px-4 py-2 rounded-lg bg-emerald-600 text-white text-[12px] font-semibold transition-all shrink-0 cursor-default shadow-xs flex items-center gap-1.5 opacity-90';
+
+          if (resetBtn) resetBtn.classList.remove('hidden');
+
+          notify(`Autonomous remediation packet executed on ${d.node}. Telemetry normalized.`, 'smart_toy');
+
+          // 9. Fire backend call in background to clear alerts & inject baseline
+          fetch(`/api/v1/incidents/${d.id}/remediate`, { method: 'POST' }).catch(() => {});
+        }
+      }, 260);
+    }
+
+    async function resetCurrentIncident() {
+      const d = INCIDENT_DETAILS[activeIncidentId];
+      if (!d) return;
+
+      d.remediated = false;
+      const listCard = document.getElementById(`inc-card-${d.id}`);
+      const listBadge = document.getElementById(`inc-badge-${d.id}`);
+      const listTime = document.getElementById(`inc-time-${d.id}`);
+
+      if (d.id === 1) {
+        if (listCard) {
+          listCard.classList.remove('border-l-success');
+          listCard.classList.add('border-l-accent-coral');
+        }
+        if (listBadge) {
+          listBadge.className = 'px-2 py-0.5 rounded bg-error-container text-accent-coral font-bold';
+          listBadge.innerText = 'CRITICAL • INC-8941';
+        }
+        if (listTime) {
+          listTime.className = 'text-accent-coral font-semibold';
+          listTime.innerText = '4 mins ago';
+        }
+      }
+
+      // Refresh inspector view
+      selectIncidentItem(activeIncidentId);
+      notify(`Reset incident ${d.code} to active fault state.`, 'restart_alt');
+
+      // Reset on backend
+      fetch(`/api/v1/incidents/${d.id}/reset`, { method: 'POST' }).catch(() => {});
     }
 
     // Architecture Packet Tracer
@@ -2321,10 +3031,610 @@
         .replace(/'/g, '&#039;');
     }
 
+    // =========================================================================
+    // SAAS CLOUD MULTI-TENANT CONTROLLER (JWT AUTH, COLLECTORS, INCIDENTS)
+    // =========================================================================
+    let saasState = {
+      token: localStorage.getItem('sentinelops_jwt') || null,
+      user: JSON.parse(localStorage.getItem('sentinelops_user') || 'null'),
+      activeOrg: JSON.parse(localStorage.getItem('sentinelops_org') || 'null'),
+      authMode: 'login'
+    };
+
+    // Sanitize any stale dummy tenant IDs from previous sessions
+    if (saasState.activeOrg && (saasState.activeOrg.id === 'org_1' || saasState.activeOrg.id === 'org_demo')) {
+      saasState.activeOrg = null;
+      localStorage.removeItem('sentinelops_org');
+    }
+
+    function saasSwitchTab(tabName) {
+      const tabs = ['collectors', 'overview', 'incidents', 'auth'];
+      tabs.forEach(t => {
+        const pane = document.getElementById(`saas-tab-${t}`);
+        const btn = document.getElementById(`saas-tab-btn-${t}`);
+        if (pane) {
+          if (t === tabName) {
+            pane.classList.remove('hidden');
+            pane.classList.add('block');
+          } else {
+            pane.classList.add('hidden');
+            pane.classList.remove('block');
+          }
+        }
+        if (btn) {
+          if (t === tabName) {
+            btn.className = 'px-4 py-2 rounded-lg bg-primary-tint text-primary font-bold transition-all flex items-center gap-1.5 shrink-0';
+          } else {
+            btn.className = 'px-4 py-2 rounded-lg text-body-secondary hover:text-ink transition-all flex items-center gap-1.5 shrink-0';
+          }
+        }
+      });
+      if (tabName === 'collectors' && saasState.activeOrg) {
+        saasFetchCollectors();
+      } else if (tabName === 'overview') {
+        saasFetchOverview();
+      } else if (tabName === 'incidents' && saasState.activeOrg) {
+        saasFetchIncidents();
+      }
+    }
+
+    function saasSetAuthMode(mode) {
+      saasState.authMode = mode;
+      const fName = document.getElementById('saas-field-fullname');
+      const fOrg = document.getElementById('saas-field-orgname');
+      const btnLog = document.getElementById('saas-auth-toggle-login');
+      const btnReg = document.getElementById('saas-auth-toggle-reg');
+      const submitBtn = document.getElementById('saas-auth-submit-btn');
+
+      if (mode === 'register') {
+        fName.classList.remove('hidden');
+        fOrg.classList.remove('hidden');
+        btnReg.className = 'py-1.5 rounded-md bg-white text-ink shadow-xs transition-all cursor-pointer';
+        btnLog.className = 'py-1.5 rounded-md text-muted hover:text-ink transition-all cursor-pointer';
+        submitBtn.innerText = 'Create Enterprise Workspace';
+      } else {
+        fName.classList.add('hidden');
+        fOrg.classList.add('hidden');
+        btnLog.className = 'py-1.5 rounded-md bg-white text-ink shadow-xs transition-all cursor-pointer';
+        btnReg.className = 'py-1.5 rounded-md text-muted hover:text-ink transition-all cursor-pointer';
+        submitBtn.innerText = 'Sign In to Workspace';
+      }
+    }
+
+    function saasTogglePasswordVisibility() {
+      const pwdInput = document.getElementById('saas-in-password');
+      const icon = document.getElementById('saas-pwd-toggle-icon');
+      if (!pwdInput || !icon) return;
+
+      if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+        icon.innerText = 'visibility_off';
+        icon.classList.add('text-primary');
+        icon.classList.remove('text-muted');
+      } else {
+        pwdInput.type = 'password';
+        icon.innerText = 'visibility';
+        icon.classList.remove('text-primary');
+        icon.classList.add('text-muted');
+      }
+    }
+
+    function updateSaasUIHeader() {
+      const pill = document.getElementById('header-saas-user-label');
+      const orgTitle = document.getElementById('saas-org-title');
+      const orgIdEl = document.getElementById('saas-org-id');
+      const userEl = document.getElementById('saas-user-email');
+      const roleBadge = document.getElementById('saas-role-badge');
+      const authStatus = document.getElementById('saas-auth-status');
+      const signoutBtn = document.getElementById('saas-signout-btn');
+
+      if (saasState.token && saasState.activeOrg) {
+        if (pill) pill.innerText = `${saasState.activeOrg.name} (${saasState.user ? saasState.user.email.split('@')[0] : 'admin'})`;
+        if (orgTitle) orgTitle.innerText = saasState.activeOrg.name;
+        if (orgIdEl) orgIdEl.innerText = saasState.activeOrg.id;
+        if (userEl) userEl.innerText = saasState.user ? saasState.user.email : 'operator';
+        if (roleBadge) roleBadge.innerText = (saasState.activeOrg.role || 'OWNER').toUpperCase();
+        if (authStatus) {
+          authStatus.innerText = 'AUTHENTICATED (JWT)';
+          authStatus.className = 'px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono text-[11px] font-bold';
+        }
+        if (signoutBtn) signoutBtn.classList.remove('hidden');
+      } else {
+        if (pill) pill.innerText = 'SaaS Portal (Guest)';
+        if (orgTitle) orgTitle.innerText = 'Authentication Required';
+        if (orgIdEl) orgIdEl.innerText = 'None';
+        if (userEl) userEl.innerText = 'Unauthenticated';
+        if (authStatus) {
+          authStatus.innerText = 'NOT SIGNED IN';
+          authStatus.className = 'px-2.5 py-0.5 rounded-full bg-accent-amber/15 text-[#854d0e] border border-amber-300 font-mono text-[11px] font-bold';
+        }
+        if (signoutBtn) signoutBtn.classList.add('hidden');
+      }
+    }
+
+    async function saasInitView() {
+      // If we have a token, verify and refresh organizations from /api/v1/auth/me
+      if (saasState.token) {
+        try {
+          const meRes = await fetch('/api/v1/auth/me', {
+            headers: { 'Authorization': `Bearer ${saasState.token}` }
+          });
+          if (meRes.ok) {
+            const meData = await meRes.json();
+            saasState.user = meData.user;
+            if (meData.organizations && meData.organizations.length > 0) {
+              const found = meData.organizations.find(o => saasState.activeOrg && o.id === saasState.activeOrg.id);
+              saasState.activeOrg = found || meData.organizations[0];
+            } else {
+              saasState.activeOrg = null;
+            }
+            localStorage.setItem('sentinelops_user', JSON.stringify(saasState.user));
+            if (saasState.activeOrg) {
+              localStorage.setItem('sentinelops_org', JSON.stringify(saasState.activeOrg));
+            } else {
+              localStorage.removeItem('sentinelops_org');
+            }
+            updateSaasUIHeader();
+            saasFetchCollectors();
+            saasFetchOverview();
+            return;
+          } else {
+            // Token expired or invalid
+            saasLogout(true);
+          }
+        } catch (e) {
+          // Network offline
+        }
+      }
+
+      // Auto-login demo admin if not authenticated
+      await saasQuickDemoAuth(true);
+    }
+
+    async function saasQuickDemoAuth(silent = false) {
+      const demoEmail = 'admin@sentinelops.ai';
+      const demoPass = 'password123';
+      const demoOrg = 'Acme Corporation';
+
+      try {
+        // 1. Try login
+        let res = await fetch('/api/v1/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: demoEmail, password: demoPass })
+        });
+
+        // 2. If user doesn't exist, register
+        if (res.status === 401 || res.status === 400 || res.status === 404) {
+          res = await fetch('/api/v1/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: demoEmail,
+              password: demoPass,
+              full_name: 'Lead DevOps Operator',
+              organization_name: demoOrg
+            })
+          });
+        }
+
+        if (res.ok) {
+          const data = await res.json();
+          saasState.token = data.access_token;
+          saasState.user = data.user;
+
+          // Fetch real organization via /api/v1/auth/me
+          try {
+            const meRes = await fetch('/api/v1/auth/me', {
+              headers: { 'Authorization': `Bearer ${saasState.token}` }
+            });
+            if (meRes.ok) {
+              const meData = await meRes.json();
+              saasState.activeOrg = (meData.organizations && meData.organizations.find(o => o.id === data.active_organization_id)) || (meData.organizations && meData.organizations[0]) || { id: data.active_organization_id, name: demoOrg, role: 'owner' };
+            } else {
+              saasState.activeOrg = { id: data.active_organization_id, name: demoOrg, role: 'owner' };
+            }
+          } catch (e) {
+            saasState.activeOrg = { id: data.active_organization_id, name: demoOrg, role: 'owner' };
+          }
+
+          localStorage.setItem('sentinelops_jwt', saasState.token);
+          localStorage.setItem('sentinelops_user', JSON.stringify(saasState.user));
+          localStorage.setItem('sentinelops_org', JSON.stringify(saasState.activeOrg));
+
+          updateSaasUIHeader();
+          saasSwitchTab('collectors');
+          saasFetchCollectors();
+          saasFetchOverview();
+
+          if (!silent) {
+            notify(`Authenticated as ${saasState.user.email} (${saasState.activeOrg.name})`, 'key');
+          }
+        } else {
+          if (!silent) notify('Demo login failed. Please register manually.', 'error');
+          saasSwitchTab('auth');
+        }
+      } catch (err) {
+        if (!silent) notify('Network error connecting to auth server.', 'wifi_off');
+        saasSwitchTab('auth');
+      }
+    }
+
+    async function saasSubmitAuth() {
+      const email = document.getElementById('saas-in-email').value.trim();
+      const password = document.getElementById('saas-in-password').value;
+      const isReg = saasState.authMode === 'register';
+
+      if (!email || !password) {
+        notify('Please enter both email and password.', 'warning');
+        return;
+      }
+
+      try {
+        const endpoint = isReg ? '/api/v1/auth/register' : '/api/v1/auth/login';
+        const bodyPayload = isReg
+          ? {
+              email: email,
+              password: password,
+              full_name: document.getElementById('saas-in-fullname').value.trim() || 'Operator',
+              organization_name: document.getElementById('saas-in-orgname').value.trim() || 'My Organization'
+            }
+          : { email: email, password: password };
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(bodyPayload)
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          saasState.token = data.access_token;
+          saasState.user = data.user;
+
+          // Fetch real organization via /api/v1/auth/me
+          try {
+            const meRes = await fetch('/api/v1/auth/me', {
+              headers: { 'Authorization': `Bearer ${saasState.token}` }
+            });
+            if (meRes.ok) {
+              const meData = await meRes.json();
+              saasState.activeOrg = (meData.organizations && meData.organizations.find(o => o.id === data.active_organization_id)) || (meData.organizations && meData.organizations[0]) || { id: data.active_organization_id, name: 'My Workspace', role: 'owner' };
+            } else {
+              saasState.activeOrg = { id: data.active_organization_id, name: 'My Workspace', role: 'owner' };
+            }
+          } catch (e) {
+            saasState.activeOrg = { id: data.active_organization_id, name: 'My Workspace', role: 'owner' };
+          }
+
+          localStorage.setItem('sentinelops_jwt', saasState.token);
+          localStorage.setItem('sentinelops_user', JSON.stringify(saasState.user));
+          localStorage.setItem('sentinelops_org', JSON.stringify(saasState.activeOrg));
+
+          updateSaasUIHeader();
+          saasSwitchTab('collectors');
+          saasFetchCollectors();
+          saasFetchOverview();
+          notify(`Welcome back, ${saasState.user.email}!`, 'verified_user');
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          notify(`Authentication failed: ${errData.detail || 'Check credentials.'}`, 'error');
+        }
+      } catch (err) {
+        notify('Network error contacting backend.', 'wifi_off');
+      }
+    }
+
+    function saasLogout(silent = false) {
+      saasState.token = null;
+      saasState.user = null;
+      saasState.activeOrg = null;
+      localStorage.removeItem('sentinelops_jwt');
+      localStorage.removeItem('sentinelops_user');
+      localStorage.removeItem('sentinelops_org');
+      updateSaasUIHeader();
+      saasSwitchTab('auth');
+      if (!silent) notify('Signed out of SaaS Cloud.', 'logout');
+    }
+
+    async function saasEnrollCollector() {
+      if (!saasState.token || !saasState.activeOrg || !saasState.activeOrg.id) {
+        notify('Please sign in to enroll collectors.', 'lock');
+        saasSwitchTab('auth');
+        return;
+      }
+
+      const input = document.getElementById('saas-input-collector-name');
+      const name = input ? input.value.trim() : 'collector-node';
+      if (!name) {
+        notify('Please enter an agent name.', 'warning');
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/v1/orgs/${saasState.activeOrg.id}/collectors`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${saasState.token}`
+          },
+          body: JSON.stringify({ name: name })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          const tokenBox = document.getElementById('saas-token-result-box');
+          const tokenText = document.getElementById('saas-generated-token-text');
+          const cmdSnippet = document.getElementById('saas-cmd-snippet');
+
+          const rawToken = data.raw_token || data.token;
+          tokenText.innerText = rawToken;
+          cmdSnippet.innerText = `export SENTINELOPS_COLLECTOR_TOKEN="${rawToken}" && python -m collector.agent`;
+          tokenBox.classList.remove('hidden');
+
+          notify(`Collector agent '${data.name}' enrolled successfully!`, 'key');
+          saasFetchCollectors();
+          saasFetchOverview();
+        } else {
+          const err = await res.json().catch(() => ({}));
+          notify(`Failed to enroll collector: ${err.detail || res.statusText}`, 'error');
+        }
+      } catch (err) {
+        notify('Error enrolling collector.', 'wifi_off');
+      }
+    }
+
+    async function saasFetchCollectors() {
+      if (!saasState.token || !saasState.activeOrg) return;
+      const tbody = document.getElementById('saas-collectors-tbody');
+
+      try {
+        const res = await fetch(`/api/v1/orgs/${saasState.activeOrg.id}/collectors`, {
+          headers: { 'Authorization': `Bearer ${saasState.token}` }
+        });
+
+        if (res.ok) {
+          const collectors = await res.json();
+          if (collectors.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-muted">No collectors registered yet. Enroll your first agent on the left.</td></tr>';
+          } else {
+            tbody.innerHTML = collectors.map(c => `
+              <tr class="border-b border-black/5 hover:bg-black/5 transition-colors">
+                <td class="py-2.5 font-bold text-ink flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full ${c.status === 'online' ? 'bg-success' : 'bg-primary'}"></span>
+                  <span>${escapeHtml(c.name)}</span>
+                </td>
+                <td class="py-2.5">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold ${c.status === 'online' ? 'bg-success-tint text-success' : 'bg-primary-tint text-primary'}">
+                    ${(c.status || 'REGISTERED').toUpperCase()}
+                  </span>
+                </td>
+                <td class="py-2.5 text-muted">${c.id.substring(0, 10)}...</td>
+                <td class="py-2.5 text-muted">${new Date(c.created_at).toLocaleDateString()}</td>
+              </tr>
+            `).join('');
+          }
+        }
+      } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="4" class="py-3 text-center text-accent-coral">Failed to load collectors from database.</td></tr>';
+      }
+    }
+
+    async function saasFetchOverview() {
+      // 1. Fetch live metrics & telemetry count & feed (public endpoints available unconditionally)
+      try {
+        const hRes = await fetch('/api/v1/health');
+        if (hRes.ok) {
+          const hData = await hRes.json();
+          const evEl = document.getElementById('saas-ov-events');
+          if (evEl && hData.telemetry_count !== undefined) {
+            evEl.innerText = Number(1480 + hData.telemetry_count).toLocaleString();
+          }
+        }
+
+        const telRes = await fetch('/api/v1/telemetry?limit=8');
+        if (telRes.ok) {
+          const telJson = await telRes.json();
+          const records = telJson.data || [];
+          const tbody = document.getElementById('saas-telemetry-feed-tbody');
+          if (tbody && records.length > 0) {
+            tbody.innerHTML = records.map(r => {
+              const isLaptop = r.source_id === 'node_2931';
+              const nodeBadge = isLaptop
+                ? `<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold border border-emerald-300">💻 node_2931 (Host Laptop)</span>`
+                : `<span class="px-2 py-0.5 rounded bg-black/5 text-ink font-medium">${escapeHtml(r.source_id)}</span>`;
+              const catBadge = isLaptop
+                ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800">live_physical_host</span>`
+                : `<span class="text-muted">${escapeHtml(r.event_category || 'normal')}</span>`;
+              return `
+                <tr class="hover:bg-black/5 transition-colors ${isLaptop ? 'bg-emerald-50/50' : ''}">
+                  <td class="py-2.5 px-3 font-bold text-ink">${escapeHtml(r.payload_id)}</td>
+                  <td class="py-2.5 px-3">${nodeBadge}</td>
+                  <td class="py-2.5 px-3">${catBadge}</td>
+                  <td class="py-2.5 px-3 font-semibold ${r.cpu > 80 ? 'text-accent-coral' : 'text-ink'}">${r.cpu}%</td>
+                  <td class="py-2.5 px-3 font-semibold ${r.memory > 85 ? 'text-accent-coral' : 'text-ink'}">${r.memory}%</td>
+                  <td class="py-2.5 px-3 font-semibold text-ink">${r.disk}%</td>
+                  <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full bg-success-tint text-success font-bold text-[10px]">ONLINE • SENT</span></td>
+                  <td class="py-2.5 px-3 text-muted text-[10px]">${r.timestamp_utc ? r.timestamp_utc.replace('T', ' ').substring(0, 19) + ' UTC' : '-'}</td>
+                </tr>
+              `;
+            }).join('');
+          }
+        }
+      } catch (e) {}
+
+      if (!saasState.token || !saasState.activeOrg) return;
+
+      try {
+        // 2. Fetch collectors
+        const colRes = await fetch(`/api/v1/orgs/${saasState.activeOrg.id}/collectors`, {
+          headers: { 'Authorization': `Bearer ${saasState.token}` }
+        });
+        if (colRes.ok) {
+          const cols = await colRes.json();
+          const colEl = document.getElementById('saas-ov-collectors');
+          const srcEl = document.getElementById('saas-ov-sources');
+          if (colEl) colEl.innerText = cols.length;
+          if (srcEl) srcEl.innerText = Math.max(cols.length, 3);
+        }
+
+        // 3. Fetch incidents
+        const incRes = await fetch(`/api/v1/orgs/${saasState.activeOrg.id}/incidents`, {
+          headers: { 'Authorization': `Bearer ${saasState.token}` }
+        });
+        if (incRes.ok) {
+          const incs = await incRes.json();
+          const activeIncs = incs.filter(i => i.status === 'open' || i.status === 'investigating');
+          const resolvedOrDismissed = incs.filter(i => i.status === 'resolved' || i.status === 'dismissed');
+
+          const ovIncEl = document.getElementById('saas-ov-incidents');
+          const ovIncTotal = document.getElementById('saas-ov-incidents-total');
+          const ovIncSub = document.getElementById('saas-ov-incidents-sub');
+          const ovBadge = document.getElementById('saas-ov-incidents-badge');
+
+          if (ovIncEl) ovIncEl.innerText = activeIncs.length;
+          if (ovIncTotal) ovIncTotal.innerText = `/ ${incs.length} Total`;
+          if (ovIncSub) {
+            ovIncSub.innerText = `${activeIncs.length} Active • ${resolvedOrDismissed.length} Resolved/Dismissed`;
+          }
+          if (ovBadge) {
+            if (activeIncs.length > 0) {
+              ovBadge.innerText = `${activeIncs.length} ACTIVE FAULTS`;
+              ovBadge.className = 'px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-error-container text-accent-coral';
+            } else {
+              ovBadge.innerText = incs.length > 0 ? 'ALL RESOLVED' : 'NOMINAL';
+              ovBadge.className = 'px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-success-tint text-success';
+            }
+          }
+        }
+      } catch (err) {}
+    }
+
+    async function saasFetchIncidents() {
+      if (!saasState.token || !saasState.activeOrg) return;
+      const container = document.getElementById('saas-incidents-container');
+
+      try {
+        const res = await fetch(`/api/v1/orgs/${saasState.activeOrg.id}/incidents`, {
+          headers: { 'Authorization': `Bearer ${saasState.token}` }
+        });
+
+        if (res.ok) {
+          const incidents = await res.json();
+          saasFetchOverview();
+
+          if (incidents.length === 0) {
+            container.innerHTML = `
+              <div class="p-8 rounded-xl bg-card-subtle text-center text-muted border border-black/5 flex flex-col items-center justify-center">
+                <span class="material-symbols-outlined text-[36px] text-success block mb-2">task_alt</span>
+                <span class="font-bold text-ink text-[15px]">Zero Active Incidents in Organization</span>
+                <p class="text-[12px] text-body-secondary mt-1 max-w-[440px]">All telemetry is nominal within Section 14 SLA baselines. To test AI anomaly correlation and lifecycle triage, click below to inject an SLA fault event.</p>
+                <button onclick="saasSimulateIncident()" class="mt-4 px-4 py-2 rounded-lg bg-primary hover:bg-primary-pressed text-white text-[12px] font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer">
+                  <span class="material-symbols-outlined text-[16px]">bolt</span>
+                  <span>Simulate AI Anomaly Fault</span>
+                </button>
+              </div>
+            `;
+          } else {
+            container.innerHTML = incidents.map(inc => `
+              <div class="p-4 rounded-xl notion-card flex flex-col md:flex-row md:items-start justify-between gap-4 border-l-4 ${inc.status === 'resolved' ? 'border-l-success' : inc.status === 'dismissed' ? 'border-l-black/20' : 'border-l-accent-coral'}">
+                <div class="space-y-1">
+                  <div class="flex items-center gap-2 text-[11px] font-mono">
+                    <span class="px-2 py-0.5 rounded font-bold ${inc.status === 'resolved' ? 'bg-success-tint text-success' : inc.status === 'dismissed' ? 'bg-surface text-muted border border-black/10' : 'bg-error-container text-accent-coral'}">
+                      ${inc.severity} • ${inc.id.substring(0, 12)}
+                    </span>
+                    <span class="text-muted">Status: <strong class="text-ink uppercase">${inc.status}</strong></span>
+                    ${inc.source_id ? `<span class="text-muted">• Node: <code class="text-ink font-semibold">${inc.source_id}</code></span>` : ''}
+                  </div>
+                  <h4 class="font-bold text-ink text-[14px] mt-1.5">${escapeHtml(inc.title)}</h4>
+                  <div class="text-[12px] text-body-secondary font-mono bg-card-subtle p-3 rounded-lg border border-black/5 whitespace-pre-line mt-2">${escapeHtml(inc.description || 'Automated anomaly correlated by AI engine.')}</div>
+                </div>
+                <div class="flex items-center gap-2 shrink-0 pt-1 flex-wrap">
+                  ${inc.status !== 'investigating' && inc.status !== 'resolved' && inc.status !== 'dismissed' ? `<button onclick="saasUpdateIncidentStatus('${inc.id}', 'investigating')" class="px-3 py-1.5 rounded-lg border border-black/10 text-ink text-[11px] font-semibold hover:bg-black/5 cursor-pointer">Investigate</button>` : ''}
+                  ${inc.status !== 'resolved' ? `<button onclick="saasUpdateIncidentStatus('${inc.id}', 'resolved')" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-[11px] font-semibold hover:bg-emerald-700 shadow-xs cursor-pointer">Resolve ✓</button>` : ''}
+                  ${inc.status !== 'dismissed' ? `<button onclick="saasUpdateIncidentStatus('${inc.id}', 'dismissed')" class="px-2.5 py-1.5 rounded-lg text-muted text-[11px] hover:text-ink cursor-pointer">Dismiss</button>` : ''}
+                  ${inc.status === 'resolved' || inc.status === 'dismissed' ? `<button onclick="saasUpdateIncidentStatus('${inc.id}', 'open')" class="px-2.5 py-1.5 rounded-lg border border-primary/30 text-primary hover:bg-primary-tint text-[11px] font-semibold cursor-pointer">↺ Reopen</button>` : ''}
+                </div>
+              </div>
+            `).join('');
+          }
+        }
+      } catch (err) {
+        container.innerHTML = '<div class="p-3 text-center text-accent-coral text-[12px]">Failed to load incidents.</div>';
+      }
+    }
+
+    async function saasSimulateIncident() {
+      if (!saasState.token || !saasState.activeOrg) {
+        notify('Please sign in first to simulate tenant incidents.', 'lock');
+        return;
+      }
+
+      notify('Injecting SLA anomaly telemetry to trigger AI incident...', 'bolt');
+      try {
+        const payload = {
+          payload_id: 'evt_sim_' + Math.random().toString(36).substring(2, 9),
+          tenant_id: saasState.activeOrg.id,
+          source_id: 'node_a81f',
+          timestamp_utc: new Date().toISOString(),
+          cpu: 98.6,
+          memory: 93.4,
+          disk: 81.2,
+          latency_ms: 315.0,
+          packet_loss_pct: 7.8,
+          error_count: 24,
+          failed_logins: 0,
+          collector_status: 'online',
+          event_category: 'incident_spike'
+        };
+
+        const res = await fetch('/api/v1/telemetry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          notify('AI Incident Intelligence engine correlated fault and committed incident to database!', 'verified');
+          await saasFetchIncidents();
+        } else {
+          notify('Failed to ingest simulation event.', 'error');
+        }
+      } catch (err) {
+        notify('Network error triggering simulation.', 'wifi_off');
+      }
+    }
+
+    async function saasUpdateIncidentStatus(incId, status) {
+      if (!saasState.token || !saasState.activeOrg) return;
+
+      try {
+        const res = await fetch(`/api/v1/orgs/${saasState.activeOrg.id}/incidents/${incId}/status`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${saasState.token}`
+          },
+          body: JSON.stringify({ status: status })
+        });
+
+        if (res.ok) {
+          notify(`Incident status updated to '${status.toUpperCase()}' and recorded in audit log.`, 'update');
+          await saasFetchIncidents();
+          await saasFetchOverview();
+        } else {
+          notify('Failed to update incident status.', 'error');
+        }
+      } catch (err) {
+        notify('Network error updating incident.', 'wifi_off');
+      }
+    }
+
     // Initialize default states
     runRedactorScenario('cascade');
     pollBackend();
     setInterval(pollBackend, 4000);
+    saasInitView();
   </script>
 </body>
 </html>
